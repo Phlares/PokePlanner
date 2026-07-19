@@ -32,9 +32,10 @@ export function writeBootstrapPack(
   lock: unknown,
   { mkdir, writeFile }: BootstrapPackWriter = { mkdir: mkdirSync, writeFile: writeFileSync },
 ): void {
+  const serializedManifest = serializeBootstrapManifest(buildBootstrapManifest(lock));
   const output = resolve(projectRoot, 'public/data/firered/manifest.json');
   mkdir(dirname(output), { recursive: true });
-  writeFile(output, serializeBootstrapManifest(buildBootstrapManifest(lock)), 'utf8');
+  writeFile(output, serializedManifest, 'utf8');
 }
 
 export function runBootstrapPack(projectRoot = process.cwd()): void {

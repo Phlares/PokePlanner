@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { ZodError } from 'zod';
 import {
   REQUIRED_POKEAPI_SOURCE,
   parseSourceLock,
@@ -23,6 +24,36 @@ describe('source lock', () => {
     expect(() => parseSourceLock(foundationLock({
       repository: 'https://user:secret@github.com/PokeAPI/api-data.git',
     }))).toThrow();
+  });
+
+  it('rejects a whitespace-wrapped repository without normalizing it', () => {
+    expect(() => parseSourceLock({
+      schemaVersion: 1,
+      sources: [
+        REQUIRED_POKEAPI_SOURCE,
+        {
+          id: 'additional-source',
+          repository: ' https://example.test/data.git ',
+          revision: '0123456789abcdef0123456789abcdef01234567',
+          license: null,
+        },
+      ],
+    })).toThrow(ZodError);
+  });
+
+  it('reports a malformed repository as a controlled Zod validation error', () => {
+    expect(() => parseSourceLock({
+      schemaVersion: 1,
+      sources: [
+        REQUIRED_POKEAPI_SOURCE,
+        {
+          id: 'additional-source',
+          repository: 'not a URL',
+          revision: '0123456789abcdef0123456789abcdef01234567',
+          license: null,
+        },
+      ],
+    })).toThrow(ZodError);
   });
 
   it('rejects a different PokeAPI revision', () => {

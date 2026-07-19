@@ -57,6 +57,19 @@ describe('bootstrap pack generator', () => {
     expect(writeFile).toHaveBeenCalledWith(output, serializeBootstrapManifest(buildBootstrapManifest(lock)), 'utf8');
   });
 
+  it('validates an invalid lock before either filesystem effect', () => {
+    const mkdir = vi.fn();
+    const writeFile = vi.fn();
+    const invalidLock = {
+      schemaVersion: 1,
+      sources: [{ ...REQUIRED_POKEAPI_SOURCE, revision: 'main' }],
+    };
+
+    expect(() => writeBootstrapPack('C:/repo/dev', invalidLock, { mkdir, writeFile })).toThrow();
+    expect(mkdir).not.toHaveBeenCalled();
+    expect(writeFile).not.toHaveBeenCalled();
+  });
+
   it('rejects an invalid on-disk lock before writing the manifest', () => {
     const projectRoot = mkdtempSync(join(tmpdir(), 'pokeplanner-bootstrap-'));
     try {

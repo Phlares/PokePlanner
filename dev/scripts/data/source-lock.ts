@@ -5,8 +5,26 @@ const REVISION_PATTERN = /^[0-9a-f]{40}$/;
 
 const sourceLockEntrySchema = z.object({
   id: z.string().regex(SOURCE_ID_PATTERN),
-  repository: z.string().url().superRefine((value, context) => {
-    const repository = new URL(value);
+  repository: z.string().superRefine((value, context) => {
+    if (value.trim() !== value) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Repository URL must not have leading or trailing whitespace',
+      });
+      return;
+    }
+
+    let repository: URL;
+    try {
+      repository = new URL(value);
+    } catch {
+      context.addIssue({
+        code: 'custom',
+        message: 'Repository must be a valid URL',
+      });
+      return;
+    }
+
     if (repository.protocol !== 'https:' || repository.username || repository.password || !repository.hostname) {
       context.addIssue({
         code: 'custom',
@@ -27,6 +45,13 @@ export const REQUIRED_POKEAPI_SOURCE = Object.freeze({
   license: 'BSD-3-Clause',
 } satisfies SourceLockEntry);
 
+function isRequiredPokeApiSource(source: SourceLockEntry | undefined): boolean {
+  return source?.id === REQUIRED_POKEAPI_SOURCE.id
+    && source.repository === REQUIRED_POKEAPI_SOURCE.repository
+    && source.revision === REQUIRED_POKEAPI_SOURCE.revision
+    && source.license === REQUIRED_POKEAPI_SOURCE.license;
+}
+
 const sourceLockSchema = z.object({
   schemaVersion: z.literal(1),
   sources: z.array(sourceLockEntrySchema).min(1),
@@ -44,9 +69,7 @@ const sourceLockSchema = z.object({
   }
 
   const requiredSource = lock.sources.find(({ id }) => id === REQUIRED_POKEAPI_SOURCE.id);
-  if (!requiredSource || Object.entries(REQUIRED_POKEAPI_SOURCE).some(
-    ([key, value]) => requiredSource[key as keyof SourceLockEntry] !== value,
-  )) {
+  if (!isRequiredPokeApiSource(requiredSource)) {
     context.addIssue({
       code: 'custom',
       path: ['sources'],
