@@ -1,7 +1,7 @@
 # PokéPlanner FireRed Vertical Slice Design
 
 Date: 2026-07-19
-Status: Approved conversational design; pending written review
+Status: Approved 2026-07-19
 
 ## 1. Summary
 
