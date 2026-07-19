@@ -1,8 +1,58 @@
+/*
+ * PokéPlanner design foundation — text-forward grayscale ledger.
+ * System sans reads prose and labels; monospace carries data (ids, levels, counts).
+ * One-pixel rules separate regions; controls are square; no shadow, gradient, or motion
+ * beyond native <details> disclosure. These custom properties are the shared vocabulary the
+ * later UI tasks reuse.
+ */
 :root {
-  color: #202124;
-  background: #eceeed;
-  font-family: "Courier New", ui-monospace, monospace;
+  /* Grayscale ramp — no hue. */
+  --gray-0: #ffffff;
+  --gray-50: #f7f7f6;
+  --gray-100: #eeeeec;
+  --gray-200: #dededb;
+  --gray-300: #c6c6c2;
+  --gray-400: #a3a39e;
+  --gray-500: #7c7c77;
+  --gray-600: #565651;
+  --gray-700: #3b3b37;
+  --gray-800: #262624;
+  --gray-900: #121210;
+
+  /* Semantic roles. */
+  --paper: var(--gray-50);
+  --panel: var(--gray-0);
+  --ink: var(--gray-900);
+  --ink-soft: var(--gray-600);
+  --ink-faint: var(--gray-500);
+  --rule-color: var(--gray-300);
+  --rule: 1px solid var(--rule-color);
+  --rule-strong: 1px solid var(--gray-500);
+
+  /* Type. */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+
+  /* Spacing. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.45;
   font-synthesis: none;
+  -webkit-text-size-adjust: 100%;
 }
 
 * { box-sizing: border-box; }
@@ -11,16 +61,348 @@ body { margin: 0; }
 
 button,
 input,
-select { font: inherit; }
+select { font: inherit; color: inherit; }
+
+code { font-family: var(--font-mono); }
+
+:where(button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
 
 .app-shell {
-  width: min(100% - 2rem, 80rem);
+  width: min(100% - 2rem, 84rem);
   margin-inline: auto;
-  padding-block: 2rem;
+  padding-block: var(--space-6);
 }
 
 .eyebrow {
-  margin-bottom: 0.25rem;
-  color: #5f6368;
+  margin-bottom: var(--space-1);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+/* --- Shared square control --- */
+.setup-option,
+.setup-create,
+.rail-milestone-current,
+.rail-milestone-preview {
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--ink);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  cursor: pointer;
+}
+
+button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  color: var(--ink-faint);
+  background: var(--gray-100);
+  border-color: var(--gray-300);
+}
+
+/* --- Game setup --- */
+.setup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 44rem;
+}
+
+.setup-group {
+  border: var(--rule);
+  border-radius: 0;
+  margin: 0;
+  padding: var(--space-4);
+}
+
+.setup-group > legend {
+  padding-inline: var(--space-2);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.setup-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.setup-identity {
+  list-style: none;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3) 0 0;
+  border-top: var(--rule);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.setup-identity li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.setup-identity-term {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.setup-identity-value {
+  font-size: var(--text-lg);
+}
+
+.setup-name {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.setup-name-input {
+  width: 100%;
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  padding: var(--space-2) var(--space-3);
+}
+
+.setup-create {
+  align-self: flex-start;
+  font-weight: 600;
+}
+
+/* --- Workbench shell --- */
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(15rem, 21rem) minmax(0, 1fr) minmax(16rem, 24rem);
+  grid-template-areas:
+    'rail table inspector'
+    'manifest manifest manifest';
+  border: var(--rule);
+  background: var(--panel);
+}
+
+.workbench-rail { grid-area: rail; border-right: var(--rule); }
+.workbench-table { grid-area: table; border-right: var(--rule); overflow-x: auto; }
+.workbench-inspector { grid-area: inspector; }
+.workbench-manifest { grid-area: manifest; border-top: var(--rule-strong); }
+
+.workbench-rail,
+.workbench-table,
+.workbench-inspector,
+.workbench-manifest { padding: var(--space-4); min-width: 0; }
+
+.workbench-region-heading {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-lg);
+}
+
+.workbench-placeholder { color: var(--ink-soft); }
+
+.workbench-search {
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: var(--rule);
+}
+
+.workbench-search label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.workbench-search-input {
+  width: 100%;
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  padding: var(--space-2) var(--space-3);
+}
+
+/* --- Progression rail: the chronological spine --- */
+.rail-spine {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rail-node {
+  padding: var(--space-3) 0;
+  border-top: var(--rule);
+}
+
+.rail-node:first-child { border-top: 0; }
+
+/* A milestone node carries a heavier left marker — a notch on the spine. */
+.rail-node[data-milestone] {
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--ink);
+  margin-left: calc(-1 * var(--space-3));
+}
+
+.rail-node-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.rail-node-order {
+  color: var(--ink-faint);
+  font-size: var(--text-xs);
+}
+
+.rail-node-select {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border: 0;
+  background: none;
+  padding: var(--space-1) 0;
+}
+
+.rail-node-select:hover .rail-node-name { text-decoration: underline; }
+
+.rail-node-kind {
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+}
+
+.rail-node-meta {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  min-height: 1rem;
+}
+
+.rail-node-branch {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  border: var(--rule);
+  padding: 0 var(--space-1);
+}
+
+.rail-node-matches {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink);
+}
+
+.rail-events {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.rail-event { display: flex; flex-direction: column; gap: var(--space-1); }
+
+.rail-event-select {
+  border: 0;
+  border-left: var(--rule);
+  background: none;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.rail-event-select:hover { color: var(--ink); }
+
+.rail-milestone-controls {
+  display: flex;
+  gap: var(--space-2);
+  padding-left: var(--space-2);
+}
+
+.rail-milestone-current,
+.rail-milestone-preview {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+}
+
+/* --- Team manifest --- */
+.manifest-sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.manifest-sections h4 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.manifest-slots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.manifest-slot {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  border: var(--rule);
+  padding: var(--space-2) var(--space-3);
+  color: var(--ink-soft);
+}
+
+.manifest-slot[data-filled] { color: var(--ink); }
+
+.manifest-slot-index {
+  color: var(--ink-faint);
+  font-size: var(--text-xs);
+}
+
+/* --- Narrow widths: stack rail -> table -> inspector -> manifest, keep tables scrollable --- */
+@media (max-width: 60rem) {
+  .workbench {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'rail'
+      'table'
+      'inspector'
+      'manifest';
+  }
+
+  .workbench-rail,
+  .workbench-table { border-right: 0; }
+
+  .workbench-rail,
+  .workbench-table,
+  .workbench-inspector { border-bottom: var(--rule); }
+
+  .manifest-sections { grid-template-columns: minmax(0, 1fr); }
 }
