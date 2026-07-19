@@ -1,0 +1,1 @@
+{"id":9,"name":"steel","damage_relations":{"double_damage_from":[{"name":"fighting","url":"/api/v2/type/2/"}],"half_damage_from":[{"name":"ghost","url":"/api/v2/type/8/"},{"name":"dark","url":"/api/v2/type/17/"}],"no_damage_from":[{"name":"poison","url":"/api/v2/type/4/"}]}}

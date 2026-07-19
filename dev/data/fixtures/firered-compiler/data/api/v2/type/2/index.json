@@ -1,0 +1,1 @@
+{"id":2,"name":"fighting","damage_relations":{"double_damage_from":[{"name":"flying","url":"/api/v2/type/3/"}],"half_damage_from":[{"name":"rock","url":"/api/v2/type/6/"}],"no_damage_from":[]}}

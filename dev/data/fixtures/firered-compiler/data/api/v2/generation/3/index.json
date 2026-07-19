@@ -1,0 +1,8 @@
+{
+  "id": 3,
+  "name": "generation-iii",
+  "version_groups": [{
+    "name": "firered-leafgreen",
+    "url": "/api/v2/version-group/7/"
+  }]
+}

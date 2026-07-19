@@ -1,0 +1,13 @@
+{
+  "generation": {
+    "name": "generation-iii",
+    "url": "/api/v2/generation/3/"
+  },
+  "id": 7,
+  "name": "firered-leafgreen",
+  "order": 11,
+  "versions": [{
+    "name": "firered",
+    "url": "/api/v2/version/10/"
+  }]
+}
