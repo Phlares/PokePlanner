@@ -121,6 +121,7 @@ describe('FireRed pack contracts', () => {
     };
 
     expect(parseEvolutionEdges([edge]).at(0)?.milestoneId).toBe('national-dex');
+    expect(parseEvolutionEdges([{ ...edge, milestoneId: null }]).at(0)?.milestoneId).toBeNull();
     const { milestoneId: _milestoneId, ...missingMilestone } = edge;
     expect(() => parseEvolutionEdges([missingMilestone])).toThrow();
     expect(() => parseEvolutionEdges([{ ...edge, milestoneId: 'National Dex' }])).toThrow();
