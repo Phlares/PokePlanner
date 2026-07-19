@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokeplanner.dev/schemas/route-progression.schema.json",
+  "title": "PokéPlanner Route Progression",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "game", "sources", "nodes"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "game": { "$ref": "#/$defs/game" },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" }, "minItems": 1 },
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" }, "minItems": 1 }
+  },
+  "$defs": {
+    "game": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "versionId", "versionGroupId", "generationId"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "versionId": { "type": "integer", "minimum": 1 },
+        "versionGroupId": { "type": "integer", "minimum": 1 },
+        "generationId": { "type": "integer", "minimum": 1 },
+        "regionId": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "revision", "license", "url"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "name": { "type": "string" }, "revision": { "type": "string" },
+        "license": { "type": ["string", "null"] }, "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sourceId", "method", "confidence"],
+      "properties": {
+        "sourceId": { "type": "string" }, "locator": { "type": ["string", "null"] },
+        "method": { "enum": ["generated", "manual", "inferred"] },
+        "confidence": { "enum": ["verified", "cross-checked", "provisional"] },
+        "note": { "type": ["string", "null"] }
+      }
+    },
+    "versionFlag": {
+      "type": "object", "additionalProperties": false,
+      "required": ["available", "exclusive"],
+      "properties": {
+        "available": { "type": "boolean" }, "exclusive": { "type": "boolean" }, "note": { "type": ["string", "null"] }
+      }
+    },
+    "condition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "operator", "value"],
+      "properties": {
+        "kind": { "enum": ["milestone-complete", "milestone-incomplete", "item-owned", "badge-owned", "starter-selected", "version", "choice", "time", "custom"] },
+        "operator": { "enum": ["equals", "not-equals", "includes", "excludes"] },
+        "value": { "type": ["string", "number", "boolean"] }, "note": { "type": ["string", "null"] }
+      }
+    },
+    "flags": {
+      "type": "object", "additionalProperties": false,
+      "required": ["keyMilestone", "gym", "rivalFight", "bossFight", "storyFight", "optional"],
+      "properties": {
+        "keyMilestone": { "type": "boolean" }, "gym": { "type": "boolean" }, "rivalFight": { "type": "boolean" },
+        "bossFight": { "type": "boolean" }, "storyFight": { "type": "boolean" }, "optional": { "type": "boolean" }
+      }
+    },
+    "unlock": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "refId"],
+      "properties": {
+        "kind": { "enum": ["location", "encounter-method", "item", "tm", "hm", "tutor", "trade", "service", "custom"] },
+        "refId": { "type": "string" }, "note": { "type": ["string", "null"] }
+      }
+    },
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "order", "type", "name", "flags", "conditions", "unlocks", "versionFlags", "provenance"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" }, "order": { "type": "integer", "minimum": 0 },
+        "type": { "enum": ["story", "checkpoint", "gym", "rival", "trainer", "boss", "gift", "static-encounter", "trade", "item", "tm-hm", "tutor", "choice"] },
+        "name": { "type": "string", "minLength": 1 }, "description": { "type": ["string", "null"] },
+        "flags": { "$ref": "#/$defs/flags" },
+        "opponentIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "acquisitionIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "conditions": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+        "unlocks": { "type": "array", "items": { "$ref": "#/$defs/unlock" } },
+        "versionFlags": { "type": "object", "additionalProperties": { "$ref": "#/$defs/versionFlag" }, "minProperties": 1 },
+        "provenance": { "type": "array", "items": { "$ref": "#/$defs/provenance" }, "minItems": 1 }
+      }
+    },
+    "node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "kind", "phase", "goldenPathOrder", "prerequisiteEventIds", "nextNodeIds", "location", "versionFlags", "events", "provenance"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" }, "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["town", "city", "route", "dungeon", "building", "landmark", "facility"] },
+        "phase": { "type": "string", "pattern": "^[a-z0-9-]+$" }, "goldenPathOrder": { "type": "integer", "minimum": 0 },
+        "branch": { "enum": ["main", "optional", "alternate", "postgame"] }, "parentNodeId": { "type": ["string", "null"] },
+        "prerequisiteEventIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "nextNodeIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "location": {
+          "type": "object", "additionalProperties": false,
+          "required": ["pokeApiLocationId", "pokeApiLocationAreaIds", "sourceMapIds"],
+          "properties": {
+            "pokeApiLocationId": { "type": ["integer", "null"], "minimum": 1 },
+            "pokeApiLocationAreaIds": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "uniqueItems": true },
+            "sourceMapIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+          }
+        },
+        "versionFlags": { "type": "object", "additionalProperties": { "$ref": "#/$defs/versionFlag" }, "minProperties": 1 },
+        "events": { "type": "array", "items": { "$ref": "#/$defs/event" } },
+        "provenance": { "type": "array", "items": { "$ref": "#/$defs/provenance" }, "minItems": 1 }
+      }
+    }
+  }
+}

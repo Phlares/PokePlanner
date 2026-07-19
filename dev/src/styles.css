@@ -1,0 +1,26 @@
+:root {
+  color: #202124;
+  background: #eceeed;
+  font-family: "Courier New", ui-monospace, monospace;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; }
+
+button,
+input,
+select { font: inherit; }
+
+.app-shell {
+  width: min(100% - 2rem, 80rem);
+  margin-inline: auto;
+  padding-block: 2rem;
+}
+
+.eyebrow {
+  margin-bottom: 0.25rem;
+  color: #5f6368;
+  text-transform: uppercase;
+}

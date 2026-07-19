@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "pokeapi-api-data",
+      "repository": "https://github.com/PokeAPI/api-data.git",
+      "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+      "license": "BSD-3-Clause"
+    }
+  ]
+}

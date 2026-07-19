@@ -1,2 +1,6 @@
 .superpowers/
 .worktrees/
+dev/node_modules/
+dev/dist/
+dev/coverage/
+dev/.cache/
