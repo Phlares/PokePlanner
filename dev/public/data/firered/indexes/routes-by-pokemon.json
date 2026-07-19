@@ -1,0 +1,873 @@
+{
+  "1": [
+    "pallet-town"
+  ],
+  "4": [
+    "pallet-town"
+  ],
+  "7": [
+    "pallet-town"
+  ],
+  "10": [
+    "kanto-route-2",
+    "kanto-route-24",
+    "kanto-route-25",
+    "pattern-bush",
+    "viridian-forest"
+  ],
+  "11": [
+    "kanto-route-24",
+    "kanto-route-25",
+    "pattern-bush",
+    "viridian-forest"
+  ],
+  "13": [
+    "kanto-route-2",
+    "kanto-route-24",
+    "kanto-route-25",
+    "pattern-bush",
+    "viridian-forest"
+  ],
+  "14": [
+    "kanto-route-24",
+    "kanto-route-25",
+    "pattern-bush",
+    "viridian-forest"
+  ],
+  "16": [
+    "berry-forest",
+    "bond-bridge",
+    "five-isle-meadow",
+    "kanto-route-1",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-14",
+    "kanto-route-15",
+    "kanto-route-2",
+    "kanto-route-24",
+    "kanto-route-25",
+    "kanto-route-3",
+    "kanto-route-5",
+    "kanto-route-6",
+    "kanto-route-7",
+    "kanto-route-8"
+  ],
+  "17": [
+    "berry-forest",
+    "bond-bridge",
+    "five-isle-meadow",
+    "kanto-route-13",
+    "kanto-route-14",
+    "kanto-route-15"
+  ],
+  "19": [
+    "kanto-route-1",
+    "kanto-route-16",
+    "kanto-route-17",
+    "kanto-route-18",
+    "kanto-route-2",
+    "kanto-route-22",
+    "kanto-route-4",
+    "kanto-route-9",
+    "pokemon-mansion"
+  ],
+  "20": [
+    "kanto-route-16",
+    "kanto-route-17",
+    "kanto-route-18",
+    "pokemon-mansion"
+  ],
+  "21": [
+    "canyon-entrance",
+    "cape-brink",
+    "kanto-route-10",
+    "kanto-route-11",
+    "kanto-route-16",
+    "kanto-route-17",
+    "kanto-route-18",
+    "kanto-route-22",
+    "kanto-route-23",
+    "kanto-route-3",
+    "kanto-route-4",
+    "kanto-route-9",
+    "kindle-road",
+    "mt-ember",
+    "ruin-valley",
+    "treasure-beach",
+    "water-path"
+  ],
+  "22": [
+    "canyon-entrance",
+    "cape-brink",
+    "kanto-route-17",
+    "kanto-route-18",
+    "kanto-route-23",
+    "kindle-road",
+    "mt-ember",
+    "ruin-valley",
+    "sevault-canyon",
+    "treasure-beach",
+    "water-path"
+  ],
+  "23": [
+    "kanto-route-10",
+    "kanto-route-11",
+    "kanto-route-23",
+    "kanto-route-4",
+    "kanto-route-8",
+    "kanto-route-9"
+  ],
+  "24": [
+    "kanto-route-23",
+    "kanto-victory-road"
+  ],
+  "25": [
+    "kanto-power-plant",
+    "viridian-forest"
+  ],
+  "29": [
+    "kanto-route-3",
+    "kanto-safari-zone"
+  ],
+  "30": [
+    "kanto-safari-zone"
+  ],
+  "32": [
+    "kanto-route-3",
+    "kanto-safari-zone"
+  ],
+  "33": [
+    "kanto-safari-zone"
+  ],
+  "35": [
+    "celadon-city",
+    "mt-moon"
+  ],
+  "39": [
+    "kanto-route-3"
+  ],
+  "41": [
+    "altering-cave",
+    "icefall-cave",
+    "kanto-victory-road",
+    "lost-cave",
+    "mt-moon",
+    "rock-tunnel",
+    "seafoam-islands"
+  ],
+  "42": [
+    "cerulean-cave",
+    "icefall-cave",
+    "kanto-victory-road",
+    "lost-cave",
+    "seafoam-islands"
+  ],
+  "43": [
+    "berry-forest",
+    "bond-bridge",
+    "cape-brink",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-14",
+    "kanto-route-15",
+    "kanto-route-24",
+    "kanto-route-25",
+    "kanto-route-5",
+    "kanto-route-6",
+    "kanto-route-7",
+    "water-path"
+  ],
+  "44": [
+    "berry-forest",
+    "bond-bridge",
+    "cape-brink",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-14",
+    "kanto-route-15",
+    "water-path"
+  ],
+  "46": [
+    "kanto-safari-zone",
+    "mt-moon"
+  ],
+  "47": [
+    "cerulean-cave",
+    "kanto-safari-zone"
+  ],
+  "48": [
+    "berry-forest",
+    "bond-bridge",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-14",
+    "kanto-route-15",
+    "kanto-safari-zone"
+  ],
+  "49": [
+    "berry-forest",
+    "kanto-safari-zone"
+  ],
+  "50": [
+    "digletts-cave"
+  ],
+  "51": [
+    "digletts-cave"
+  ],
+  "52": [
+    "bond-bridge",
+    "canyon-entrance",
+    "cape-brink",
+    "five-isle-meadow",
+    "kanto-route-5",
+    "kanto-route-6",
+    "kanto-route-7",
+    "kanto-route-8",
+    "kindle-road",
+    "ruin-valley",
+    "sevault-canyon",
+    "treasure-beach",
+    "water-path"
+  ],
+  "53": [
+    "bond-bridge",
+    "canyon-entrance",
+    "cape-brink",
+    "five-isle-meadow",
+    "kindle-road",
+    "ruin-valley",
+    "sevault-canyon",
+    "treasure-beach",
+    "water-path"
+  ],
+  "54": [
+    "berry-forest",
+    "bond-bridge",
+    "canyon-entrance",
+    "cape-brink",
+    "celadon-city",
+    "cerulean-cave",
+    "cerulean-city",
+    "cinnabar-island",
+    "five-island",
+    "five-isle-meadow",
+    "four-island",
+    "fuchsia-city",
+    "green-path",
+    "icefall-cave",
+    "kanto-route-10",
+    "kanto-route-11",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-22",
+    "kanto-route-23",
+    "kanto-route-24",
+    "kanto-route-25",
+    "kanto-route-4",
+    "kanto-route-6",
+    "kanto-safari-zone",
+    "kanto-sea-route-19",
+    "kanto-sea-route-20",
+    "kanto-sea-route-21",
+    "kindle-road",
+    "memorial-pillar",
+    "one-island",
+    "outcast-island",
+    "pallet-town",
+    "resort-gorgeous",
+    "ruin-valley",
+    "seafoam-islands",
+    "ss-anne",
+    "tanoby-ruins",
+    "trainer-tower",
+    "treasure-beach",
+    "vermilion-city",
+    "viridian-city",
+    "water-labyrinth",
+    "water-path"
+  ],
+  "55": [
+    "berry-forest",
+    "cape-brink",
+    "cerulean-cave",
+    "seafoam-islands"
+  ],
+  "56": [
+    "kanto-route-22",
+    "kanto-route-23",
+    "kanto-route-3",
+    "kanto-route-4",
+    "rock-tunnel"
+  ],
+  "57": [
+    "cerulean-cave",
+    "kanto-route-23",
+    "kanto-victory-road"
+  ],
+  "58": [
+    "kanto-route-7",
+    "kanto-route-8",
+    "pokemon-mansion"
+  ],
+  "60": [
+    "berry-forest",
+    "cape-brink",
+    "cerulean-cave",
+    "four-island",
+    "fuchsia-city",
+    "icefall-cave",
+    "kanto-route-22",
+    "kanto-route-23",
+    "kanto-route-25",
+    "kanto-route-6",
+    "kanto-safari-zone",
+    "ruin-valley",
+    "viridian-city"
+  ],
+  "61": [
+    "cape-brink",
+    "cerulean-cave",
+    "four-island",
+    "icefall-cave",
+    "kanto-route-22",
+    "kanto-route-23",
+    "kanto-route-25",
+    "kanto-route-6",
+    "ruin-valley",
+    "viridian-city"
+  ],
+  "63": [
+    "celadon-city",
+    "kanto-route-24",
+    "kanto-route-25"
+  ],
+  "64": [
+    "cerulean-cave"
+  ],
+  "66": [
+    "kanto-victory-road",
+    "mt-ember",
+    "rock-tunnel"
+  ],
+  "67": [
+    "cerulean-cave",
+    "kanto-victory-road",
+    "mt-ember"
+  ],
+  "72": [
+    "bond-bridge",
+    "cerulean-city",
+    "cinnabar-island",
+    "five-island",
+    "five-isle-meadow",
+    "green-path",
+    "icefall-cave",
+    "kanto-route-10",
+    "kanto-route-11",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-24",
+    "kanto-route-4",
+    "kanto-sea-route-19",
+    "kanto-sea-route-20",
+    "kanto-sea-route-21",
+    "kindle-road",
+    "memorial-pillar",
+    "one-island",
+    "outcast-island",
+    "pallet-town",
+    "resort-gorgeous",
+    "ss-anne",
+    "tanoby-ruins",
+    "trainer-tower",
+    "treasure-beach",
+    "vermilion-city",
+    "water-labyrinth",
+    "water-path"
+  ],
+  "73": [
+    "bond-bridge",
+    "five-island",
+    "five-isle-meadow",
+    "green-path",
+    "icefall-cave",
+    "kindle-road",
+    "memorial-pillar",
+    "one-island",
+    "outcast-island",
+    "resort-gorgeous",
+    "tanoby-ruins",
+    "trainer-tower",
+    "treasure-beach",
+    "water-labyrinth",
+    "water-path"
+  ],
+  "74": [
+    "cerulean-cave",
+    "kanto-victory-road",
+    "kindle-road",
+    "mt-ember",
+    "mt-moon",
+    "rock-tunnel",
+    "sevault-canyon"
+  ],
+  "75": [
+    "cerulean-cave",
+    "kindle-road",
+    "mt-ember",
+    "rock-tunnel",
+    "sevault-canyon"
+  ],
+  "77": [
+    "kindle-road",
+    "mt-ember"
+  ],
+  "78": [
+    "kindle-road",
+    "mt-ember"
+  ],
+  "81": [
+    "kanto-power-plant"
+  ],
+  "82": [
+    "cerulean-cave",
+    "kanto-power-plant"
+  ],
+  "84": [
+    "kanto-route-16",
+    "kanto-route-17",
+    "kanto-route-18",
+    "kanto-safari-zone"
+  ],
+  "86": [
+    "icefall-cave",
+    "seafoam-islands"
+  ],
+  "87": [
+    "icefall-cave",
+    "seafoam-islands"
+  ],
+  "88": [
+    "celadon-city",
+    "pokemon-mansion"
+  ],
+  "90": [
+    "cinnabar-island",
+    "five-island",
+    "icefall-cave",
+    "one-island",
+    "pallet-town",
+    "ss-anne",
+    "vermilion-city"
+  ],
+  "92": [
+    "lost-cave",
+    "pokemon-tower"
+  ],
+  "93": [
+    "lost-cave",
+    "pokemon-tower"
+  ],
+  "95": [
+    "kanto-victory-road",
+    "rock-tunnel",
+    "sevault-canyon"
+  ],
+  "96": [
+    "berry-forest",
+    "kanto-route-11"
+  ],
+  "97": [
+    "berry-forest"
+  ],
+  "98": [
+    "cerulean-city",
+    "cinnabar-island",
+    "kanto-route-10",
+    "kanto-route-11",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-24",
+    "kanto-route-4",
+    "kanto-sea-route-19",
+    "kanto-sea-route-20",
+    "kanto-sea-route-21",
+    "pallet-town",
+    "seafoam-islands",
+    "ss-anne",
+    "vermilion-city"
+  ],
+  "100": [
+    "kanto-power-plant",
+    "kanto-route-10"
+  ],
+  "101": [
+    "cerulean-cave",
+    "kanto-power-plant"
+  ],
+  "102": [
+    "berry-forest",
+    "kanto-safari-zone"
+  ],
+  "104": [
+    "pokemon-tower",
+    "sevault-canyon"
+  ],
+  "105": [
+    "kanto-victory-road",
+    "sevault-canyon"
+  ],
+  "106": [
+    "saffron-city"
+  ],
+  "107": [
+    "saffron-city"
+  ],
+  "109": [
+    "celadon-city",
+    "pokemon-mansion"
+  ],
+  "110": [
+    "pokemon-mansion"
+  ],
+  "111": [
+    "kanto-safari-zone"
+  ],
+  "113": [
+    "kanto-safari-zone"
+  ],
+  "114": [
+    "kanto-sea-route-21",
+    "treasure-beach"
+  ],
+  "115": [
+    "kanto-safari-zone"
+  ],
+  "116": [
+    "bond-bridge",
+    "cerulean-city",
+    "cinnabar-island",
+    "five-island",
+    "five-isle-meadow",
+    "green-path",
+    "icefall-cave",
+    "kanto-route-10",
+    "kanto-route-11",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-24",
+    "kanto-route-4",
+    "kanto-sea-route-19",
+    "kanto-sea-route-20",
+    "kanto-sea-route-21",
+    "kindle-road",
+    "memorial-pillar",
+    "one-island",
+    "outcast-island",
+    "pallet-town",
+    "resort-gorgeous",
+    "seafoam-islands",
+    "ss-anne",
+    "tanoby-ruins",
+    "trainer-tower",
+    "treasure-beach",
+    "vermilion-city",
+    "water-labyrinth",
+    "water-path"
+  ],
+  "117": [
+    "bond-bridge",
+    "cinnabar-island",
+    "five-island",
+    "five-isle-meadow",
+    "green-path",
+    "icefall-cave",
+    "kanto-sea-route-19",
+    "kanto-sea-route-20",
+    "kanto-sea-route-21",
+    "kindle-road",
+    "memorial-pillar",
+    "one-island",
+    "outcast-island",
+    "pallet-town",
+    "resort-gorgeous",
+    "tanoby-ruins",
+    "trainer-tower",
+    "treasure-beach",
+    "water-labyrinth",
+    "water-path"
+  ],
+  "118": [
+    "berry-forest",
+    "cape-brink",
+    "cerulean-cave",
+    "four-island",
+    "fuchsia-city",
+    "icefall-cave",
+    "kanto-route-22",
+    "kanto-route-23",
+    "kanto-route-25",
+    "kanto-route-6",
+    "kanto-safari-zone",
+    "ruin-valley",
+    "viridian-city"
+  ],
+  "119": [
+    "berry-forest",
+    "fuchsia-city",
+    "kanto-safari-zone"
+  ],
+  "123": [
+    "celadon-city",
+    "kanto-safari-zone"
+  ],
+  "125": [
+    "kanto-power-plant"
+  ],
+  "128": [
+    "kanto-safari-zone"
+  ],
+  "129": [
+    "berry-forest",
+    "bond-bridge",
+    "cape-brink",
+    "celadon-city",
+    "cerulean-cave",
+    "cerulean-city",
+    "cinnabar-island",
+    "five-island",
+    "five-isle-meadow",
+    "four-island",
+    "fuchsia-city",
+    "green-path",
+    "icefall-cave",
+    "kanto-route-10",
+    "kanto-route-11",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-22",
+    "kanto-route-23",
+    "kanto-route-24",
+    "kanto-route-25",
+    "kanto-route-3",
+    "kanto-route-4",
+    "kanto-route-6",
+    "kanto-safari-zone",
+    "kanto-sea-route-19",
+    "kanto-sea-route-20",
+    "kanto-sea-route-21",
+    "kindle-road",
+    "memorial-pillar",
+    "one-island",
+    "outcast-island",
+    "pallet-town",
+    "resort-gorgeous",
+    "ruin-valley",
+    "seafoam-islands",
+    "ss-anne",
+    "tanoby-ruins",
+    "trainer-tower",
+    "treasure-beach",
+    "vermilion-city",
+    "viridian-city",
+    "water-labyrinth",
+    "water-path"
+  ],
+  "130": [
+    "berry-forest",
+    "bond-bridge",
+    "cape-brink",
+    "cerulean-cave",
+    "cerulean-city",
+    "cinnabar-island",
+    "five-island",
+    "five-isle-meadow",
+    "four-island",
+    "fuchsia-city",
+    "green-path",
+    "icefall-cave",
+    "kanto-route-10",
+    "kanto-route-11",
+    "kanto-route-12",
+    "kanto-route-13",
+    "kanto-route-22",
+    "kanto-route-23",
+    "kanto-route-24",
+    "kanto-route-25",
+    "kanto-route-4",
+    "kanto-route-6",
+    "kanto-sea-route-19",
+    "kanto-sea-route-20",
+    "kanto-sea-route-21",
+    "kindle-road",
+    "memorial-pillar",
+    "one-island",
+    "outcast-island",
+    "pallet-town",
+    "resort-gorgeous",
+    "ruin-valley",
+    "seafoam-islands",
+    "ss-anne",
+    "tanoby-ruins",
+    "trainer-tower",
+    "treasure-beach",
+    "vermilion-city",
+    "viridian-city",
+    "water-labyrinth",
+    "water-path"
+  ],
+  "131": [
+    "icefall-cave",
+    "saffron-city"
+  ],
+  "132": [
+    "cerulean-cave",
+    "kanto-route-13",
+    "kanto-route-14",
+    "kanto-route-15",
+    "pokemon-mansion"
+  ],
+  "133": [
+    "celadon-city"
+  ],
+  "137": [
+    "celadon-city"
+  ],
+  "138": [
+    "cinnabar-island"
+  ],
+  "140": [
+    "cinnabar-island"
+  ],
+  "142": [
+    "cinnabar-island"
+  ],
+  "143": [
+    "kanto-route-12",
+    "kanto-route-16"
+  ],
+  "144": [
+    "seafoam-islands"
+  ],
+  "145": [
+    "kanto-power-plant"
+  ],
+  "146": [
+    "mt-ember"
+  ],
+  "147": [
+    "celadon-city",
+    "kanto-safari-zone"
+  ],
+  "148": [
+    "kanto-safari-zone"
+  ],
+  "150": [
+    "cerulean-cave"
+  ],
+  "161": [
+    "canyon-entrance",
+    "five-isle-meadow",
+    "water-path"
+  ],
+  "165": [
+    "pattern-bush"
+  ],
+  "167": [
+    "pattern-bush"
+  ],
+  "175": [
+    "water-labyrinth"
+  ],
+  "177": [
+    "ruin-valley"
+  ],
+  "179": [
+    "altering-cave"
+  ],
+  "187": [
+    "five-island",
+    "five-isle-meadow",
+    "memorial-pillar",
+    "resort-gorgeous",
+    "water-labyrinth"
+  ],
+  "190": [
+    "altering-cave"
+  ],
+  "193": [
+    "ruin-valley"
+  ],
+  "194": [
+    "four-island",
+    "icefall-cave",
+    "ruin-valley"
+  ],
+  "198": [
+    "lost-cave"
+  ],
+  "201": [
+    "tanoby-ruins"
+  ],
+  "202": [
+    "cerulean-cave",
+    "ruin-valley"
+  ],
+  "204": [
+    "altering-cave"
+  ],
+  "206": [
+    "three-isle-port"
+  ],
+  "211": [
+    "five-isle-meadow",
+    "green-path",
+    "memorial-pillar",
+    "outcast-island",
+    "resort-gorgeous",
+    "tanoby-ruins",
+    "trainer-tower",
+    "water-labyrinth",
+    "water-path"
+  ],
+  "213": [
+    "altering-cave"
+  ],
+  "214": [
+    "pattern-bush"
+  ],
+  "216": [
+    "altering-cave"
+  ],
+  "218": [
+    "mt-ember"
+  ],
+  "219": [
+    "mt-ember"
+  ],
+  "220": [
+    "icefall-cave"
+  ],
+  "225": [
+    "icefall-cave"
+  ],
+  "227": [
+    "sevault-canyon"
+  ],
+  "228": [
+    "altering-cave"
+  ],
+  "231": [
+    "canyon-entrance",
+    "sevault-canyon"
+  ],
+  "234": [
+    "altering-cave"
+  ],
+  "235": [
+    "altering-cave"
+  ],
+  "246": [
+    "sevault-canyon"
+  ]
+}

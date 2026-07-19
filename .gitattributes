@@ -1,0 +1,6 @@
+# Deterministic generated FireRed pack and research report: force LF so the
+# byte-exact `npm run data:verify` holds across platforms and fresh checkouts
+# (the repo default is core.autocrlf=true, which would otherwise rewrite these
+# committed LF files to CRLF in the working tree and break verification).
+dev/public/data/firered/** text eol=lf
+dev/data/research/firered/** text eol=lf

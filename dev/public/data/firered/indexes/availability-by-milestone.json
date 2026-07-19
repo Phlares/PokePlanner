@@ -1,0 +1,2920 @@
+{
+  "blaine-gym": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 15,
+        "status": "available-now"
+      },
+      {
+        "moveId": 19,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 57,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 70,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 92,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 126,
+        "status": "available-now"
+      },
+      {
+        "moveId": 127,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 202,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 249,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      },
+      {
+        "moveId": 347,
+        "status": "available-now"
+      },
+      {
+        "moveId": 351,
+        "status": "available-now"
+      },
+      {
+        "moveId": 352,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [
+      {
+        "milestoneId": "champion",
+        "moveId": 14,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "champion",
+        "moveId": 34,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 38,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 89,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 258,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 315,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 337,
+        "status": "future-milestone"
+      }
+    ],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  },
+  "brock-gym": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [
+      {
+        "milestoneId": "champion",
+        "moveId": 14,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "misty-gym",
+        "moveId": 15,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "surge-gym",
+        "moveId": 19,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "champion",
+        "moveId": 34,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 38,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "koga-gym",
+        "moveId": 57,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "erika-gym",
+        "moveId": 70,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 89,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "koga-gym",
+        "moveId": 92,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 126,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 127,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "erika-gym",
+        "moveId": 202,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 249,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 258,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 315,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 337,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 347,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "surge-gym",
+        "moveId": 351,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "misty-gym",
+        "moveId": 352,
+        "status": "future-milestone"
+      }
+    ],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  },
+  "champion": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 14,
+        "status": "available-now"
+      },
+      {
+        "moveId": 15,
+        "status": "available-now"
+      },
+      {
+        "moveId": 19,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 34,
+        "status": "available-now"
+      },
+      {
+        "moveId": 38,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 57,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 70,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 89,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 92,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 126,
+        "status": "available-now"
+      },
+      {
+        "moveId": 127,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 202,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 249,
+        "status": "available-now"
+      },
+      {
+        "moveId": 258,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 315,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 337,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      },
+      {
+        "moveId": 347,
+        "status": "available-now"
+      },
+      {
+        "moveId": 351,
+        "status": "available-now"
+      },
+      {
+        "moveId": 352,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  },
+  "erika-gym": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 15,
+        "status": "available-now"
+      },
+      {
+        "moveId": 19,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 70,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 202,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      },
+      {
+        "moveId": 351,
+        "status": "available-now"
+      },
+      {
+        "moveId": 352,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [
+      {
+        "milestoneId": "champion",
+        "moveId": 14,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "champion",
+        "moveId": 34,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 38,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "koga-gym",
+        "moveId": 57,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 89,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "koga-gym",
+        "moveId": 92,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 126,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 127,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 249,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 258,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 315,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 337,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 347,
+        "status": "future-milestone"
+      }
+    ],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  },
+  "giovanni-gym": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 15,
+        "status": "available-now"
+      },
+      {
+        "moveId": 19,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 38,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 57,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 70,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 89,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 92,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 126,
+        "status": "available-now"
+      },
+      {
+        "moveId": 127,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 202,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 249,
+        "status": "available-now"
+      },
+      {
+        "moveId": 258,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 315,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 337,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      },
+      {
+        "moveId": 347,
+        "status": "available-now"
+      },
+      {
+        "moveId": 351,
+        "status": "available-now"
+      },
+      {
+        "moveId": 352,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [
+      {
+        "milestoneId": "champion",
+        "moveId": 14,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "champion",
+        "moveId": 34,
+        "status": "future-milestone"
+      }
+    ],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  },
+  "koga-gym": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 15,
+        "status": "available-now"
+      },
+      {
+        "moveId": 19,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 57,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 70,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 92,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 202,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      },
+      {
+        "moveId": 351,
+        "status": "available-now"
+      },
+      {
+        "moveId": 352,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [
+      {
+        "milestoneId": "champion",
+        "moveId": 14,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "champion",
+        "moveId": 34,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 38,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 89,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 126,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 127,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 249,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 258,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 315,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 337,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 347,
+        "status": "future-milestone"
+      }
+    ],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  },
+  "misty-gym": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 15,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      },
+      {
+        "moveId": 352,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [
+      {
+        "milestoneId": "champion",
+        "moveId": 14,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "surge-gym",
+        "moveId": 19,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "champion",
+        "moveId": 34,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 38,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "koga-gym",
+        "moveId": 57,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "erika-gym",
+        "moveId": 70,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 89,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "koga-gym",
+        "moveId": 92,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 126,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 127,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "erika-gym",
+        "moveId": 202,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 249,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 258,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 315,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 337,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 347,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "surge-gym",
+        "moveId": 351,
+        "status": "future-milestone"
+      }
+    ],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  },
+  "sabrina-gym": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 15,
+        "status": "available-now"
+      },
+      {
+        "moveId": 19,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 57,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 70,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 92,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 202,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 249,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      },
+      {
+        "moveId": 347,
+        "status": "available-now"
+      },
+      {
+        "moveId": 351,
+        "status": "available-now"
+      },
+      {
+        "moveId": 352,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [
+      {
+        "milestoneId": "champion",
+        "moveId": 14,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "champion",
+        "moveId": 34,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 38,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 89,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 126,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 127,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 258,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 315,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 337,
+        "status": "future-milestone"
+      }
+    ],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  },
+  "surge-gym": {
+    "availableNow": [
+      {
+        "moveId": 5,
+        "status": "available-now"
+      },
+      {
+        "moveId": 15,
+        "status": "available-now"
+      },
+      {
+        "moveId": 19,
+        "status": "available-now"
+      },
+      {
+        "moveId": 25,
+        "status": "available-now"
+      },
+      {
+        "moveId": 46,
+        "status": "available-now"
+      },
+      {
+        "moveId": 53,
+        "status": "available-now"
+      },
+      {
+        "moveId": 58,
+        "status": "available-now"
+      },
+      {
+        "moveId": 59,
+        "status": "available-now"
+      },
+      {
+        "moveId": 63,
+        "status": "available-now"
+      },
+      {
+        "moveId": 68,
+        "status": "available-now"
+      },
+      {
+        "moveId": 69,
+        "status": "available-now"
+      },
+      {
+        "moveId": 76,
+        "status": "available-now"
+      },
+      {
+        "moveId": 85,
+        "status": "available-now"
+      },
+      {
+        "moveId": 86,
+        "status": "available-now"
+      },
+      {
+        "moveId": 87,
+        "status": "available-now"
+      },
+      {
+        "moveId": 91,
+        "status": "available-now"
+      },
+      {
+        "moveId": 94,
+        "status": "available-now"
+      },
+      {
+        "moveId": 102,
+        "status": "available-now"
+      },
+      {
+        "moveId": 104,
+        "status": "available-now"
+      },
+      {
+        "moveId": 113,
+        "status": "available-now"
+      },
+      {
+        "moveId": 115,
+        "status": "available-now"
+      },
+      {
+        "moveId": 118,
+        "status": "available-now"
+      },
+      {
+        "moveId": 135,
+        "status": "available-now"
+      },
+      {
+        "moveId": 138,
+        "status": "available-now"
+      },
+      {
+        "moveId": 148,
+        "status": "available-now"
+      },
+      {
+        "moveId": 153,
+        "status": "available-now"
+      },
+      {
+        "moveId": 156,
+        "status": "available-now"
+      },
+      {
+        "moveId": 157,
+        "status": "available-now"
+      },
+      {
+        "moveId": 164,
+        "status": "available-now"
+      },
+      {
+        "moveId": 168,
+        "status": "available-now"
+      },
+      {
+        "moveId": 182,
+        "status": "available-now"
+      },
+      {
+        "moveId": 188,
+        "status": "available-now"
+      },
+      {
+        "moveId": 201,
+        "status": "available-now"
+      },
+      {
+        "moveId": 211,
+        "status": "available-now"
+      },
+      {
+        "moveId": 213,
+        "status": "available-now"
+      },
+      {
+        "moveId": 216,
+        "status": "available-now"
+      },
+      {
+        "moveId": 218,
+        "status": "available-now"
+      },
+      {
+        "moveId": 219,
+        "status": "available-now"
+      },
+      {
+        "moveId": 231,
+        "status": "available-now"
+      },
+      {
+        "moveId": 237,
+        "status": "available-now"
+      },
+      {
+        "moveId": 240,
+        "status": "available-now"
+      },
+      {
+        "moveId": 241,
+        "status": "available-now"
+      },
+      {
+        "moveId": 247,
+        "status": "available-now"
+      },
+      {
+        "moveId": 259,
+        "status": "available-now"
+      },
+      {
+        "moveId": 263,
+        "status": "available-now"
+      },
+      {
+        "moveId": 264,
+        "status": "available-now"
+      },
+      {
+        "moveId": 269,
+        "status": "available-now"
+      },
+      {
+        "moveId": 280,
+        "status": "available-now"
+      },
+      {
+        "moveId": 285,
+        "status": "available-now"
+      },
+      {
+        "moveId": 289,
+        "status": "available-now"
+      },
+      {
+        "moveId": 290,
+        "status": "available-now"
+      },
+      {
+        "moveId": 307,
+        "status": "available-now"
+      },
+      {
+        "moveId": 308,
+        "status": "available-now"
+      },
+      {
+        "moveId": 317,
+        "status": "available-now"
+      },
+      {
+        "moveId": 331,
+        "status": "available-now"
+      },
+      {
+        "moveId": 332,
+        "status": "available-now"
+      },
+      {
+        "moveId": 338,
+        "status": "available-now"
+      },
+      {
+        "moveId": 339,
+        "status": "available-now"
+      },
+      {
+        "moveId": 351,
+        "status": "available-now"
+      },
+      {
+        "moveId": 352,
+        "status": "available-now"
+      }
+    ],
+    "futureLevel": [],
+    "futureMilestone": [
+      {
+        "milestoneId": "champion",
+        "moveId": 14,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "champion",
+        "moveId": 34,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 38,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "koga-gym",
+        "moveId": 57,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "erika-gym",
+        "moveId": 70,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 89,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "koga-gym",
+        "moveId": 92,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 126,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "blaine-gym",
+        "moveId": 127,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "erika-gym",
+        "moveId": 202,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 249,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 258,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 315,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "giovanni-gym",
+        "moveId": 337,
+        "status": "future-milestone"
+      },
+      {
+        "milestoneId": "sabrina-gym",
+        "moveId": 347,
+        "status": "future-milestone"
+      }
+    ],
+    "unavailable": [
+      {
+        "moveId": 291,
+        "reason": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "status": "unavailable"
+      }
+    ]
+  }
+}

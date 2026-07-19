@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { FIRERED_CONTEXT } from '../domain/game';
+import { fireRedPackManifestSchema, type FireRedPackManifest } from '../domain/pack';
 
 const gameContextSchema = z.object({
   id: z.literal(FIRERED_CONTEXT.id),
@@ -9,7 +10,7 @@ const gameContextSchema = z.object({
   generationId: z.literal(FIRERED_CONTEXT.generationId),
 });
 
-const manifestSchema = z.object({
+const legacyManifestSchema = z.object({
   schemaVersion: z.literal(1),
   packVersion: z.string().min(1),
   game: gameContextSchema,
@@ -17,7 +18,16 @@ const manifestSchema = z.object({
   files: z.record(z.string(), z.string()),
 });
 
+/**
+ * The lightweight manifest boundary accepts both the legacy bootstrap manifest
+ * (schema version 1) and the verified, content-addressed FireRed pack manifest
+ * (schema version 2). It validates and displays manifest metadata only; individual
+ * hashed assets are fetched later (Task 8).
+ */
+const manifestSchema = z.discriminatedUnion('schemaVersion', [legacyManifestSchema, fireRedPackManifestSchema]);
+
 export type GamePackManifest = z.infer<typeof manifestSchema>;
+export type { FireRedPackManifest };
 
 export function parseGamePackManifest(input: unknown): GamePackManifest {
   return manifestSchema.parse(input);

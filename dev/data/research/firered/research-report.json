@@ -1,0 +1,252 @@
+{
+  "builtAt": "2026-07-19T04:09:43+02:00",
+  "conflicts": [
+    {
+      "resolution": "Curse retains the Generation III \"???\" type, normalized as the move-only value \"unknown\"; it is never a Pokemon type or type-chart entry.",
+      "topic": "Curse move type"
+    },
+    {
+      "resolution": "No Fairy type or Fairy relations exist; the type chart holds exactly 17 Generation III types.",
+      "topic": "Fairy type"
+    },
+    {
+      "resolution": "Hidden (Dream World) abilities are excluded; only Generation III ability slots 1 and 2 are retained.",
+      "topic": "Hidden abilities"
+    },
+    {
+      "resolution": "PokeAPI move IDs 10001-10018 (the shadow type) are excluded as non-FireRed data with no FireRed learnset.",
+      "topic": "Orre-only Shadow moves"
+    },
+    {
+      "resolution": "Damage class is derived from the Generation III type-based physical/special split rather than per-move categories.",
+      "topic": "Physical/special split"
+    }
+  ],
+  "counts": {
+    "acquisitions": 123,
+    "encounters": 137,
+    "evolutions": 184,
+    "hms": 8,
+    "learnsets": 386,
+    "moves": 354,
+    "pokemon": 386,
+    "tms": 50,
+    "tutors": 18,
+    "types": 17
+  },
+  "coverageMatrix": {
+    "acquisitionsByKind": {
+      "event": 5,
+      "fossil": 3,
+      "game-corner": 2,
+      "gift": 4,
+      "hm": 8,
+      "starter": 3,
+      "static": 9,
+      "tm": 50,
+      "trade": 6,
+      "transfer": 15,
+      "tutor": 18
+    },
+    "availabilityByStatus": {
+      "event-only": 5,
+      "postgame": 47,
+      "standard": 147,
+      "transfer-only": 164,
+      "version-exclusive": 23
+    },
+    "encountersByMethod": {
+      "event": 2,
+      "gift": 8,
+      "gift-egg": 1,
+      "good-rod": 49,
+      "old-rod": 49,
+      "only-one": 7,
+      "pokeflute": 2,
+      "rock-smash": 13,
+      "super-rod": 49,
+      "surf": 49,
+      "walk": 106
+    }
+  },
+  "crossChecks": [
+    {
+      "claim": "Route 22 wild Mankey",
+      "evidence": "Location area 313 (kanto-route-22) walk encounters list Mankey (#56) at chances [20,10,10,4,1] and levels [3,4,2,5,5]."
+    },
+    {
+      "claim": "Boulder Badge milestone acquisition",
+      "evidence": "Acquisition \"tm39-rock-tomb\" (TM39 Rock Tomb) becomes available at the brock-gym milestone."
+    },
+    {
+      "claim": "Mankey ability rollback",
+      "evidence": "Mankey (#56) retains only its Generation III ability slot(s): [\"Vital Spirit\"]; hidden abilities are excluded."
+    },
+    {
+      "claim": "HM08 Dive excluded from FireRed use",
+      "evidence": "Acquisition \"hm08-dive\" (HM08 Dive) is recorded as unavailable in FireRed."
+    }
+  ],
+  "game": {
+    "generationId": 3,
+    "id": "firered",
+    "name": "Pokémon FireRed",
+    "versionGroupId": 7,
+    "versionId": 10
+  },
+  "overrides": [
+    {
+      "fromPokemonId": 42,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 169
+    },
+    {
+      "fromPokemonId": 44,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 182
+    },
+    {
+      "fromPokemonId": 61,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 186
+    },
+    {
+      "fromPokemonId": 79,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 199
+    },
+    {
+      "fromPokemonId": 95,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 208
+    },
+    {
+      "fromPokemonId": 113,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 242
+    },
+    {
+      "fromPokemonId": 117,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 230
+    },
+    {
+      "fromPokemonId": 123,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 212
+    },
+    {
+      "fromPokemonId": 133,
+      "milestoneId": null,
+      "reason": "no-day-night-cycle",
+      "status": "unavailable",
+      "toPokemonId": 196
+    },
+    {
+      "fromPokemonId": 133,
+      "milestoneId": null,
+      "reason": "no-day-night-cycle",
+      "status": "unavailable",
+      "toPokemonId": 197
+    },
+    {
+      "fromPokemonId": 137,
+      "milestoneId": "national-dex",
+      "reason": null,
+      "status": "postgame",
+      "toPokemonId": 233
+    },
+    {
+      "fromPokemonId": 265,
+      "milestoneId": null,
+      "reason": "personality-value-branch",
+      "status": "standard",
+      "toPokemonId": 266
+    },
+    {
+      "fromPokemonId": 265,
+      "milestoneId": null,
+      "reason": "personality-value-branch",
+      "status": "standard",
+      "toPokemonId": 268
+    },
+    {
+      "fromPokemonId": 290,
+      "milestoneId": null,
+      "reason": "empty-party-slot",
+      "status": "standard",
+      "toPokemonId": 292
+    },
+    {
+      "fromPokemonId": 349,
+      "milestoneId": null,
+      "reason": "requires-pre-raised-beauty",
+      "status": "transfer-only",
+      "toPokemonId": 350
+    }
+  ],
+  "provisionalRecords": 0,
+  "provisionalStatement": "Every shipped fact is verified or cross-checked; zero provisional records remain in the built pack.",
+  "schemaVersion": 1,
+  "scope": {
+    "generationId": 3,
+    "moveCount": 354,
+    "pokemonCount": 386,
+    "typeCount": 17,
+    "versionGroupId": 7,
+    "versionId": 10
+  },
+  "sources": [
+    {
+      "id": "bulbapedia-frlg-move-tutors",
+      "license": null,
+      "name": "Bulbapedia: Move Tutor",
+      "revision": "accessed-2026-07-19",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Move_Tutor"
+    },
+    {
+      "id": "bulbapedia-frlg-walkthrough",
+      "license": null,
+      "name": "Bulbapedia: FireRed and LeafGreen walkthrough",
+      "revision": "accessed-2026-07-19",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_FireRed_and_LeafGreen"
+    },
+    {
+      "id": "bulbapedia-gen3-tm-hm-locations",
+      "license": null,
+      "name": "Bulbapedia: List of TM and HM locations in Generation III",
+      "revision": "accessed-2026-07-19",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/List_of_TM_and_HM_locations_in_Generation_III"
+    },
+    {
+      "id": "pokeapi-api-data",
+      "license": "BSD-3-Clause",
+      "name": "PokeAPI api-data snapshot",
+      "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+      "url": "https://github.com/PokeAPI/api-data"
+    },
+    {
+      "id": "pret-pokefirered",
+      "license": null,
+      "name": "pret/pokefirered decompilation (accuracy reference only)",
+      "revision": "df4449a27cd78dd747ce269e47d3ab4a0149d8f4",
+      "url": "https://github.com/pret/pokefirered"
+    }
+  ]
+}

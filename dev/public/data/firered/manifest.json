@@ -1,18 +1,109 @@
 {
-  "schemaVersion": 1,
-  "packVersion": "firered-bootstrap-1",
+  "builtAt": "2026-07-19T04:09:43+02:00",
+  "files": {
+    "acquisitions": {
+      "path": "acquisitions.json",
+      "schemaVersion": 1,
+      "sha256": "a2529ca28f2e30ffa89222053a728ef3e15e5273c0d2c7566b0226a7858d8528"
+    },
+    "encounters": {
+      "path": "encounters.json",
+      "schemaVersion": 1,
+      "sha256": "7035d2a49cf3727cf0e421b8c50d81bac19eb98f39a6ea017a50b8bdc868e677"
+    },
+    "evolutions": {
+      "path": "evolutions.json",
+      "schemaVersion": 1,
+      "sha256": "bf7420cd5bffae89616a92276e61e1a4bdcdbc035ac4d89cc7aca1752d2dba34"
+    },
+    "indexes": {
+      "availability-by-milestone": {
+        "path": "indexes/availability-by-milestone.json",
+        "schemaVersion": 1,
+        "sha256": "0ac42637e0ee30bec3f4e7ab0baa44b7980841636da93ab28e53f9375b311350"
+      },
+      "pokemon-by-ability": {
+        "path": "indexes/pokemon-by-ability.json",
+        "schemaVersion": 1,
+        "sha256": "ec7198df7e587f1c2ffb80940bf1cfe6c6d479cf858dbc06d5f929b00fe53965"
+      },
+      "pokemon-by-move": {
+        "path": "indexes/pokemon-by-move.json",
+        "schemaVersion": 1,
+        "sha256": "9429fad6b633d57b3c1ae9384fb2a59d70e8288662729c8a874fe4f8e44c3a49"
+      },
+      "pokemon-by-type": {
+        "path": "indexes/pokemon-by-type.json",
+        "schemaVersion": 1,
+        "sha256": "3f23cb541cdffdb777cae085d33f3b1dc2087d248cb465f216e5b7b7e5ed3bae"
+      },
+      "routes-by-pokemon": {
+        "path": "indexes/routes-by-pokemon.json",
+        "schemaVersion": 1,
+        "sha256": "fd6d981275cfad08769f49ff008554fa9805d5208b58fa76e107668591eb3466"
+      }
+    },
+    "learnsets": {
+      "path": "learnsets.json",
+      "schemaVersion": 1,
+      "sha256": "75d14f78f622be77e5fe559a0d303f9bb3e03032d29e9e3a0d9e531c11e64897"
+    },
+    "moves": {
+      "path": "moves.json",
+      "schemaVersion": 1,
+      "sha256": "ac6a81623e99697bfda54c4f939637fe5dcc12a20118bd002e0dba003b5e4b28"
+    },
+    "pokemon": {
+      "path": "pokemon.json",
+      "schemaVersion": 1,
+      "sha256": "9473efd0bf4bad42c02ac989a56bbf3c2d1df2be90809c11a7cb4d1b884e2d8b"
+    },
+    "progression": {
+      "path": "progression.json",
+      "schemaVersion": 1,
+      "sha256": "68329c3db3c3070848286324378a0a8aeddb87f5315bfae0082b127c8fb706e6"
+    },
+    "type-chart": {
+      "path": "type-chart.json",
+      "schemaVersion": 1,
+      "sha256": "ec5d7a0bc9701b0964d72ad8223a33169ff56f9c1bd3201473548f3f3ab62d4b"
+    }
+  },
   "game": {
+    "generationId": 3,
     "id": "firered",
     "name": "Pokémon FireRed",
-    "versionId": 10,
     "versionGroupId": 7,
-    "generationId": 3
+    "versionId": 10
   },
+  "packVersion": "firered-42c26a408738c054fe98cbfcba0c8ef735f325f4629ad3dd8fe33bb085a309b3",
+  "schemaVersion": 2,
   "sources": [
     {
       "id": "pokeapi-api-data",
       "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d"
+    },
+    {
+      "id": "pret-pokefirered",
+      "revision": "df4449a27cd78dd747ce269e47d3ab4a0149d8f4"
+    },
+    {
+      "id": "bulbapedia-frlg-walkthrough",
+      "revision": "accessed-2026-07-19"
+    },
+    {
+      "id": "bulbapedia-gen3-tm-hm-locations",
+      "revision": "accessed-2026-07-19"
+    },
+    {
+      "id": "bulbapedia-frlg-move-tutors",
+      "revision": "accessed-2026-07-19"
     }
   ],
-  "files": {}
+  "validation": {
+    "moveCount": 354,
+    "pokemonCount": 386,
+    "typeCount": 17,
+    "valid": true
+  }
 }

@@ -1,0 +1,3483 @@
+[
+  {
+    "id": "event-celebi",
+    "milestoneId": null,
+    "name": "Celebi (event)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-251",
+        "method": "manual",
+        "note": "Distributed only through official Nintendo events; not obtainable in ordinary play.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "event-only",
+    "subject": {
+      "kind": "event",
+      "pokemonId": 251
+    }
+  },
+  {
+    "id": "event-deoxys",
+    "milestoneId": null,
+    "name": "Deoxys (event)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-386",
+        "method": "manual",
+        "note": "Found on Birth Island, reachable only with the event-distributed Aurora Ticket.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "event-only",
+    "subject": {
+      "kind": "event",
+      "pokemonId": 386
+    }
+  },
+  {
+    "id": "event-hooh",
+    "milestoneId": null,
+    "name": "Ho-Oh (event)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-250",
+        "method": "manual",
+        "note": "Found at Navel Rock, reachable only with the event-distributed MysticTicket.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "event-only",
+    "subject": {
+      "kind": "event",
+      "pokemonId": 250
+    }
+  },
+  {
+    "id": "event-lugia",
+    "milestoneId": null,
+    "name": "Lugia (event)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-249",
+        "method": "manual",
+        "note": "Found at Navel Rock, reachable only with the event-distributed MysticTicket.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "event-only",
+    "subject": {
+      "kind": "event",
+      "pokemonId": 249
+    }
+  },
+  {
+    "id": "event-mew",
+    "milestoneId": null,
+    "name": "Mew (event)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-151",
+        "method": "manual",
+        "note": "Distributed only through official Nintendo events; not obtainable in ordinary play.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "event-only",
+    "subject": {
+      "kind": "event",
+      "pokemonId": 151
+    }
+  },
+  {
+    "id": "fossil-aerodactyl",
+    "milestoneId": null,
+    "name": "Aerodactyl (Old Amber)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-142",
+        "method": "manual",
+        "note": "Revived from the Old Amber, obtained in the Pewter Museum, at the Cinnabar Lab.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "fossil",
+      "pokemonId": 142
+    }
+  },
+  {
+    "id": "fossil-kabuto",
+    "milestoneId": null,
+    "name": "Kabuto (Dome Fossil)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-140",
+        "method": "manual",
+        "note": "Revived from the Dome Fossil at the Cinnabar Lab; mutually exclusive with the Helix Fossil (Omanyte).",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "fossil",
+      "pokemonId": 140
+    }
+  },
+  {
+    "id": "fossil-omanyte",
+    "milestoneId": null,
+    "name": "Omanyte (Helix Fossil)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-138",
+        "method": "manual",
+        "note": "Revived from the Helix Fossil at the Cinnabar Lab; the Helix and Dome fossils are a mutually exclusive choice in Mt. Moon.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "fossil",
+      "pokemonId": 138
+    }
+  },
+  {
+    "id": "game-corner-dratini",
+    "milestoneId": null,
+    "name": "Dratini (Game Corner prize)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-147",
+        "method": "manual",
+        "note": "Prize at the Celadon Game Corner; also fishable in the Safari Zone.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "game-corner",
+      "pokemonId": 147
+    }
+  },
+  {
+    "id": "game-corner-porygon",
+    "milestoneId": null,
+    "name": "Porygon (Game Corner prize)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-137",
+        "method": "manual",
+        "note": "Prize at the Celadon Game Corner; only obtainable there in FireRed.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "game-corner",
+      "pokemonId": 137
+    }
+  },
+  {
+    "id": "gift-eevee-celadon",
+    "milestoneId": null,
+    "name": "Eevee (Celadon gift)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-133",
+        "method": "manual",
+        "note": "Gift in the rooftop room of the Celadon Condominiums.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "gift",
+      "pokemonId": 133
+    }
+  },
+  {
+    "id": "gift-hitmonchan-dojo",
+    "milestoneId": null,
+    "name": "Hitmonchan (Fighting Dojo gift)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-107",
+        "method": "manual",
+        "note": "Prize for clearing the Saffron City Fighting Dojo; mutually exclusive with Hitmonlee.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "gift",
+      "pokemonId": 107
+    }
+  },
+  {
+    "id": "gift-hitmonlee-dojo",
+    "milestoneId": null,
+    "name": "Hitmonlee (Fighting Dojo gift)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-106",
+        "method": "manual",
+        "note": "Prize for clearing the Saffron City Fighting Dojo; mutually exclusive with Hitmonchan.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "gift",
+      "pokemonId": 106
+    }
+  },
+  {
+    "id": "gift-lapras-silph",
+    "milestoneId": null,
+    "name": "Lapras (Silph Co. gift)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-131",
+        "method": "manual",
+        "note": "Gift from a Silph Co. employee after the Team Rocket takeover is ended.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "gift",
+      "pokemonId": 131
+    }
+  },
+  {
+    "id": "hm01-cut",
+    "milestoneId": "misty-gym",
+    "name": "HM01 Cut",
+    "prerequisites": [
+      "misty-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine hm01 (item/397, move/15)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "cut",
+        "method": "manual",
+        "note": "Obtained on the S.S. Anne; field use requires the Cascade Badge.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 397,
+      "kind": "hm",
+      "machineNumber": 1,
+      "moveId": 15
+    }
+  },
+  {
+    "id": "hm02-fly",
+    "milestoneId": "surge-gym",
+    "name": "HM02 Fly",
+    "prerequisites": [
+      "surge-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine hm02 (item/398, move/19)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "fly",
+        "method": "manual",
+        "note": "Obtained on Route 16; field use requires the Thunder Badge.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 398,
+      "kind": "hm",
+      "machineNumber": 2,
+      "moveId": 19
+    }
+  },
+  {
+    "id": "hm03-surf",
+    "milestoneId": "koga-gym",
+    "name": "HM03 Surf",
+    "prerequisites": [
+      "koga-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine hm03 (item/399, move/57)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "surf",
+        "method": "manual",
+        "note": "Obtained in the Safari Zone; field use requires the Soul Badge.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 399,
+      "kind": "hm",
+      "machineNumber": 3,
+      "moveId": 57
+    }
+  },
+  {
+    "id": "hm04-strength",
+    "milestoneId": "erika-gym",
+    "name": "HM04 Strength",
+    "prerequisites": [
+      "erika-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine hm04 (item/400, move/70)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "strength",
+        "method": "manual",
+        "note": "Obtained in Fuchsia City; field use requires the Rainbow Badge.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 400,
+      "kind": "hm",
+      "machineNumber": 4,
+      "moveId": 70
+    }
+  },
+  {
+    "id": "hm05-flash",
+    "milestoneId": "brock-gym",
+    "name": "HM05 Flash",
+    "prerequisites": [
+      "brock-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine hm05 (item/401, move/148)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "flash",
+        "method": "manual",
+        "note": "Obtained on Route 2 from Professor Oak's Aide; field use requires the Boulder Badge.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 401,
+      "kind": "hm",
+      "machineNumber": 5,
+      "moveId": 148
+    }
+  },
+  {
+    "id": "hm06-rock-smash",
+    "milestoneId": "sabrina-gym",
+    "name": "HM06 Rock Smash",
+    "prerequisites": [
+      "sabrina-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine hm06 (item/402, move/249)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "rock-smash",
+        "method": "manual",
+        "note": "Obtained at Ember Spa on One Island; field use requires the Marsh Badge.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 402,
+      "kind": "hm",
+      "machineNumber": 6,
+      "moveId": 249
+    }
+  },
+  {
+    "id": "hm07-waterfall",
+    "milestoneId": "blaine-gym",
+    "name": "HM07 Waterfall",
+    "prerequisites": [
+      "blaine-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine hm07 (item/403, move/127)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "waterfall",
+        "method": "manual",
+        "note": "Obtained in Icefall Cave; field use requires the Volcano Badge.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 403,
+      "kind": "hm",
+      "machineNumber": 7,
+      "moveId": 127
+    }
+  },
+  {
+    "id": "hm08-dive",
+    "milestoneId": null,
+    "name": "HM08 Dive",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine hm08 (item/404, move/291)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "dive",
+        "method": "manual",
+        "note": "HM08 Dive does not exist in FireRed; Dive was introduced as a field move in Ruby, Sapphire, and Emerald.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "unavailable",
+    "subject": {
+      "itemId": 404,
+      "kind": "hm",
+      "machineNumber": 8,
+      "moveId": 291
+    }
+  },
+  {
+    "id": "roaming-entei",
+    "milestoneId": "champion",
+    "name": "Entei (roaming)",
+    "prerequisites": [
+      "champion"
+    ],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-244",
+        "method": "manual",
+        "note": "Roams Kanto after the National Pokedex is obtained; appears only if Bulbasaur was chosen as the starter.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "postgame",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 244
+    }
+  },
+  {
+    "id": "roaming-raikou",
+    "milestoneId": "champion",
+    "name": "Raikou (roaming)",
+    "prerequisites": [
+      "champion"
+    ],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-243",
+        "method": "manual",
+        "note": "Roams Kanto after the National Pokedex is obtained; appears only if Squirtle was chosen as the starter.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "postgame",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 243
+    }
+  },
+  {
+    "id": "roaming-suicune",
+    "milestoneId": "champion",
+    "name": "Suicune (roaming)",
+    "prerequisites": [
+      "champion"
+    ],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-245",
+        "method": "manual",
+        "note": "Roams Kanto after the National Pokedex is obtained; appears only if Charmander was chosen as the starter.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "postgame",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 245
+    }
+  },
+  {
+    "id": "starter-bulbasaur",
+    "milestoneId": "starter-selection",
+    "name": "Bulbasaur (starter)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-1",
+        "method": "manual",
+        "note": "Starter chosen at Professor Oak's lab; mutually exclusive with Charmander and Squirtle.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "starter",
+      "pokemonId": 1
+    }
+  },
+  {
+    "id": "starter-charmander",
+    "milestoneId": "starter-selection",
+    "name": "Charmander (starter)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-4",
+        "method": "manual",
+        "note": "Starter chosen at Professor Oak's lab; mutually exclusive with Bulbasaur and Squirtle.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "starter",
+      "pokemonId": 4
+    }
+  },
+  {
+    "id": "starter-squirtle",
+    "milestoneId": "starter-selection",
+    "name": "Squirtle (starter)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-7",
+        "method": "manual",
+        "note": "Starter chosen at Professor Oak's lab; mutually exclusive with Bulbasaur and Charmander.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "starter",
+      "pokemonId": 7
+    }
+  },
+  {
+    "id": "static-articuno",
+    "milestoneId": null,
+    "name": "Articuno (Seafoam Islands)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-144",
+        "method": "manual",
+        "note": "Static encounter deep in the Seafoam Islands.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 144
+    }
+  },
+  {
+    "id": "static-mewtwo",
+    "milestoneId": "champion",
+    "name": "Mewtwo (Cerulean Cave)",
+    "prerequisites": [
+      "champion",
+      "network-machine-restored"
+    ],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-150",
+        "method": "manual",
+        "note": "Static encounter deep in Cerulean Cave, which reopens after the Network Machine is restored and the Elite Four are defeated.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "postgame",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 150
+    }
+  },
+  {
+    "id": "static-moltres",
+    "milestoneId": null,
+    "name": "Moltres (Mt. Ember)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-146",
+        "method": "manual",
+        "note": "Static encounter at the summit of Mt. Ember on One Island.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 146
+    }
+  },
+  {
+    "id": "static-snorlax-route-12",
+    "milestoneId": null,
+    "name": "Snorlax (Route 12)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-143",
+        "method": "manual",
+        "note": "Blocks Route 12 and is woken with the Poke Flute.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 143
+    }
+  },
+  {
+    "id": "static-snorlax-route-16",
+    "milestoneId": null,
+    "name": "Snorlax (Route 16)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-143",
+        "method": "manual",
+        "note": "Blocks Route 16 and is woken with the Poke Flute.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 143
+    }
+  },
+  {
+    "id": "static-zapdos",
+    "milestoneId": null,
+    "name": "Zapdos (Power Plant)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-145",
+        "method": "manual",
+        "note": "Static encounter in the Kanto Power Plant.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "static",
+      "pokemonId": 145
+    }
+  },
+  {
+    "id": "tm01-focus-punch",
+    "milestoneId": null,
+    "name": "TM01 Focus Punch",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm01 (item/305, move/264)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "focus-punch",
+        "method": "manual",
+        "note": "Found in Silph Co.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 305,
+      "kind": "tm",
+      "machineNumber": 1,
+      "moveId": 264
+    }
+  },
+  {
+    "id": "tm02-dragon-claw",
+    "milestoneId": "giovanni-gym",
+    "name": "TM02 Dragon Claw",
+    "prerequisites": [
+      "giovanni-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm02 (item/306, move/337)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "dragon-claw",
+        "method": "manual",
+        "note": "Found in Victory Road.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 306,
+      "kind": "tm",
+      "machineNumber": 2,
+      "moveId": 337
+    }
+  },
+  {
+    "id": "tm03-water-pulse",
+    "milestoneId": "misty-gym",
+    "name": "TM03 Water Pulse",
+    "prerequisites": [
+      "misty-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm03 (item/307, move/352)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "water-pulse",
+        "method": "manual",
+        "note": "Given by Misty for defeating the Cerulean City Gym.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 307,
+      "kind": "tm",
+      "machineNumber": 3,
+      "moveId": 352
+    }
+  },
+  {
+    "id": "tm04-calm-mind",
+    "milestoneId": "sabrina-gym",
+    "name": "TM04 Calm Mind",
+    "prerequisites": [
+      "sabrina-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm04 (item/308, move/347)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "calm-mind",
+        "method": "manual",
+        "note": "Given by Sabrina for defeating the Saffron City Gym.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 308,
+      "kind": "tm",
+      "machineNumber": 4,
+      "moveId": 347
+    }
+  },
+  {
+    "id": "tm05-roar",
+    "milestoneId": null,
+    "name": "TM05 Roar",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm05 (item/309, move/46)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "roar",
+        "method": "manual",
+        "note": "Found on Route 4; also sold at the Celadon Department Store.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 309,
+      "kind": "tm",
+      "machineNumber": 5,
+      "moveId": 46
+    }
+  },
+  {
+    "id": "tm06-toxic",
+    "milestoneId": "koga-gym",
+    "name": "TM06 Toxic",
+    "prerequisites": [
+      "koga-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm06 (item/310, move/92)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "toxic",
+        "method": "manual",
+        "note": "Given by Koga for defeating the Fuchsia City Gym.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 310,
+      "kind": "tm",
+      "machineNumber": 6,
+      "moveId": 92
+    }
+  },
+  {
+    "id": "tm07-hail",
+    "milestoneId": "giovanni-gym",
+    "name": "TM07 Hail",
+    "prerequisites": [
+      "giovanni-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm07 (item/311, move/258)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "hail",
+        "method": "manual",
+        "note": "Found in Victory Road.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 311,
+      "kind": "tm",
+      "machineNumber": 7,
+      "moveId": 258
+    }
+  },
+  {
+    "id": "tm08-bulk-up",
+    "milestoneId": null,
+    "name": "TM08 Bulk Up",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm08 (item/312, move/339)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "bulk-up",
+        "method": "manual",
+        "note": "Found in Silph Co.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 312,
+      "kind": "tm",
+      "machineNumber": 8,
+      "moveId": 339
+    }
+  },
+  {
+    "id": "tm09-bullet-seed",
+    "milestoneId": null,
+    "name": "TM09 Bullet Seed",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm09 (item/313, move/331)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "bullet-seed",
+        "method": "manual",
+        "note": "Found in Mt. Moon.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 313,
+      "kind": "tm",
+      "machineNumber": 9,
+      "moveId": 331
+    }
+  },
+  {
+    "id": "tm10-hidden-power",
+    "milestoneId": null,
+    "name": "TM10 Hidden Power",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm10 (item/314, move/237)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "hidden-power",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 314,
+      "kind": "tm",
+      "machineNumber": 10,
+      "moveId": 237
+    }
+  },
+  {
+    "id": "tm11-sunny-day",
+    "milestoneId": null,
+    "name": "TM11 Sunny Day",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm11 (item/315, move/241)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "sunny-day",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 315,
+      "kind": "tm",
+      "machineNumber": 11,
+      "moveId": 241
+    }
+  },
+  {
+    "id": "tm12-taunt",
+    "milestoneId": null,
+    "name": "TM12 Taunt",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm12 (item/316, move/269)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "taunt",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 316,
+      "kind": "tm",
+      "machineNumber": 12,
+      "moveId": 269
+    }
+  },
+  {
+    "id": "tm13-ice-beam",
+    "milestoneId": null,
+    "name": "TM13 Ice Beam",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm13 (item/317, move/58)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "ice-beam",
+        "method": "manual",
+        "note": "Prize at the Celadon Game Corner.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 317,
+      "kind": "tm",
+      "machineNumber": 13,
+      "moveId": 58
+    }
+  },
+  {
+    "id": "tm14-blizzard",
+    "milestoneId": null,
+    "name": "TM14 Blizzard",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm14 (item/318, move/59)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "blizzard",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 318,
+      "kind": "tm",
+      "machineNumber": 14,
+      "moveId": 59
+    }
+  },
+  {
+    "id": "tm15-hyper-beam",
+    "milestoneId": null,
+    "name": "TM15 Hyper Beam",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm15 (item/319, move/63)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "hyper-beam",
+        "method": "manual",
+        "note": "Sold at the Celadon Department Store.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 319,
+      "kind": "tm",
+      "machineNumber": 15,
+      "moveId": 63
+    }
+  },
+  {
+    "id": "tm16-light-screen",
+    "milestoneId": null,
+    "name": "TM16 Light Screen",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm16 (item/320, move/113)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "light-screen",
+        "method": "manual",
+        "note": "Sold at the Celadon Department Store.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 320,
+      "kind": "tm",
+      "machineNumber": 16,
+      "moveId": 113
+    }
+  },
+  {
+    "id": "tm17-protect",
+    "milestoneId": null,
+    "name": "TM17 Protect",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm17 (item/321, move/182)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "protect",
+        "method": "manual",
+        "note": "Found in the Kanto Power Plant.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 321,
+      "kind": "tm",
+      "machineNumber": 17,
+      "moveId": 182
+    }
+  },
+  {
+    "id": "tm18-rain-dance",
+    "milestoneId": null,
+    "name": "TM18 Rain Dance",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm18 (item/322, move/240)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "rain-dance",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 322,
+      "kind": "tm",
+      "machineNumber": 18,
+      "moveId": 240
+    }
+  },
+  {
+    "id": "tm19-giga-drain",
+    "milestoneId": "erika-gym",
+    "name": "TM19 Giga Drain",
+    "prerequisites": [
+      "erika-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm19 (item/323, move/202)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "giga-drain",
+        "method": "manual",
+        "note": "Given by Erika for defeating the Celadon City Gym.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 323,
+      "kind": "tm",
+      "machineNumber": 19,
+      "moveId": 202
+    }
+  },
+  {
+    "id": "tm20-safeguard",
+    "milestoneId": null,
+    "name": "TM20 Safeguard",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm20 (item/324, move/219)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "safeguard",
+        "method": "manual",
+        "note": "Sold at the Celadon Department Store.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 324,
+      "kind": "tm",
+      "machineNumber": 20,
+      "moveId": 219
+    }
+  },
+  {
+    "id": "tm21-frustration",
+    "milestoneId": null,
+    "name": "TM21 Frustration",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm21 (item/325, move/218)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "frustration",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 325,
+      "kind": "tm",
+      "machineNumber": 21,
+      "moveId": 218
+    }
+  },
+  {
+    "id": "tm22-solar-beam",
+    "milestoneId": null,
+    "name": "TM22 Solar Beam",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm22 (item/326, move/76)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "solar-beam",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 326,
+      "kind": "tm",
+      "machineNumber": 22,
+      "moveId": 76
+    }
+  },
+  {
+    "id": "tm23-iron-tail",
+    "milestoneId": null,
+    "name": "TM23 Iron Tail",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm23 (item/327, move/231)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "iron-tail",
+        "method": "manual",
+        "note": "Prize at the Celadon Game Corner.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 327,
+      "kind": "tm",
+      "machineNumber": 23,
+      "moveId": 231
+    }
+  },
+  {
+    "id": "tm24-thunderbolt",
+    "milestoneId": null,
+    "name": "TM24 Thunderbolt",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm24 (item/328, move/85)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "thunderbolt",
+        "method": "manual",
+        "note": "Prize at the Celadon Game Corner.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 328,
+      "kind": "tm",
+      "machineNumber": 24,
+      "moveId": 85
+    }
+  },
+  {
+    "id": "tm25-thunder",
+    "milestoneId": null,
+    "name": "TM25 Thunder",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm25 (item/329, move/87)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "thunder",
+        "method": "manual",
+        "note": "Found in the Kanto Power Plant.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 329,
+      "kind": "tm",
+      "machineNumber": 25,
+      "moveId": 87
+    }
+  },
+  {
+    "id": "tm26-earthquake",
+    "milestoneId": "giovanni-gym",
+    "name": "TM26 Earthquake",
+    "prerequisites": [
+      "giovanni-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm26 (item/330, move/89)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "earthquake",
+        "method": "manual",
+        "note": "Given by Giovanni for defeating the Viridian City Gym.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 330,
+      "kind": "tm",
+      "machineNumber": 26,
+      "moveId": 89
+    }
+  },
+  {
+    "id": "tm27-return",
+    "milestoneId": null,
+    "name": "TM27 Return",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm27 (item/331, move/216)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "return",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 331,
+      "kind": "tm",
+      "machineNumber": 27,
+      "moveId": 216
+    }
+  },
+  {
+    "id": "tm28-dig",
+    "milestoneId": null,
+    "name": "TM28 Dig",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm28 (item/332, move/91)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "dig",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 332,
+      "kind": "tm",
+      "machineNumber": 28,
+      "moveId": 91
+    }
+  },
+  {
+    "id": "tm29-psychic",
+    "milestoneId": null,
+    "name": "TM29 Psychic",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm29 (item/333, move/94)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "psychic",
+        "method": "manual",
+        "note": "Received in Saffron City.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 333,
+      "kind": "tm",
+      "machineNumber": 29,
+      "moveId": 94
+    }
+  },
+  {
+    "id": "tm30-shadow-ball",
+    "milestoneId": null,
+    "name": "TM30 Shadow Ball",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm30 (item/334, move/247)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "shadow-ball",
+        "method": "manual",
+        "note": "Prize at the Celadon Game Corner.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 334,
+      "kind": "tm",
+      "machineNumber": 30,
+      "moveId": 247
+    }
+  },
+  {
+    "id": "tm31-brick-break",
+    "milestoneId": null,
+    "name": "TM31 Brick Break",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm31 (item/335, move/280)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "brick-break",
+        "method": "manual",
+        "note": "Sold at the Celadon Department Store; also found aboard the S.S. Anne.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 335,
+      "kind": "tm",
+      "machineNumber": 31,
+      "moveId": 280
+    }
+  },
+  {
+    "id": "tm32-double-team",
+    "milestoneId": null,
+    "name": "TM32 Double Team",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm32 (item/336, move/104)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "double-team",
+        "method": "manual",
+        "note": "Found in the Kanto Safari Zone.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 336,
+      "kind": "tm",
+      "machineNumber": 32,
+      "moveId": 104
+    }
+  },
+  {
+    "id": "tm33-reflect",
+    "milestoneId": null,
+    "name": "TM33 Reflect",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm33 (item/337, move/115)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "reflect",
+        "method": "manual",
+        "note": "Sold at the Celadon Department Store.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 337,
+      "kind": "tm",
+      "machineNumber": 33,
+      "moveId": 115
+    }
+  },
+  {
+    "id": "tm34-shock-wave",
+    "milestoneId": "surge-gym",
+    "name": "TM34 Shock Wave",
+    "prerequisites": [
+      "surge-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm34 (item/338, move/351)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "shock-wave",
+        "method": "manual",
+        "note": "Given by Lt. Surge for defeating the Vermilion City Gym.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 338,
+      "kind": "tm",
+      "machineNumber": 34,
+      "moveId": 351
+    }
+  },
+  {
+    "id": "tm35-flamethrower",
+    "milestoneId": null,
+    "name": "TM35 Flamethrower",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm35 (item/339, move/53)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "flamethrower",
+        "method": "manual",
+        "note": "Prize at the Celadon Game Corner.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 339,
+      "kind": "tm",
+      "machineNumber": 35,
+      "moveId": 53
+    }
+  },
+  {
+    "id": "tm36-sludge-bomb",
+    "milestoneId": null,
+    "name": "TM36 Sludge Bomb",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm36 (item/340, move/188)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "sludge-bomb",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 340,
+      "kind": "tm",
+      "machineNumber": 36,
+      "moveId": 188
+    }
+  },
+  {
+    "id": "tm37-sandstorm",
+    "milestoneId": null,
+    "name": "TM37 Sandstorm",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm37 (item/341, move/201)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "sandstorm",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 341,
+      "kind": "tm",
+      "machineNumber": 37,
+      "moveId": 201
+    }
+  },
+  {
+    "id": "tm38-fire-blast",
+    "milestoneId": "blaine-gym",
+    "name": "TM38 Fire Blast",
+    "prerequisites": [
+      "blaine-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm38 (item/342, move/126)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "fire-blast",
+        "method": "manual",
+        "note": "Given by Blaine for defeating the Cinnabar Island Gym.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 342,
+      "kind": "tm",
+      "machineNumber": 38,
+      "moveId": 126
+    }
+  },
+  {
+    "id": "tm39-rock-tomb",
+    "milestoneId": "brock-gym",
+    "name": "TM39 Rock Tomb",
+    "prerequisites": [
+      "brock-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm39 (item/343, move/317)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "rock-tomb",
+        "method": "manual",
+        "note": "Given by Brock for defeating the Pewter City Gym.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 343,
+      "kind": "tm",
+      "machineNumber": 39,
+      "moveId": 317
+    }
+  },
+  {
+    "id": "tm40-aerial-ace",
+    "milestoneId": null,
+    "name": "TM40 Aerial Ace",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm40 (item/344, move/332)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "aerial-ace",
+        "method": "manual",
+        "note": "Found on Route 9.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 344,
+      "kind": "tm",
+      "machineNumber": 40,
+      "moveId": 332
+    }
+  },
+  {
+    "id": "tm41-torment",
+    "milestoneId": null,
+    "name": "TM41 Torment",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm41 (item/345, move/259)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "torment",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 345,
+      "kind": "tm",
+      "machineNumber": 41,
+      "moveId": 259
+    }
+  },
+  {
+    "id": "tm42-facade",
+    "milestoneId": null,
+    "name": "TM42 Facade",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm42 (item/346, move/263)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "facade",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 346,
+      "kind": "tm",
+      "machineNumber": 42,
+      "moveId": 263
+    }
+  },
+  {
+    "id": "tm43-secret-power",
+    "milestoneId": null,
+    "name": "TM43 Secret Power",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm43 (item/347, move/290)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "secret-power",
+        "method": "manual",
+        "note": "Found on Route 25; also sold at the Celadon Department Store.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 347,
+      "kind": "tm",
+      "machineNumber": 43,
+      "moveId": 290
+    }
+  },
+  {
+    "id": "tm44-rest",
+    "milestoneId": null,
+    "name": "TM44 Rest",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm44 (item/348, move/156)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "rest",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 348,
+      "kind": "tm",
+      "machineNumber": 44,
+      "moveId": 156
+    }
+  },
+  {
+    "id": "tm45-attract",
+    "milestoneId": null,
+    "name": "TM45 Attract",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm45 (item/349, move/213)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "attract",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 349,
+      "kind": "tm",
+      "machineNumber": 45,
+      "moveId": 213
+    }
+  },
+  {
+    "id": "tm46-thief",
+    "milestoneId": null,
+    "name": "TM46 Thief",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm46 (item/350, move/168)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "thief",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 350,
+      "kind": "tm",
+      "machineNumber": 46,
+      "moveId": 168
+    }
+  },
+  {
+    "id": "tm47-steel-wing",
+    "milestoneId": null,
+    "name": "TM47 Steel Wing",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm47 (item/351, move/211)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "steel-wing",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 351,
+      "kind": "tm",
+      "machineNumber": 47,
+      "moveId": 211
+    }
+  },
+  {
+    "id": "tm48-skill-swap",
+    "milestoneId": null,
+    "name": "TM48 Skill Swap",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm48 (item/352, move/285)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "skill-swap",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 352,
+      "kind": "tm",
+      "machineNumber": 48,
+      "moveId": 285
+    }
+  },
+  {
+    "id": "tm49-snatch",
+    "milestoneId": null,
+    "name": "TM49 Snatch",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm49 (item/353, move/289)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "snatch",
+        "method": "manual",
+        "note": null,
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 353,
+      "kind": "tm",
+      "machineNumber": 49,
+      "moveId": 289
+    }
+  },
+  {
+    "id": "tm50-overheat",
+    "milestoneId": "giovanni-gym",
+    "name": "TM50 Overheat",
+    "prerequisites": [
+      "giovanni-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "machine tm50 (item/354, move/315)",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "overheat",
+        "method": "manual",
+        "note": "Found in Victory Road.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-gen3-tm-hm-locations"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "itemId": 354,
+      "kind": "tm",
+      "machineNumber": 50,
+      "moveId": 315
+    }
+  },
+  {
+    "id": "trade-farfetchd",
+    "milestoneId": null,
+    "name": "Farfetch'd (Vermilion trade)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-83",
+        "method": "manual",
+        "note": "Received in Vermilion City in trade for a Spearow; only obtainable by trade in FireRed.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "trade",
+      "pokemonId": 83
+    }
+  },
+  {
+    "id": "trade-jynx",
+    "milestoneId": null,
+    "name": "Jynx (Cerulean trade)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-124",
+        "method": "manual",
+        "note": "Received in Cerulean City in trade for a Poliwhirl.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "trade",
+      "pokemonId": 124
+    }
+  },
+  {
+    "id": "trade-lickitung",
+    "milestoneId": null,
+    "name": "Lickitung (Route 18 trade)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-108",
+        "method": "manual",
+        "note": "Received on Route 18 in trade for a Golduck; only obtainable by trade in FireRed.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "trade",
+      "pokemonId": 108
+    }
+  },
+  {
+    "id": "trade-mr-mime",
+    "milestoneId": null,
+    "name": "Mr. Mime (Route 2 trade)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-122",
+        "method": "manual",
+        "note": "Received on Route 2 in trade for an Abra; only obtainable by trade in FireRed.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "trade",
+      "pokemonId": 122
+    }
+  },
+  {
+    "id": "trade-seel",
+    "milestoneId": null,
+    "name": "Seel (Cinnabar trade)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-86",
+        "method": "manual",
+        "note": "Received on Cinnabar Island in trade for a Ponyta; also found in the Seafoam Islands.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "trade",
+      "pokemonId": 86
+    }
+  },
+  {
+    "id": "trade-tangela",
+    "milestoneId": null,
+    "name": "Tangela (Cinnabar trade)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-114",
+        "method": "manual",
+        "note": "Received on Cinnabar Island in trade for a Venonat.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "trade",
+      "pokemonId": 114
+    }
+  },
+  {
+    "id": "transfer-mudkip",
+    "milestoneId": null,
+    "name": "Mudkip (transfer only)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-258",
+        "method": "manual",
+        "note": "Not present in the FireRed regional dex; obtainable only by trading from another Generation III game.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "transfer-only",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 258
+    }
+  },
+  {
+    "id": "transfer-torchic",
+    "milestoneId": null,
+    "name": "Torchic (transfer only)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-255",
+        "method": "manual",
+        "note": "Not present in the FireRed regional dex; obtainable only by trading from another Generation III game.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "transfer-only",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 255
+    }
+  },
+  {
+    "id": "transfer-treecko",
+    "milestoneId": null,
+    "name": "Treecko (transfer only)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-252",
+        "method": "manual",
+        "note": "Not present in the FireRed regional dex; obtainable only by trading from another Generation III game.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "transfer-only",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 252
+    }
+  },
+  {
+    "id": "tutor-blast-burn",
+    "milestoneId": null,
+    "name": "Blast Burn Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/307",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "blast-burn",
+        "method": "manual",
+        "note": "Taught at Cape Brink (Two Island) to a fully evolved Charizard at maximum friendship.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 307
+    }
+  },
+  {
+    "id": "tutor-body-slam",
+    "milestoneId": "champion",
+    "name": "Body Slam Tutor",
+    "prerequisites": [
+      "champion"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/34",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "body-slam",
+        "method": "manual",
+        "note": "Taught by the Move Tutor on Four Island (Sevii Islands).",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "postgame",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 34
+    }
+  },
+  {
+    "id": "tutor-counter",
+    "milestoneId": null,
+    "name": "Counter Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/68",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "counter",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in the Celadon Department Store.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 68
+    }
+  },
+  {
+    "id": "tutor-double-edge",
+    "milestoneId": "giovanni-gym",
+    "name": "Double Edge Tutor",
+    "prerequisites": [
+      "giovanni-gym"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/38",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "double-edge",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in Victory Road.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 38
+    }
+  },
+  {
+    "id": "tutor-dream-eater",
+    "milestoneId": null,
+    "name": "Dream Eater Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/138",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "dream-eater",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in Viridian City.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 138
+    }
+  },
+  {
+    "id": "tutor-explosion",
+    "milestoneId": null,
+    "name": "Explosion Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/153",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "explosion",
+        "method": "manual",
+        "note": "Taught by the Move Tutor on Mt. Ember (One Island).",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 153
+    }
+  },
+  {
+    "id": "tutor-frenzy-plant",
+    "milestoneId": null,
+    "name": "Frenzy Plant Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/338",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "frenzy-plant",
+        "method": "manual",
+        "note": "Taught at Cape Brink (Two Island) to a fully evolved Venusaur at maximum friendship.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 338
+    }
+  },
+  {
+    "id": "tutor-hydro-cannon",
+    "milestoneId": null,
+    "name": "Hydro Cannon Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/308",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "hydro-cannon",
+        "method": "manual",
+        "note": "Taught at Cape Brink (Two Island) to a fully evolved Blastoise at maximum friendship.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 308
+    }
+  },
+  {
+    "id": "tutor-mega-kick",
+    "milestoneId": null,
+    "name": "Mega Kick Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/25",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "mega-kick",
+        "method": "manual",
+        "note": "Taught by the Move Tutor on Route 4.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 25
+    }
+  },
+  {
+    "id": "tutor-mega-punch",
+    "milestoneId": null,
+    "name": "Mega Punch Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/5",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "mega-punch",
+        "method": "manual",
+        "note": "Taught by the Move Tutor on Route 4.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 5
+    }
+  },
+  {
+    "id": "tutor-metronome",
+    "milestoneId": null,
+    "name": "Metronome Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/118",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "metronome",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in the Cinnabar Island Pokemon Lab.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 118
+    }
+  },
+  {
+    "id": "tutor-mimic",
+    "milestoneId": null,
+    "name": "Mimic Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/102",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "mimic",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in Saffron City.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 102
+    }
+  },
+  {
+    "id": "tutor-rock-slide",
+    "milestoneId": null,
+    "name": "Rock Slide Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/157",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "rock-slide",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in Rock Tunnel.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 157
+    }
+  },
+  {
+    "id": "tutor-seismic-toss",
+    "milestoneId": null,
+    "name": "Seismic Toss Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/69",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "seismic-toss",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in the Pewter Museum of Science.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 69
+    }
+  },
+  {
+    "id": "tutor-soft-boiled",
+    "milestoneId": null,
+    "name": "Soft Boiled Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/135",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "soft-boiled",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in Celadon City.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 135
+    }
+  },
+  {
+    "id": "tutor-substitute",
+    "milestoneId": null,
+    "name": "Substitute Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/164",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "substitute",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in Fuchsia City.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 164
+    }
+  },
+  {
+    "id": "tutor-swords-dance",
+    "milestoneId": "champion",
+    "name": "Swords Dance Tutor",
+    "prerequisites": [
+      "champion"
+    ],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/14",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "swords-dance",
+        "method": "manual",
+        "note": "Taught by the Move Tutor on Seven Island (Sevii Islands).",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "postgame",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 14
+    }
+  },
+  {
+    "id": "tutor-thunder-wave",
+    "milestoneId": null,
+    "name": "Thunder Wave Tutor",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/86",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "cross-checked",
+        "locator": "thunder-wave",
+        "method": "manual",
+        "note": "Taught by the Move Tutor in Silph Co.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-move-tutors"
+      }
+    ],
+    "repeatable": false,
+    "status": "standard",
+    "subject": {
+      "kind": "tutor",
+      "moveId": 86
+    }
+  },
+  {
+    "id": "version-exclusive-azurill",
+    "milestoneId": null,
+    "name": "Azurill (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-298",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 298
+    }
+  },
+  {
+    "id": "version-exclusive-bellsprout",
+    "milestoneId": null,
+    "name": "Bellsprout (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-69",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 69
+    }
+  },
+  {
+    "id": "version-exclusive-magby",
+    "milestoneId": null,
+    "name": "Magby (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-240",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 240
+    }
+  },
+  {
+    "id": "version-exclusive-mantine",
+    "milestoneId": null,
+    "name": "Mantine (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-226",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 226
+    }
+  },
+  {
+    "id": "version-exclusive-misdreavus",
+    "milestoneId": null,
+    "name": "Misdreavus (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-200",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 200
+    }
+  },
+  {
+    "id": "version-exclusive-pinsir",
+    "milestoneId": null,
+    "name": "Pinsir (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-127",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 127
+    }
+  },
+  {
+    "id": "version-exclusive-remoraid",
+    "milestoneId": null,
+    "name": "Remoraid (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-223",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 223
+    }
+  },
+  {
+    "id": "version-exclusive-sandshrew",
+    "milestoneId": null,
+    "name": "Sandshrew (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-27",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 27
+    }
+  },
+  {
+    "id": "version-exclusive-slowpoke",
+    "milestoneId": null,
+    "name": "Slowpoke (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-79",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 79
+    }
+  },
+  {
+    "id": "version-exclusive-sneasel",
+    "milestoneId": null,
+    "name": "Sneasel (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-215",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 215
+    }
+  },
+  {
+    "id": "version-exclusive-staryu",
+    "milestoneId": null,
+    "name": "Staryu (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-120",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 120
+    }
+  },
+  {
+    "id": "version-exclusive-vulpix",
+    "milestoneId": null,
+    "name": "Vulpix (LeafGreen exclusive)",
+    "prerequisites": [],
+    "provenance": [
+      {
+        "confidence": "cross-checked",
+        "locator": "pokemon-37",
+        "method": "manual",
+        "note": "LeafGreen version exclusive; obtainable in FireRed only by trading.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-frlg-walkthrough"
+      }
+    ],
+    "repeatable": false,
+    "status": "version-exclusive",
+    "subject": {
+      "kind": "transfer",
+      "pokemonId": 37
+    }
+  }
+]
