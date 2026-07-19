@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { loadGamePackManifest, type GamePackManifest } from './data/manifest';
+import { gamePackManifestUrl } from './data/manifest-url';
 
 interface AppProps {
   fetcher?: typeof fetch;
+  baseUrl?: string;
 }
 
 type LoadState =
@@ -10,13 +12,15 @@ type LoadState =
   | { status: 'ready'; manifest: GamePackManifest }
   | { status: 'error' };
 
-export function App({ fetcher = fetch }: AppProps) {
+export function App({ fetcher = fetch, baseUrl = import.meta.env.BASE_URL }: AppProps) {
   const [state, setState] = useState<LoadState>({ status: 'loading' });
+  const manifestUrl = gamePackManifestUrl(baseUrl);
 
   useEffect(() => {
     let active = true;
+    setState({ status: 'loading' });
 
-    loadGamePackManifest(fetcher, './data/firered/manifest.json')
+    loadGamePackManifest(fetcher, manifestUrl)
       .then((manifest) => {
         if (active) setState({ status: 'ready', manifest });
       })
@@ -27,7 +31,7 @@ export function App({ fetcher = fetch }: AppProps) {
     return () => {
       active = false;
     };
-  }, [fetcher]);
+  }, [fetcher, manifestUrl]);
 
   return (
     <main className="app-shell">
@@ -35,7 +39,7 @@ export function App({ fetcher = fetch }: AppProps) {
         <p className="eyebrow">Generation III vertical slice</p>
         <h1>PokéPlanner</h1>
       </header>
-      {state.status === 'loading' && <p>Loading FireRed data…</p>}
+      {state.status === 'loading' && <p role="status">Loading FireRed data…</p>}
       {state.status === 'error' && <p role="alert">FireRed data could not be loaded. Reload to try again.</p>}
       {state.status === 'ready' && (
         <section aria-labelledby="data-status-heading">
