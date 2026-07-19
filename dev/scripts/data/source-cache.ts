@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync, renameSync, rmSync } from 'node:fs';
-import { basename, dirname, join, relative, resolve, sep } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import sourceFile from '../../data/sources.lock.json';
 import {
@@ -22,6 +22,14 @@ export interface SourceCacheDependencies {
   rename: (from: string, to: string) => void;
   remove: (path: string) => void;
 }
+
+export interface PathOperations {
+  relative: (from: string, to: string) => string;
+  isAbsolute: (path: string) => boolean;
+  sep: string;
+}
+
+const nativePathOperations: PathOperations = { relative, isAbsolute, sep };
 
 export function sourceCachePath(projectRoot: string, lock: SourceLock): string {
   const source = parseSourceLockEntry(lock);
@@ -76,10 +84,23 @@ export function syncSource(
 }
 
 function assertWithinCacheRoot(cacheRoot: string, target: string): void {
-  const pathFromRoot = relative(cacheRoot, target);
-  if (pathFromRoot === '' || pathFromRoot === '..' || pathFromRoot.startsWith(`..${sep}`)) {
+  if (!isPathWithinRoot(cacheRoot, target)) {
     throw new Error(`Unsafe source cache path: ${target}`);
   }
+}
+
+export function isPathWithinRoot(
+  cacheRoot: string,
+  target: string,
+  pathOperations: PathOperations = nativePathOperations,
+): boolean {
+  const pathFromRoot = pathOperations.relative(cacheRoot, target);
+  return !(
+    pathOperations.isAbsolute(pathFromRoot)
+    || pathFromRoot === ''
+    || pathFromRoot === '..'
+    || pathFromRoot.startsWith(`..${pathOperations.sep}`)
+  );
 }
 
 function assertTemporarySibling(target: string, temporaryTarget: string, cacheRoot: string): void {

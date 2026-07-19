@@ -1,5 +1,6 @@
+import { win32 } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
-import { sourceCachePath, syncSource, type SourceLock } from './source-cache';
+import { isPathWithinRoot, sourceCachePath, syncSource, type SourceLock } from './source-cache';
 
 const lock: SourceLock = {
   id: 'pokeapi-api-data',
@@ -21,6 +22,10 @@ function promotionDependencies() {
 }
 
 describe('source cache', () => {
+  it('rejects Windows cross-drive targets under POSIX CI', () => {
+    expect(isPathWithinRoot('C:\\repo\\dev\\.cache\\sources', 'D:\\outside\\partial', win32)).toBe(false);
+  });
+
   it('uses source ID and revision as the immutable cache key', () => {
     expect(sourceCachePath('C:/repo/dev', lock).replaceAll('\\', '/').endsWith(
       '/.cache/sources/pokeapi-api-data/0fb5313cb77f46269502e987a53a0bf751ae883d',
@@ -167,7 +172,7 @@ describe('source cache', () => {
       temporaryTarget: () => 'D:/outside/partial',
       rename: vi.fn(),
       remove: vi.fn(),
-    })).toThrow('Unsafe temporary source cache path');
+    })).toThrow('Unsafe source cache path');
     expect(mkdir).not.toHaveBeenCalled();
   });
 
