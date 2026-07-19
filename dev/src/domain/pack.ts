@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 const positiveInteger = z.number().int().positive();
 const nonNegativeInteger = z.number().int().nonnegative();
+const pokemonId = positiveInteger.max(386);
+const moveId = positiveInteger.max(372);
 const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Expected a normalized slug');
 const nonEmptyText = z.string().trim().min(1);
 const localAssetPath = z.string().regex(
@@ -21,7 +23,7 @@ const typeSchema = z.enum([
   'normal', 'fighting', 'flying', 'poison', 'ground', 'rock', 'bug', 'ghost', 'steel',
   'fire', 'water', 'grass', 'electric', 'psychic', 'ice', 'dragon', 'dark',
 ]);
-const uniquePositiveIds = z.array(positiveInteger).superRefine((ids, context) => {
+const uniquePokemonIds = z.array(pokemonId).superRefine((ids, context) => {
   if (new Set(ids).size !== ids.length) context.addIssue({ code: 'custom', message: 'IDs must be unique' });
 });
 
@@ -37,18 +39,26 @@ const statSchema = z.object({
 const abilitySchema = z.object({
   id: positiveInteger,
   name: nonEmptyText,
-  slot: z.literal(1),
+  slot: z.union([z.literal(1), z.literal(2)]),
   shortEffect: nonEmptyText,
 }).strict();
+const abilityListSchema = z.array(abilitySchema).min(1).superRefine((abilities, context) => {
+  if (new Set(abilities.map((ability) => ability.id)).size !== abilities.length) {
+    context.addIssue({ code: 'custom', message: 'Ability IDs must be unique' });
+  }
+  if (new Set(abilities.map((ability) => ability.slot)).size !== abilities.length) {
+    context.addIssue({ code: 'custom', message: 'Ability slots must be unique' });
+  }
+});
 
 export const pokemonRecordSchema = z.object({
-  id: positiveInteger.max(386),
+  id: pokemonId,
   slug,
   name: nonEmptyText,
   types: z.array(typeSchema).min(1).max(2).superRefine((types, context) => {
     if (new Set(types).size !== types.length) context.addIssue({ code: 'custom', message: 'Types must be unique' });
   }),
-  abilities: z.array(abilitySchema).min(1),
+  abilities: abilityListSchema,
   baseStats: statSchema,
   evYield: statSchema,
   captureRate: nonNegativeInteger.max(255),
@@ -57,7 +67,7 @@ export const pokemonRecordSchema = z.object({
 }).strict();
 
 export const moveRecordSchema = z.object({
-  id: positiveInteger.max(372),
+  id: moveId,
   slug,
   name: nonEmptyText,
   type: typeSchema,
@@ -70,23 +80,23 @@ export const moveRecordSchema = z.object({
   provenance: provenanceList,
 }).strict();
 
-const levelUpMoveMethodSchema = z.object({ method: z.literal('level-up'), moveId: positiveInteger, level: nonNegativeInteger }).strict();
-const machineMoveMethodSchema = z.object({ method: z.literal('machine'), moveId: positiveInteger, acquisitionIds: z.array(slug).min(1) }).strict();
-const tutorMoveMethodSchema = z.object({ method: z.literal('tutor'), moveId: positiveInteger, acquisitionIds: z.array(slug).min(1) }).strict();
-const eggMoveMethodSchema = z.object({ method: z.literal('egg'), moveId: positiveInteger }).strict();
-const transferMoveMethodSchema = z.object({ method: z.literal('transfer'), moveId: positiveInteger, reason: nonEmptyText }).strict();
+const levelUpMoveMethodSchema = z.object({ method: z.literal('level-up'), moveId, level: nonNegativeInteger }).strict();
+const machineMoveMethodSchema = z.object({ method: z.literal('machine'), moveId, acquisitionIds: z.array(slug).min(1) }).strict();
+const tutorMoveMethodSchema = z.object({ method: z.literal('tutor'), moveId, acquisitionIds: z.array(slug).min(1) }).strict();
+const eggMoveMethodSchema = z.object({ method: z.literal('egg'), moveId }).strict();
+const transferMoveMethodSchema = z.object({ method: z.literal('transfer'), moveId, reason: nonEmptyText }).strict();
 export const moveMethodSchema = z.discriminatedUnion('method', [
   levelUpMoveMethodSchema, machineMoveMethodSchema, tutorMoveMethodSchema, eggMoveMethodSchema, transferMoveMethodSchema,
 ]);
 
 export const learnsetRecordSchema = z.object({
-  pokemonId: positiveInteger.max(386),
+  pokemonId,
   moves: z.array(moveMethodSchema).min(1),
   provenance: provenanceList,
 }).strict();
 
 const encounterSlotSchema = z.object({
-  pokemonId: positiveInteger.max(386),
+  pokemonId,
   chance: nonNegativeInteger.max(100),
   maxChance: nonNegativeInteger.max(100),
   minLevel: positiveInteger.max(100),
@@ -108,9 +118,9 @@ export const encounterAreaSchema = z.object({
   provenance: provenanceList,
 }).strict();
 
-const machineAcquisitionSchema = z.object({ kind: z.enum(['tm', 'hm']), moveId: positiveInteger, itemId: positiveInteger, machineNumber: positiveInteger }).strict();
-const tutorAcquisitionSchema = z.object({ kind: z.literal('tutor'), moveId: positiveInteger }).strict();
-const pokemonAcquisitionSchema = z.object({ kind: z.enum(['starter', 'gift', 'gift-egg', 'static', 'trade', 'game-corner', 'fossil', 'event', 'transfer']), pokemonId: positiveInteger.max(386) }).strict();
+const machineAcquisitionSchema = z.object({ kind: z.enum(['tm', 'hm']), moveId, itemId: positiveInteger, machineNumber: positiveInteger }).strict();
+const tutorAcquisitionSchema = z.object({ kind: z.literal('tutor'), moveId }).strict();
+const pokemonAcquisitionSchema = z.object({ kind: z.enum(['starter', 'gift', 'gift-egg', 'static', 'trade', 'game-corner', 'fossil', 'event', 'transfer']), pokemonId }).strict();
 export const acquisitionSubjectSchema = z.discriminatedUnion('kind', [machineAcquisitionSchema, tutorAcquisitionSchema, pokemonAcquisitionSchema]);
 export const acquisitionRecordSchema = z.object({
   id: slug,
@@ -124,8 +134,8 @@ export const acquisitionRecordSchema = z.object({
 }).strict();
 
 export const evolutionEdgeSchema = z.object({
-  fromPokemonId: positiveInteger.max(386),
-  toPokemonId: positiveInteger.max(386),
+  fromPokemonId: pokemonId,
+  toPokemonId: pokemonId,
   trigger: z.enum(['level', 'trade', 'item', 'friendship', 'other']),
   minimumLevel: positiveInteger.nullable(),
   itemId: positiveInteger.nullable(),
@@ -149,23 +159,28 @@ export const typeChartSchema = z.object({
   provenance: provenanceList,
 }).strict();
 
-const currentMoveSchema = z.object({ moveId: positiveInteger, status: z.literal('available-now') }).strict();
-const futureLevelMoveSchema = z.object({ moveId: positiveInteger, status: z.literal('future-level'), level: positiveInteger }).strict();
-const futureMilestoneMoveSchema = z.object({ moveId: positiveInteger, status: z.literal('future-milestone'), milestoneId: slug }).strict();
-const unavailableMoveSchema = z.object({ moveId: positiveInteger, status: z.literal('unavailable'), reason: nonEmptyText }).strict();
+const currentMoveSchema = z.object({ moveId, status: z.literal('available-now') }).strict();
+const futureLevelMoveSchema = z.object({ moveId, status: z.literal('future-level'), level: positiveInteger }).strict();
+const futureMilestoneMoveSchema = z.object({ moveId, status: z.literal('future-milestone'), milestoneId: slug }).strict();
+const unavailableMoveSchema = z.object({ moveId, status: z.literal('unavailable'), reason: nonEmptyText }).strict();
 const moveAvailabilitySchema = z.object({
   availableNow: z.array(currentMoveSchema),
   futureLevel: z.array(futureLevelMoveSchema),
   futureMilestone: z.array(futureMilestoneMoveSchema),
   unavailable: z.array(unavailableMoveSchema),
 }).strict();
-const idIndexSchema = z.record(slug, uniquePositiveIds);
+const pokemonIdKey = z.string().regex(/^[1-9][0-9]*$/).refine(
+  (value) => Number(value) <= 386,
+  'Expected a Generation I-III Pokemon ID key',
+);
+const idIndexSchema = z.record(slug, uniquePokemonIds);
 export const fireRedIndexesSchema = z.object({
   pokemonByMove: idIndexSchema,
   pokemonByType: idIndexSchema,
   pokemonByAbility: idIndexSchema,
-  routesByPokemon: z.record(z.string().regex(/^[1-9][0-9]*$/), z.array(slug).min(1)),
+  routesByPokemon: z.record(pokemonIdKey, z.array(slug).min(1)),
   availabilityByMilestone: z.record(slug, moveAvailabilitySchema),
+  provenance: provenanceList,
 }).strict();
 
 const assetDescriptorSchema = z.object({

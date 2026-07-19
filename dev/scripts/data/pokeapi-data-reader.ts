@@ -43,6 +43,7 @@ export class PokeApiDataReader {
     }
 
     const match = /^\/api\/v2\/([a-z0-9-]+)\/([1-9][0-9]*)\/$/.exec(parsed.pathname);
+    const canonicalUrl = match === null ? null : `https://pokeapi.co/api/v2/${match[1]}/${match[2]}/`;
     if (
       parsed.origin !== 'https://pokeapi.co'
       || parsed.username !== ''
@@ -50,6 +51,7 @@ export class PokeApiDataReader {
       || parsed.search !== ''
       || parsed.hash !== ''
       || match?.[1] !== resource
+      || url !== canonicalUrl
     ) {
       throw new Error(`Expected ${resource} reference`);
     }

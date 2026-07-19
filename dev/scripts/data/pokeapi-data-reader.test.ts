@@ -68,5 +68,9 @@ describe('PokeApiDataReader', () => {
       .toThrow('Expected pokemon reference');
     expect(() => reader.readReferenceId('https://pokeapi.co/api/v2/pokemon/9007199254740992/', 'pokemon'))
       .toThrow('Expected pokemon reference');
+    expect(() => reader.readReferenceId('https://pokeapi.co/api/v2/pokemon/../pokemon/56/', 'pokemon'))
+      .toThrow('Expected pokemon reference');
+    expect(() => reader.readReferenceId('https://pokeapi.co:443/api/v2/pokemon/56/', 'pokemon'))
+      .toThrow('Expected pokemon reference');
   });
 });
