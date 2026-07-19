@@ -8,7 +8,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "data:sync": "tsx scripts/data/source-cache.ts",
+    "data:bootstrap": "tsx scripts/data/write-bootstrap-pack.ts",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "prebuild": "npm run data:bootstrap",
     "build": "vite build",
     "check": "npm run test && npm run typecheck && npm run build"
   },

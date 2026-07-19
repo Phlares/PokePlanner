@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packVersion": "firered-bootstrap-1",
+  "game": {
+    "id": "firered",
+    "name": "Pokémon FireRed",
+    "versionId": 10,
+    "versionGroupId": 7,
+    "generationId": 3
+  },
+  "sources": [
+    {
+      "id": "pokeapi-api-data",
+      "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d"
+    }
+  ],
+  "files": {}
+}
