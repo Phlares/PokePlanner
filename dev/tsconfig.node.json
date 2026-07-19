@@ -6,6 +6,7 @@
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "strict": true,
+    "tsBuildInfoFile": "./.cache/tsconfig.node.tsbuildinfo",
     "types": ["node"]
   },
   "include": ["vite.config.ts", "scripts/**/*.ts"]
