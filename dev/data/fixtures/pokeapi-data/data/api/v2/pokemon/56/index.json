@@ -1,0 +1,10 @@
+{
+  "id": 56,
+  "name": "mankey",
+  "abilities": [{ "is_hidden": false, "slot": 1, "ability": { "name": "vital-spirit", "url": "https://pokeapi.co/api/v2/ability/72/" } }],
+  "moves": [],
+  "past_abilities": [],
+  "past_types": [],
+  "stats": [],
+  "types": [{ "slot": 1, "type": { "name": "fighting", "url": "https://pokeapi.co/api/v2/type/2/" } }]
+}
