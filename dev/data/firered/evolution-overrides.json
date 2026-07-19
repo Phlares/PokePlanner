@@ -1,0 +1,122 @@
+[
+  {
+    "fromPokemonId": 42,
+    "toPokemonId": 169,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "golbat-crobat", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 44,
+    "toPokemonId": 182,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "gloom-bellossom", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 61,
+    "toPokemonId": 186,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "poliwhirl-politoed", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 79,
+    "toPokemonId": 199,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "slowpoke-slowking", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 95,
+    "toPokemonId": 208,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "onix-steelix", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 113,
+    "toPokemonId": 242,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "chansey-blissey", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 117,
+    "toPokemonId": 230,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "seadra-kingdra", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 123,
+    "toPokemonId": 212,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "scyther-scizor", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 133,
+    "toPokemonId": 196,
+    "status": "unavailable",
+    "milestoneId": null,
+    "reason": "no-day-night-cycle",
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "no-day-night-cycle", "locator": "eevee-espeon", "method": "manual", "confidence": "verified", "note": "FireRed has no day or night clock for time-of-day evolutions." }]
+  },
+  {
+    "fromPokemonId": 133,
+    "toPokemonId": 197,
+    "status": "unavailable",
+    "milestoneId": null,
+    "reason": "no-day-night-cycle",
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "no-day-night-cycle", "locator": "eevee-umbreon", "method": "manual", "confidence": "verified", "note": "FireRed has no day or night clock for time-of-day evolutions." }]
+  },
+  {
+    "fromPokemonId": 137,
+    "toPokemonId": 233,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "national-dex-evolution-gate", "locator": "porygon-porygon2", "method": "manual", "confidence": "verified", "note": "FireRed enables evolutions into later-generation species after the National Dex." }]
+  },
+  {
+    "fromPokemonId": 265,
+    "toPokemonId": 266,
+    "status": "standard",
+    "milestoneId": null,
+    "reason": "personality-value-branch",
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "personality-value-evolution", "locator": "wurmple-silcoon", "method": "manual", "confidence": "verified", "note": "Wurmple's personality value selects its Silcoon or Cascoon evolution branch in Generation III." }]
+  },
+  {
+    "fromPokemonId": 265,
+    "toPokemonId": 268,
+    "status": "standard",
+    "milestoneId": null,
+    "reason": "personality-value-branch",
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "personality-value-evolution", "locator": "wurmple-cascoon", "method": "manual", "confidence": "verified", "note": "Wurmple's personality value selects its Silcoon or Cascoon evolution branch in Generation III." }]
+  },
+  {
+    "fromPokemonId": 290,
+    "toPokemonId": 292,
+    "status": "standard",
+    "milestoneId": null,
+    "reason": "empty-party-slot",
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "shedinja-evolution-condition", "locator": "nincada-shedinja", "method": "manual", "confidence": "verified", "note": "In Generation III, Nincada's Shedinja evolution requires an empty party slot; Shedinja copies Nincada's Poke Ball." }]
+  },
+  {
+    "fromPokemonId": 349,
+    "toPokemonId": 350,
+    "status": "unavailable",
+    "milestoneId": null,
+    "reason": "beauty-condition-unavailable",
+    "provenance": [{ "sourceId": "firered-game-rules", "revision": "no-contest-condition", "locator": "feebas-milotic", "method": "manual", "confidence": "verified", "note": "FireRed has no contest condition system for Feebas's Beauty evolution." }]
+  }
+]
