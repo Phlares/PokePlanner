@@ -3,7 +3,10 @@ import { z } from 'zod';
 const positiveInteger = z.number().int().positive();
 const nonNegativeInteger = z.number().int().nonnegative();
 const pokemonId = positiveInteger.max(386);
-const moveId = positiveInteger.max(372);
+const moveId = positiveInteger.refine(
+  (id) => id <= 354 || (id >= 10001 && id <= 10018),
+  'Expected a Generation I-III or Shadow move ID',
+);
 const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Expected a normalized slug');
 const nonEmptyText = z.string().trim().min(1);
 const localAssetPath = z.string().regex(
@@ -48,6 +51,9 @@ const abilityListSchema = z.array(abilitySchema).min(1).superRefine((abilities, 
   }
   if (new Set(abilities.map((ability) => ability.slot)).size !== abilities.length) {
     context.addIssue({ code: 'custom', message: 'Ability slots must be unique' });
+  }
+  if (!abilities.some((ability) => ability.slot === 1)) {
+    context.addIssue({ code: 'custom', message: 'Ability lists must include slot 1' });
   }
 });
 
@@ -174,9 +180,16 @@ const pokemonIdKey = z.string().regex(/^[1-9][0-9]*$/).refine(
   'Expected a Generation I-III Pokemon ID key',
 );
 const idIndexSchema = z.record(slug, uniquePokemonIds);
+const pokemonByTypeSchema = z.object({
+  normal: uniquePokemonIds, fighting: uniquePokemonIds, flying: uniquePokemonIds, poison: uniquePokemonIds,
+  ground: uniquePokemonIds, rock: uniquePokemonIds, bug: uniquePokemonIds, ghost: uniquePokemonIds,
+  steel: uniquePokemonIds, fire: uniquePokemonIds, water: uniquePokemonIds, grass: uniquePokemonIds,
+  electric: uniquePokemonIds, psychic: uniquePokemonIds, ice: uniquePokemonIds, dragon: uniquePokemonIds,
+  dark: uniquePokemonIds,
+}).strict();
 export const fireRedIndexesSchema = z.object({
   pokemonByMove: idIndexSchema,
-  pokemonByType: idIndexSchema,
+  pokemonByType: pokemonByTypeSchema,
   pokemonByAbility: idIndexSchema,
   routesByPokemon: z.record(pokemonIdKey, z.array(slug).min(1)),
   availabilityByMilestone: z.record(slug, moveAvailabilitySchema),

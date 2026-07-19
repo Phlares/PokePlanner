@@ -34,6 +34,10 @@ const mankey = {
 };
 
 const descriptor = { path: 'pokemon.json', sha256: 'a'.repeat(64), schemaVersion: 1 };
+const genIIITypeIndex = Object.fromEntries([
+  'normal', 'fighting', 'flying', 'poison', 'ground', 'rock', 'bug', 'ghost', 'steel',
+  'fire', 'water', 'grass', 'electric', 'psychic', 'ice', 'dragon', 'dark',
+].map((type) => [type, type === 'fighting' ? [56] : []]));
 const manifest = {
   schemaVersion: 2,
   packVersion: 'firered-test-pack',
@@ -75,6 +79,7 @@ describe('FireRed pack contracts', () => {
         { id: 50, name: 'Run Away', slot: 2, shortEffect: 'Lets the Pokémon flee.' },
       ],
     }]).at(0)?.abilities).toHaveLength(2);
+    expect(() => parsePokemonRecords([{ ...mankey, abilities: [{ ...mankey.abilities[0], slot: 2 }] }])).toThrow();
     expect(() => parsePokemonRecords([{ ...mankey, abilities: [{ ...mankey.abilities[0], slot: 3 }] }])).toThrow();
     expect(() => parsePokemonRecords([{ ...mankey, abilities: [mankey.abilities[0], { ...mankey.abilities[0], id: 50 }] }])).toThrow();
     expect(() => parsePokemonRecords([{ ...mankey, abilities: [mankey.abilities[0], { ...mankey.abilities[0], slot: 2 }] }])).toThrow();
@@ -99,10 +104,24 @@ describe('FireRed pack contracts', () => {
     }])).toThrow();
   });
 
+  it('accepts a valid bounded evolution edge', () => {
+    expect(parseEvolutionEdges([{
+      fromPokemonId: 56,
+      toPokemonId: 57,
+      trigger: 'level',
+      minimumLevel: 28,
+      itemId: null,
+      locationId: null,
+      status: 'standard',
+      reason: null,
+      provenance,
+    }]).at(0)?.toPokemonId).toBe(57);
+  });
+
   it('does not admit future moves in an available-now index', () => {
     const validIndexes = {
-      pokemonByMove: { 'karate-chop': [56] },
-      pokemonByType: { fighting: [56] },
+      pokemonByMove: { 'shadow-ball': [56] },
+      pokemonByType: genIIITypeIndex,
       pokemonByAbility: { 'vital-spirit': [56] },
       routesByPokemon: { '56': ['route-22'] },
       availabilityByMilestone: {
@@ -111,6 +130,12 @@ describe('FireRed pack contracts', () => {
       provenance,
     };
     expect(parseFireRedIndexes(validIndexes)).toMatchObject({ provenance });
+    expect(parseFireRedIndexes({
+      ...validIndexes,
+      availabilityByMilestone: {
+        'pallet-town': { availableNow: [{ moveId: 10001, status: 'available-now' }], futureLevel: [], futureMilestone: [], unavailable: [] },
+      },
+    }).availabilityByMilestone['pallet-town'].availableNow.at(0)?.moveId).toBe(10001);
     expect(() => parseFireRedIndexes({ ...validIndexes, provenance: [] })).toThrow();
     expect(() => parseFireRedIndexes({
       ...validIndexes,
@@ -123,28 +148,35 @@ describe('FireRed pack contracts', () => {
         },
       },
     })).toThrow();
-    expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByMove: { 'karate-chop': [387] } })).toThrow();
+    expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByMove: { 'shadow-ball': [387] } })).toThrow();
     expect(() => parseFireRedIndexes({ ...validIndexes, routesByPokemon: { '387': ['route-22'] } })).toThrow();
     expect(() => parseFireRedIndexes({
       ...validIndexes,
       availabilityByMilestone: {
-        'pallet-town': { availableNow: [{ moveId: 373, status: 'available-now' }], futureLevel: [], futureMilestone: [], unavailable: [] },
+        'pallet-town': { availableNow: [{ moveId: 355, status: 'available-now' }], futureLevel: [], futureMilestone: [], unavailable: [] },
       },
     })).toThrow();
+    expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByType: { ...genIIITypeIndex, fairy: [] } })).toThrow();
+    expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByType: { ...genIIITypeIndex, sound: [] } })).toThrow();
+    const { fighting: _fighting, ...missingType } = genIIITypeIndex;
+    expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByType: missingType })).toThrow();
   });
 
   it('parses bounded strict move records', () => {
-    const move = { id: 372, slug: 'shadow-ball', name: 'Shadow Ball', type: 'ghost', damageClass: 'physical', power: 80, accuracy: 100, pp: 15, priority: 0, shortEffect: 'Deals damage.', provenance };
-    expect(parseMoveRecords([move]).at(0)?.id).toBe(372);
-    expect(() => parseMoveRecords([{ ...move, id: 373 }])).toThrow();
+    const move = { id: 247, slug: 'shadow-ball', name: 'Shadow Ball', type: 'ghost', damageClass: 'physical', power: 80, accuracy: 100, pp: 15, priority: 0, shortEffect: 'Deals damage.', provenance };
+    expect(parseMoveRecords([move]).at(0)?.id).toBe(247);
+    expect(parseMoveRecords([{ ...move, id: 10001, slug: 'shadow-rush', name: 'Shadow Rush' }]).at(0)?.id).toBe(10001);
+    expect(() => parseMoveRecords([{ ...move, id: 355 }])).toThrow();
+    expect(() => parseMoveRecords([{ ...move, id: 10019 }])).toThrow();
     expect(() => parseMoveRecords([{ ...move, unexpected: true }])).toThrow();
   });
 
   it('parses bounded strict learnset records', () => {
-    const learnset = { pokemonId: 386, moves: [{ method: 'machine', moveId: 372, acquisitionIds: ['tm50'] }], provenance };
+    const learnset = { pokemonId: 386, moves: [{ method: 'machine', moveId: 247, acquisitionIds: ['tm30'] }], provenance };
     expect(parseLearnsetRecords([learnset]).at(0)?.pokemonId).toBe(386);
+    expect(parseLearnsetRecords([{ ...learnset, moves: [{ method: 'transfer', moveId: 10001, reason: 'Shadow move evidence.' }] }]).at(0)?.moves.at(0)?.moveId).toBe(10001);
     expect(() => parseLearnsetRecords([{ ...learnset, pokemonId: 387 }])).toThrow();
-    expect(() => parseLearnsetRecords([{ ...learnset, moves: [{ method: 'machine', moveId: 373, acquisitionIds: ['tm50'] }] }])).toThrow();
+    expect(() => parseLearnsetRecords([{ ...learnset, moves: [{ method: 'machine', moveId: 355, acquisitionIds: ['tm30'] }] }])).toThrow();
   });
 
   it('parses bounded strict encounter areas', () => {
@@ -158,9 +190,10 @@ describe('FireRed pack contracts', () => {
   });
 
   it('parses bounded strict acquisition records', () => {
-    const machine = { id: 'tm50', name: 'TM50', subject: { kind: 'tm', moveId: 372, itemId: 420, machineNumber: 50 }, milestoneId: 'pallet-town', prerequisites: [], repeatable: false, status: 'standard', provenance };
-    expect(parseAcquisitionRecords([machine]).at(0)?.id).toBe('tm50');
-    expect(() => parseAcquisitionRecords([{ ...machine, subject: { ...machine.subject, moveId: 373 } }])).toThrow();
+    const machine = { id: 'tm30', name: 'TM30', subject: { kind: 'tm', moveId: 247, itemId: 420, machineNumber: 30 }, milestoneId: 'pallet-town', prerequisites: [], repeatable: false, status: 'standard', provenance };
+    expect(parseAcquisitionRecords([machine]).at(0)?.id).toBe('tm30');
+    expect(parseAcquisitionRecords([{ ...machine, subject: { ...machine.subject, moveId: 10001 } }]).at(0)?.subject).toMatchObject({ moveId: 10001 });
+    expect(() => parseAcquisitionRecords([{ ...machine, subject: { ...machine.subject, moveId: 355 } }])).toThrow();
     expect(() => parseAcquisitionRecords([{ ...machine, subject: { kind: 'gift', pokemonId: 387 } }])).toThrow();
     expect(() => parseAcquisitionRecords([{ ...machine, unexpected: true }])).toThrow();
   });
