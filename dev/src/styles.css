@@ -347,6 +347,285 @@ button:disabled {
   padding: var(--space-1) var(--space-2);
 }
 
+/* --- Encounter table: the wild-encounter ledger --- */
+.encounter-scroll {
+  overflow-x: auto;
+}
+
+.encounter-scroll + .encounter-scroll {
+  margin-top: var(--space-4);
+}
+
+.encounter-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.encounter-caption {
+  text-align: left;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-lg);
+  font-family: var(--font-sans);
+}
+
+.encounter-table th,
+.encounter-table td {
+  border-bottom: var(--rule);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.encounter-table thead th {
+  border-bottom: var(--rule-strong);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.encounter-num {
+  font-family: var(--font-mono);
+  text-align: right;
+}
+
+.encounter-cell-method,
+.encounter-cell-conditions,
+.encounter-cell-ev {
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+}
+
+.encounter-cell-name { font-weight: 400; }
+
+.encounter-select {
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.encounter-select:hover { text-decoration: underline; }
+
+.encounter-table tr[data-selected] { background: var(--gray-100); }
+
+.encounter-table tr[data-selected] .encounter-select {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* --- Pokémon inspector --- */
+.inspector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.inspector-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.inspector-name { margin: 0; font-size: var(--text-lg); }
+
+.inspector-dex { color: var(--ink-faint); font-size: var(--text-sm); }
+
+.inspector-summary {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-4);
+}
+
+.inspector-pair { display: flex; flex-direction: column; gap: 2px; }
+
+.inspector-pair dt {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.inspector-pair dd { margin: 0; }
+
+.inspector-section { border-top: var(--rule); padding-top: var(--space-3); }
+
+.inspector-section-heading {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.inspector-empty { margin: 0; color: var(--ink-soft); }
+
+.stat-table {
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.stat-table th {
+  text-align: left;
+  padding: var(--space-1) var(--space-3) var(--space-1) 0;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  text-align: right;
+  padding: var(--space-1) 0;
+}
+
+.ability-list { margin: 0; }
+
+.ability-item { margin-bottom: var(--space-2); }
+
+.ability-item dt { font-weight: 600; }
+
+.ability-item dd { margin: 0; color: var(--ink-soft); font-size: var(--text-sm); }
+
+.evolution-list,
+.source-list,
+.provenance-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.evolution-item,
+.source-item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
+}
+
+.evolution-gate,
+.source-kind {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.source-kind {
+  text-transform: uppercase;
+  min-width: 3.5rem;
+}
+
+.provenance-item {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}
+
+.plan-controls { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+.plan-field { display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--text-sm); }
+
+.plan-field span {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.plan-field input,
+.plan-field select {
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-mono);
+  width: 6rem;
+}
+
+/* --- Move availability drawers --- */
+.move-availability {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.move-drawer { border: var(--rule); }
+
+.move-drawer-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-size: var(--text-sm);
+}
+
+.move-drawer-title { font-weight: 600; }
+
+.move-drawer-count { font-family: var(--font-mono); color: var(--ink-faint); }
+
+.move-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: var(--rule);
+}
+
+.move-entry { border-bottom: var(--rule); padding: var(--space-2) var(--space-3); }
+
+.move-entry:last-child { border-bottom: 0; }
+
+.move-entry-head { display: flex; align-items: baseline; gap: var(--space-2); }
+
+.move-entry-name { flex: 1; }
+
+.move-entry-planned {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: var(--rule);
+  padding: 0 var(--space-1);
+}
+
+.move-entry-plan {
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.move-evidence {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.move-evidence-row { display: flex; gap: var(--space-2); }
+
+.move-evidence-row dt {
+  min-width: 5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+.move-evidence-row dd { margin: 0; }
+
+.move-evidence-reason { margin: var(--space-1) 0 0; }
+
+.move-empty { margin: 0; padding: var(--space-2) var(--space-3); color: var(--ink-soft); font-size: var(--text-sm); }
+
 /* --- Team manifest --- */
 .manifest-sections {
   display: grid;

@@ -4,6 +4,8 @@ import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
 import { searchFireRed } from '../../domain/search';
 import type { Slot } from '../../domain/team';
+import { EncounterTable } from './EncounterTable';
+import { PokemonInspector, type MemberDraft } from './PokemonInspector';
 import { ProgressionRail } from './ProgressionRail';
 
 /** Local id-resolution surface so emitted playthrough changes are re-validated before they leave. */
@@ -33,14 +35,25 @@ export interface WorkbenchProps {
  * The FireRed timeline workbench shell: the chronological progression rail, a route-detail
  * region, a contextual inspector region, and the full-width team manifest. Selected route,
  * event, and search text are ephemeral view state owned here; only milestone changes are
- * validated and emitted upward for App to persist. Encounter table and inspector detail land
- * in Task 12 — their regions are real scaffolding placeholders for now.
+ * validated and emitted upward for App to persist. Selecting a wild Pokémon in the encounter
+ * table opens the inspector in place; inspector edits emit member drafts that stay local until
+ * the team-manifest work in Task 13 wires them into saved state.
  */
 export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.now }: WorkbenchProps) {
   const index = useMemo(() => packIndexOf(pack), [pack]);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [, setSelectedEventId] = useState<string | null>(null);
+  const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null);
+  const [, setMemberDraft] = useState<MemberDraft | null>(null);
   const [searchText, setSearchText] = useState('');
+
+  const availabilityContext = useMemo(
+    () => ({
+      currentMilestoneId: playthrough.currentMilestoneId,
+      previewMilestoneId: playthrough.previewMilestoneId,
+    }),
+    [playthrough.currentMilestoneId, playthrough.previewMilestoneId],
+  );
 
   const matchCountsByNode = useMemo(() => {
     const query = searchText.trim();
@@ -55,6 +68,15 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
   const selectedNode = selectedNodeId === null
     ? null
     : pack.progression.nodes.find((node) => node.id === selectedNodeId) ?? null;
+
+  const selectedAreas = selectedNodeId === null
+    ? []
+    : pack.encounters.filter((area) => area.nodeId === selectedNodeId);
+
+  const selectRoute = (nodeId: string): void => {
+    setSelectedNodeId(nodeId);
+    setSelectedPokemonId(null);
+  };
 
   const emit = (patch: Partial<Playthrough>): void => {
     const next = parsePlaythrough({ ...playthrough, ...patch, updatedAt: now() }, index);
@@ -80,7 +102,7 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
           currentMilestoneId={playthrough.currentMilestoneId}
           previewMilestoneId={playthrough.previewMilestoneId}
           matchCountsByNode={matchCountsByNode}
-          onSelectNode={setSelectedNodeId}
+          onSelectNode={selectRoute}
           onSelectEvent={setSelectedEventId}
           onSetCurrentMilestone={(milestoneId) => emit({ currentMilestoneId: milestoneId })}
           onSetPreviewMilestone={(milestoneId) => emit({ previewMilestoneId: milestoneId })}
@@ -88,17 +110,38 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
       </section>
 
       <section className="workbench-table" aria-label="Route detail">
-        <h3 className="workbench-region-heading">{selectedNode ? selectedNode.name : 'Select a route'}</h3>
-        {selectedNode
-          ? <p className="workbench-placeholder">Encounter table lands in the next step.</p>
-          : <p className="workbench-placeholder">Choose a node from the progression spine.</p>}
+        {selectedNode === null && (
+          <p className="workbench-placeholder">Choose a node from the progression spine.</p>
+        )}
+        {selectedNode !== null && selectedAreas.length === 0 && (
+          <>
+            <h3 className="workbench-region-heading">{selectedNode.name}</h3>
+            <p className="workbench-placeholder">No wild encounters recorded for this location.</p>
+          </>
+        )}
+        {selectedAreas.map((area) => (
+          <EncounterTable
+            key={area.slug}
+            area={area}
+            pack={pack}
+            selectedPokemonId={selectedPokemonId}
+            onSelectPokemon={setSelectedPokemonId}
+          />
+        ))}
       </section>
 
       <section className="workbench-inspector" aria-label="Inspector">
         <h3 className="workbench-region-heading">Inspector</h3>
-        <p className="workbench-placeholder">
-          {selectedEventId ? 'Event and Pokémon detail lands in the next step.' : 'Nothing selected.'}
-        </p>
+        {selectedPokemonId === null ? (
+          <p className="workbench-placeholder">Select a Pokémon from the encounter table.</p>
+        ) : (
+          <PokemonInspector
+            pokemonId={selectedPokemonId}
+            pack={pack}
+            context={availabilityContext}
+            onDraftMember={setMemberDraft}
+          />
+        )}
       </section>
 
       <section className="workbench-manifest" aria-label="Team manifest">
