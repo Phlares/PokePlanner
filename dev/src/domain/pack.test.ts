@@ -190,6 +190,22 @@ describe('FireRed pack contracts', () => {
       methods: [{ method: 'walk', slots: [{ pokemonId: 386, chance: 45, maxChance: 45, minLevel: 3, maxLevel: 5, conditions: [] }] }], provenance,
     };
     expect(parseEncounterAreas([area]).at(0)?.locationAreaId).toBe(313);
+    expect(parseEncounterAreas([{
+      ...area,
+      methods: [{ ...area.methods[0], slots: [{ ...area.methods[0].slots[0], maxChance: 299 }] }],
+    }]).at(0)?.methods[0].slots[0].maxChance).toBe(299);
+    expect(() => parseEncounterAreas([{
+      ...area,
+      methods: [{ ...area.methods[0], slots: [{ ...area.methods[0].slots[0], chance: 101 }] }],
+    }])).toThrow();
+    expect(() => parseEncounterAreas([{
+      ...area,
+      methods: [{ ...area.methods[0], slots: [{ ...area.methods[0].slots[0], maxChance: -1 }] }],
+    }])).toThrow();
+    expect(() => parseEncounterAreas([{
+      ...area,
+      methods: [{ ...area.methods[0], slots: [{ ...area.methods[0].slots[0], maxChance: 2.5 }] }],
+    }])).toThrow();
     expect(() => parseEncounterAreas([{ ...area, methods: [{ ...area.methods[0], slots: [{ ...area.methods[0].slots[0], pokemonId: 387 }] }] }])).toThrow();
     expect(() => parseEncounterAreas([{ ...area, unexpected: true }])).toThrow();
   });

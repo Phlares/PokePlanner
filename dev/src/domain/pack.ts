@@ -102,7 +102,7 @@ export const learnsetRecordSchema = z.object({
 const encounterSlotSchema = z.object({
   pokemonId,
   chance: nonNegativeInteger.max(100),
-  maxChance: nonNegativeInteger.max(100),
+  maxChance: nonNegativeInteger,
   minLevel: positiveInteger.max(100),
   maxLevel: positiveInteger.max(100),
   conditions: z.array(slug),
