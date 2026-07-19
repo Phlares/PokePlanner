@@ -60,6 +60,18 @@ describe('FireRed historical mechanics normalizer', () => {
     ]));
     expect(mankey.moves.every(({ method }) => ['level-up', 'machine', 'tutor', 'egg'].includes(method))).toBe(true);
     expect(mankey.moves).toHaveLength(fireRedDetailCount);
+    expect(mankey.moves.filter(({ method }) => method === 'machine' || method === 'tutor')
+      .every((move) => !Object.hasOwn(move, 'acquisitionIds'))).toBe(true);
+  }, 120_000);
+
+  it('uses FireRed Deoxys Attack Forme mechanics while retaining species ID 386', () => {
+    const deoxys = normalizePokemonCatalog(reader).find(({ id }) => id === 386)!;
+    const learnset = normalizeLearnsets(reader).find(({ pokemonId }) => pokemonId === 386)!;
+
+    expect(deoxys).toMatchObject({ id: 386, baseStats: { attack: 180, defense: 20, speed: 150 } });
+    expect(deoxys.provenance.at(0)?.locator).toBe('pokemon/10001');
+    expect(learnset.moves).not.toHaveLength(0);
+    expect(learnset.provenance.at(0)?.locator).toBe('pokemon/10001');
   }, 120_000);
 
   it('covers the locked Generation III source without later mechanics or dangling references', () => {
@@ -78,7 +90,7 @@ describe('FireRed historical mechanics normalizer', () => {
     expect(moves.some(({ id }) => id === 355 || id >= 10001)).toBe(false);
     expect(learnsets).toHaveLength(386);
     expect(learnsets.every(({ pokemonId, moves: learned }) => pokemon.some(({ id }) => id === pokemonId)
-      && learned.every(({ moveId }) => moveIds.has(moveId)))).toBe(true);
+      && learned.length > 0 && learned.every(({ moveId }) => moveIds.has(moveId)))).toBe(true);
     expect(Object.hasOwn(typeChart, 'fairy')).toBe(false);
     const { provenance: _provenance, ...relations } = typeChart;
     expect(Object.values(relations).flatMap(({ weakTo, resists, immuneTo }) => [...weakTo, ...resists, ...immuneTo]))

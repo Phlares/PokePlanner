@@ -173,11 +173,11 @@ git commit -m "feat: define FireRed pack contracts"
 
 **Interfaces:**
 - Consumes: exact endpoint objects from the pinned reader.
-- Produces: `assertFireRedSourceContext(reader)`, `normalizePokemonCatalog(reader)`, `normalizeMoveCatalog(reader)`, `normalizeLearnsets(reader)`, and `normalizeTypeChart(reader)`.
+- Produces: `assertFireRedSourceContext(reader)`, `normalizePokemonCatalog(reader)`, `normalizeMoveCatalog(reader)`, `normalizeLearnsets(reader): NormalizedLearnsetRecord[]`, and `normalizeTypeChart(reader)`. The normalized learnset is deliberately pre-acquisition: machine/tutor entries retain method plus move ID but do not invent final `acquisitionIds` before Task 6's curated facts exist.
 
 - [ ] **Step 1: Add endpoint-shaped fixtures and write context RED tests**
 
-Include version `10`, version-group `7`, generation `3`, Clefairy, Gengar, Mankey, Tackle, and their referenced resources. Assert version 10 points to group 7, group 7 points to generation 3, and mismatches fail before any output is built.
+Include version `10`, version-group `7`, generation `3`, Clefairy, Gengar, Mankey, Tackle, and their referenced resources. Assert exact endpoint and inline-reference names as well as the 10 → 7 → 3 links, and make mismatches fail before any output is built.
 
 - [ ] **Step 2: Run context tests and verify RED**
 
@@ -362,7 +362,7 @@ git commit -m "feat: curate FireRed route progression"
 - Create: `dev/scripts/data/firered/indexes.test.ts`
 
 **Interfaces:**
-- Produces: validated acquisitions plus `buildFireRedIndexes(packInputs): FireRedIndexes`.
+- Produces: validated acquisitions, `attachAcquisitionIds(normalizedLearnsets, acquisitions): LearnsetRecord[]`, and `buildFireRedIndexes(packInputs): FireRedIndexes`.
 
 - [ ] **Step 1: Write acquisition RED tests**
 
@@ -381,6 +381,8 @@ Expected: FAIL because acquisition coverage is absent.
 - [ ] **Step 4: Encode independent factual acquisition records**
 
 Each record includes kind, referenced Pokémon/move/item, node/event/milestone, prerequisites/choices, repeatability, FireRed status, and provenance. Multiple physical copies remain separate facts while the availability index records the earliest legal milestone and all later sources.
+
+Join the Task 2 pre-acquisition learnsets to these validated records by move and method. Populate machine/tutor `acquisitionIds` with every matching concrete fact, keep other learn methods unchanged, and fail on either an unresolved machine/tutor entry or an acquisition ID that does not resolve.
 
 - [ ] **Step 5: Write index RED tests**
 

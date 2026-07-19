@@ -1,3 +1,5 @@
+import { readFileSync, readdirSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { PokeApiDataReader } from '../pokeapi-data-reader';
 import { assertFireRedSourceContext } from './compiler-context';
@@ -27,6 +29,19 @@ describe('FireRed compiler context', () => {
     };
 
     expect(() => assertFireRedSourceContext(mismatchedReader)).toThrow(/version group/i);
+  });
+
+  it.each([
+    ['version group', { readVersion: () => ({ id: 10, name: 'firered', version_group: { name: 'ruby-sapphire', url: '/api/v2/version-group/7/' } }) }],
+    ['generation', { readVersionGroup: () => ({ id: 7, name: 'firered-leafgreen', generation: { name: 'generation-iv', url: '/api/v2/generation/3/' } }) }],
+  ])('rejects a mismatched inline %s name even when its reference ID is correct', (_label, overrides) => {
+    const mismatchedReader = {
+      readVersion: reader.readVersion.bind(reader),
+      readVersionGroup: reader.readVersionGroup.bind(reader),
+      readGeneration: reader.readGeneration.bind(reader),
+      ...overrides,
+    };
+    expect(() => assertFireRedSourceContext(mismatchedReader)).toThrow(/FireRed|Generation III/i);
   });
 
   it('rejects a FireRed group that points outside Generation III before output', () => {
@@ -82,5 +97,16 @@ describe('FireRed compiler context', () => {
     expect(reader.read('move', 7)).toMatchObject({ id: 7, name: 'fire-punch', type: { url: '/api/v2/type/10/' } });
     expect(reader.read('ability', 56)).toMatchObject({ id: 56, name: 'cute-charm' });
     expect(reader.read('type', 9)).toMatchObject({ id: 9, name: 'steel' });
+  });
+
+  it('closes every canonical fixture URL to a readable local endpoint', () => {
+    const fixtureRoot = resolve('data/fixtures/firered-compiler/data/api/v2');
+    const urls = readdirSync(fixtureRoot, { recursive: true })
+      .filter((path): path is string => typeof path === 'string' && path.endsWith('index.json'))
+      .flatMap((path) => [...readFileSync(resolve(fixtureRoot, path), 'utf8').matchAll(/"\/api\/v2\/([a-z0-9-]+)\/([1-9][0-9]*)\/"/g)])
+      .map(([, resource, id]) => ({ resource, id: Number(id) }));
+
+    expect(urls).not.toHaveLength(0);
+    for (const { resource, id } of urls) expect(() => reader.read(resource, id)).not.toThrow();
   });
 });

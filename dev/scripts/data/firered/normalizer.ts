@@ -1,5 +1,6 @@
 import type { LearnsetRecord, MoveRecord, PokemonRecord, TypeChart } from '../../../src/domain/pack';
 import { assertFireRedSourceContext, FIRERED_IDS } from './compiler-context';
+import { REQUIRED_POKEAPI_SOURCE } from '../source-lock';
 
 type Endpoint = Record<string, unknown>;
 type Reader = {
@@ -81,13 +82,28 @@ function englishShortEffect(entries: unknown, label: string): string {
 
 function provenance(locator: string) {
   return [{
-    sourceId: 'pokeapi-api-data',
-    revision: '0fb5313cb77f46269502e987a53a0bf751ae883d',
+    sourceId: REQUIRED_POKEAPI_SOURCE.id,
+    revision: REQUIRED_POKEAPI_SOURCE.revision,
     locator,
     method: 'generated' as const,
     confidence: 'verified' as const,
     note: null,
   }];
+}
+
+export type NormalizedLearnsetMove =
+  | { method: 'level-up'; moveId: number; level: number }
+  | { method: 'egg'; moveId: number }
+  | { method: 'machine'; moveId: number }
+  | { method: 'tutor'; moveId: number };
+export interface NormalizedLearnsetRecord {
+  pokemonId: number;
+  moves: NormalizedLearnsetMove[];
+  provenance: LearnsetRecord['provenance'];
+}
+
+function sourcePokemonId(speciesId: number): number {
+  return speciesId === 386 ? 10001 : speciesId;
 }
 
 function generationId(change: Endpoint): number {
@@ -207,7 +223,8 @@ export function normalizeAbility(reader: Reader, value: unknown): PokemonRecord[
 export function normalizePokemonCatalog(reader: Reader): PokemonRecord[] {
   assertFireRedSourceContext(reader);
   return reader.listIds('pokemon').filter((id) => id <= 386).map((id) => {
-    const endpoint = asObject(reader.readPokemon(id), 'pokemon');
+    const mechanicsId = sourcePokemonId(id);
+    const endpoint = asObject(reader.readPokemon(mechanicsId), 'pokemon');
     const species = asObject(reader.read('pokemon-species', id), 'pokemon species');
     const historicalAbilities = rollBackAbilities(endpoint.abilities, endpoint.past_abilities);
     const historicalTypes = rollBackGeneration(endpoint.types, endpoint.past_types, 'types');
@@ -227,7 +244,7 @@ export function normalizePokemonCatalog(reader: Reader): PokemonRecord[] {
       evYield: normalizeStats(historicalStats, 'effort'),
       captureRate: integer(species.capture_rate, 'capture rate'),
       sprite: null,
-      provenance: provenance(`pokemon/${id}`),
+      provenance: provenance(`pokemon/${mechanicsId}`),
     };
   });
 }
@@ -260,13 +277,15 @@ export function normalizeMoveCatalog(reader: Reader): MoveRecord[] {
     .map((id) => normalizeMove(reader, id));
 }
 
-export function normalizeLearnsets(reader: Reader): LearnsetRecord[] {
+export function normalizeLearnsets(reader: Reader): NormalizedLearnsetRecord[] {
   assertFireRedSourceContext(reader);
   return reader.listIds('pokemon').filter((id) => id <= 386).map((pokemonId) => {
-    const endpoint = asObject(reader.readPokemon(pokemonId), 'pokemon');
+    const mechanicsId = sourcePokemonId(pokemonId);
+    const endpoint = asObject(reader.readPokemon(mechanicsId), 'pokemon');
     const moves = asArray(endpoint.moves, 'pokemon moves').flatMap((move) => {
       const entry = asObject(move, 'pokemon move');
       const moveId = endpointId(entry.move, 'move');
+      if (moveId > 354) return [];
       return asArray(entry.version_group_details, 'version group details')
         .filter((detail) => endpointId(asObject(detail, 'version group detail').version_group, 'version-group') === FIRERED_IDS.versionGroupId)
         .map((detail) => {
@@ -274,12 +293,13 @@ export function normalizeLearnsets(reader: Reader): LearnsetRecord[] {
           const method = resourceName(value.move_learn_method, 'move learn method');
           if (method === 'level-up') return { method: 'level-up' as const, moveId, level: integer(value.level_learned_at, 'level learned') };
           if (method === 'egg') return { method: 'egg' as const, moveId };
-          if (method === 'machine') return { method: 'machine' as const, moveId, acquisitionIds: ['machine'] };
-          if (method === 'tutor') return { method: 'tutor' as const, moveId, acquisitionIds: ['tutor'] };
+          if (method === 'machine') return { method: 'machine' as const, moveId };
+          if (method === 'tutor') return { method: 'tutor' as const, moveId };
           throw new Error(`Unsupported FireRed learn method: ${method}`);
         });
     });
-    return { pokemonId, moves, provenance: provenance(`pokemon/${pokemonId}`) };
+    if (moves.length === 0) throw new Error(`Expected FireRed learnset for Pokemon ${pokemonId}`);
+    return { pokemonId, moves, provenance: provenance(`pokemon/${mechanicsId}`) };
   });
 }
 
