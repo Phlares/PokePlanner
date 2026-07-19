@@ -2,6 +2,7 @@ import type { EvolutionEdge, PokemonRecord, Provenance } from '../../../src/doma
 import { z } from 'zod';
 import { assertFireRedSourceContext } from './compiler-context';
 import { REQUIRED_POKEAPI_SOURCE } from '../source-lock';
+import evolutionSourcesInput from '../../../data/firered/sources.json';
 
 type Endpoint = Record<string, unknown>;
 type Reader = {
@@ -12,6 +13,29 @@ type Reader = {
 };
 
 const normalizedSlug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+const sourceRegistrySchema = z.object({
+  schemaVersion: z.literal(1),
+  sources: z.array(z.object({
+    id: normalizedSlug,
+    name: z.string().trim().min(1),
+    url: z.string().url().startsWith('https://'),
+    revision: z.string().regex(/^accessed-[0-9]{4}-[0-9]{2}-[0-9]{2}$/),
+    accessedOn: z.string().regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/),
+    license: z.string().trim().min(1).nullable(),
+  }).strict()).min(1),
+}).strict().superRefine((registry, context) => {
+  if (new Set(registry.sources.map(({ id }) => id)).size !== registry.sources.length) {
+    context.addIssue({ code: 'custom', message: 'Manual source IDs must be unique' });
+  }
+  if (new Set(registry.sources.map(({ url }) => url)).size !== registry.sources.length) {
+    context.addIssue({ code: 'custom', message: 'Manual source URLs must be unique' });
+  }
+  for (const [index, source] of registry.sources.entries()) {
+    if (source.revision !== `accessed-${source.accessedOn}`) {
+      context.addIssue({ code: 'custom', path: ['sources', index, 'revision'], message: 'Source revision must match accessed date' });
+    }
+  }
+});
 const overrideProvenance = z.object({
   sourceId: normalizedSlug,
   revision: z.string().trim().min(1),
@@ -37,9 +61,26 @@ const evolutionOverrideSchema = z.object({
 });
 
 export type EvolutionOverride = z.infer<typeof evolutionOverrideSchema>;
+export type EvolutionSources = z.infer<typeof sourceRegistrySchema>;
 
 export function parseEvolutionOverrides(input: unknown): EvolutionOverride[] {
   return z.array(evolutionOverrideSchema).parse(input);
+}
+
+export function parseEvolutionSources(input: unknown): EvolutionSources {
+  return sourceRegistrySchema.parse(input);
+}
+
+export function assertOverrideSourcesRegistered(overrides: EvolutionOverride[], registry: EvolutionSources): void {
+  const sources = new Map(registry.sources.map((source) => [source.id, source]));
+  for (const override of parseEvolutionOverrides(overrides)) {
+    for (const provenance of override.provenance) {
+      const source = sources.get(provenance.sourceId);
+      if (source === undefined || source.revision !== provenance.revision) {
+        throw new Error(`Undeclared override provenance source: ${provenance.sourceId}@${provenance.revision}`);
+      }
+    }
+  }
 }
 
 interface ChainNode {
@@ -110,13 +151,21 @@ function sourceReason(detail: Endpoint): string | null {
   return null;
 }
 
-function selectFireRedDetail(details: unknown): Endpoint {
+function selectFireRedDetail(reader: Reader, details: unknown): Endpoint {
+  const targetOrder = asObject(reader.readVersionGroup(7), 'version group').order;
+  if (typeof targetOrder !== 'number' || !Number.isInteger(targetOrder)) throw new Error('Expected FireRed version-group order');
   const candidates = asArray(details, 'evolution details')
     .map((detail) => asObject(detail, 'evolution detail'))
     .filter((detail) => detail.base_form === null && detail.evolved_form === null)
-    .map((detail) => ({ detail, versionGroupId: referenceId(detail.version_group, 'version-group') }))
-    .sort((left, right) => left.versionGroupId - right.versionGroupId);
-  if (candidates.length === 0) throw new Error('Expected an unformed evolution detail');
+    .map((detail) => {
+      const versionGroupId = referenceId(detail.version_group, 'version-group');
+      const order = asObject(reader.readVersionGroup(versionGroupId), 'version group').order;
+      if (typeof order !== 'number' || !Number.isInteger(order)) throw new Error('Expected version-group order');
+      return { detail, order };
+    })
+    .filter(({ order }) => order <= targetOrder)
+    .sort((left, right) => right.order - left.order);
+  if (candidates.length === 0) throw new Error('Expected a FireRed-applicable evolution detail');
   return candidates[0].detail;
 }
 
@@ -137,14 +186,12 @@ function compileSourceEdge(fromPokemonId: number, toPokemonId: number, detail: E
 }
 
 function applyOverrides(sourceEdges: EvolutionEdge[], overrides: EvolutionOverride[]): EvolutionEdge[] {
-  const matched = new Set<string>();
   const byPair = new Map(overrides.map((override) => [`${override.fromPokemonId}:${override.toPokemonId}`, override]));
   if (byPair.size !== overrides.length) throw new Error('Duplicate evolution override');
 
   for (const override of overrides) {
     const candidates = sourceEdges.filter((edge) => edge.fromPokemonId === override.fromPokemonId && edge.toPokemonId === override.toPokemonId);
     if (candidates.length !== 1) throw new Error(`Override ${override.fromPokemonId}->${override.toPokemonId} did not match exactly one source edge`);
-    matched.add(`${override.fromPokemonId}:${override.toPokemonId}`);
   }
 
   return sourceEdges.map((edge) => {
@@ -157,7 +204,11 @@ function applyOverrides(sourceEdges: EvolutionEdge[], overrides: EvolutionOverri
 export function compileEvolutions(reader: Reader, pokemon: Pick<PokemonRecord, 'id'>[], overrides: EvolutionOverride[]): EvolutionEdge[] {
   assertFireRedSourceContext(reader);
   const parsedOverrides = parseEvolutionOverrides(overrides);
-  const speciesIds = new Set(pokemon.map(({ id }) => id).filter((id) => Number.isInteger(id) && id >= 1 && id <= 386));
+  assertOverrideSourcesRegistered(parsedOverrides, parseEvolutionSources(evolutionSourcesInput));
+  const speciesIds = new Set(pokemon.map(({ id }) => id));
+  if (pokemon.length !== 386 || speciesIds.size !== 386 || Array.from({ length: 386 }, (_, index) => index + 1).some((id) => !speciesIds.has(id))) {
+    throw new Error('Expected Pokemon catalog IDs 1 through 386 exactly once');
+  }
   const chainIds = new Set<number>();
   const sourceEdges: EvolutionEdge[] = [];
 
@@ -177,7 +228,7 @@ export function compileEvolutions(reader: Reader, pokemon: Pick<PokemonRecord, '
         pending.push(target);
         const toPokemonId = referenceId(target.species, 'pokemon-species');
         if (!speciesIds.has(fromPokemonId) || !speciesIds.has(toPokemonId)) continue;
-        sourceEdges.push(compileSourceEdge(fromPokemonId, toPokemonId, selectFireRedDetail(target.evolution_details), chainId));
+        sourceEdges.push(compileSourceEdge(fromPokemonId, toPokemonId, selectFireRedDetail(reader, target.evolution_details), chainId));
       }
     }
   }

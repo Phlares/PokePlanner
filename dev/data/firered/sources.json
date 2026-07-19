@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "bulbapedia-evolution-prevention",
+      "name": "Bulbapedia: Evolution prevention",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Evolution_prevention",
+      "revision": "accessed-2026-07-19",
+      "accessedOn": "2026-07-19",
+      "license": null
+    },
+    {
+      "id": "bulbapedia-methods-of-evolution",
+      "name": "Bulbapedia: Methods of Evolution",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Methods_of_Evolution",
+      "revision": "accessed-2026-07-19",
+      "accessedOn": "2026-07-19",
+      "license": null
+    },
+    {
+      "id": "bulbapedia-personality-values",
+      "name": "Bulbapedia: Personality values",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Personality_values",
+      "revision": "accessed-2026-07-19",
+      "accessedOn": "2026-07-19",
+      "license": null
+    },
+    {
+      "id": "bulbapedia-nincada",
+      "name": "Bulbapedia: Nincada",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Nincada_%28Pok%C3%A9mon%29",
+      "revision": "accessed-2026-07-19",
+      "accessedOn": "2026-07-19",
+      "license": null
+    }
+  ]
+}

@@ -232,6 +232,7 @@ git commit -m "feat: normalize Generation III mechanics"
 ### Task 3: Compile FireRed evolution rules and species acquisition classes
 
 **Files:**
+- Create: `dev/data/firered/sources.json` (seed the central registry with evolution-rule sources; Task 5 extends it)
 - Create: `dev/data/firered/evolution-overrides.json`
 - Create: `dev/scripts/data/firered/evolutions.ts`
 - Create: `dev/scripts/data/firered/evolutions.test.ts`
@@ -251,7 +252,7 @@ Expected: FAIL because the evolution compiler and override file do not exist.
 
 - [ ] **Step 3: Add strict provenance-backed overrides**
 
-Each override includes `fromPokemonId`, `toPokemonId`, `status`, `milestoneId` or `reason`, and provenance. Encode National Dex locks, FireRed-impossible time evolutions, and later-generation exclusions; do not paste decompilation tables.
+Each override includes `fromPokemonId`, `toPokemonId`, `status`, `milestoneId` or `reason`, and provenance resolving to `sources.json`. Encode National Dex locks, FireRed-impossible time evolutions, transfer-prepared Beauty evolution, and later-generation exclusions; do not paste decompilation tables or source prose.
 
 - [ ] **Step 4: Implement and validate evolution compilation**
 
@@ -262,7 +263,7 @@ Traverse chains iteratively, keep only IDs 1–386, normalize trigger/item/level
 Assert every target/source resolves, every species has an availability classification after encounters/acquisitions are merged later, and no generation IV+ target remains.
 
 ```powershell
-git add dev/data/firered/evolution-overrides.json dev/scripts/data/firered/evolutions.ts dev/scripts/data/firered/evolutions.test.ts
+git add dev/data/firered/sources.json dev/data/firered/evolution-overrides.json dev/scripts/data/firered/evolutions.ts dev/scripts/data/firered/evolutions.test.ts
 git commit -m "feat: compile FireRed evolution rules"
 ```
 
@@ -314,7 +315,7 @@ git commit -m "feat: compile FireRed encounter tables"
 ### Task 5: Curate and validate route progression with a research registry
 
 **Files:**
-- Create: `dev/data/firered/sources.json`
+- Modify: `dev/data/firered/sources.json`
 - Create: `dev/data/firered/progression.json`
 - Create: `dev/scripts/data/firered/curated.ts`
 - Create: `dev/scripts/data/firered/curated.test.ts`
@@ -323,7 +324,7 @@ git commit -m "feat: compile FireRed encounter tables"
 - Consumes: the existing `validateRouteProgression` contract.
 - Produces: `loadFireRedSources`, `loadFireRedProgression`, and a complete area-to-node mapping.
 
-- [ ] **Step 1: Register exact research sources**
+- [ ] **Step 1: Extend the exact research-source registry**
 
 Include PokeAPI revision `0fb5313c…`, pret reference revision `df4449a…` with `license: null` and reference-only note, the Bulbapedia FireRed/LeafGreen walkthrough index, Generation III TM/HM locations, and FireRed/LeafGreen move tutor pages, all accessed `2026-07-19`. Store URLs and locator conventions, not copied prose.
 
