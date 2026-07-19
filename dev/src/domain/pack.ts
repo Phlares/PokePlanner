@@ -3,10 +3,7 @@ import { z } from 'zod';
 const positiveInteger = z.number().int().positive();
 const nonNegativeInteger = z.number().int().nonnegative();
 const pokemonId = positiveInteger.max(386);
-const moveId = positiveInteger.refine(
-  (id) => id <= 354 || (id >= 10001 && id <= 10018),
-  'Expected a Generation I-III or Shadow move ID',
-);
+const moveId = positiveInteger.max(354);
 const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Expected a normalized slug');
 const nonEmptyText = z.string().trim().min(1);
 const localAssetPath = z.string().regex(
@@ -26,6 +23,7 @@ const typeSchema = z.enum([
   'normal', 'fighting', 'flying', 'poison', 'ground', 'rock', 'bug', 'ghost', 'steel',
   'fire', 'water', 'grass', 'electric', 'psychic', 'ice', 'dragon', 'dark',
 ]);
+const moveTypeSchema = z.union([typeSchema, z.literal('unknown')]);
 const uniquePokemonIds = z.array(pokemonId).superRefine((ids, context) => {
   if (new Set(ids).size !== ids.length) context.addIssue({ code: 'custom', message: 'IDs must be unique' });
 });
@@ -76,7 +74,7 @@ export const moveRecordSchema = z.object({
   id: moveId,
   slug,
   name: nonEmptyText,
-  type: typeSchema,
+  type: moveTypeSchema,
   damageClass: z.enum(['physical', 'special', 'status']),
   power: nonNegativeInteger.nullable(),
   accuracy: z.number().int().min(1).max(100).nullable(),

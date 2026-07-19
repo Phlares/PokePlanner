@@ -88,6 +88,7 @@ describe('FireRed pack contracts', () => {
 
   it('rejects forbidden Generation III mechanics', () => {
     expect(() => parsePokemonRecords([{ ...mankey, types: ['fairy'] }])).toThrow();
+    expect(() => parsePokemonRecords([{ ...mankey, types: ['unknown'] }])).toThrow();
   });
 
   it('rejects evolutions whose target is not a Generation III Pokemon', () => {
@@ -130,12 +131,6 @@ describe('FireRed pack contracts', () => {
       provenance,
     };
     expect(parseFireRedIndexes(validIndexes)).toMatchObject({ provenance });
-    expect(parseFireRedIndexes({
-      ...validIndexes,
-      availabilityByMilestone: {
-        'pallet-town': { availableNow: [{ moveId: 10001, status: 'available-now' }], futureLevel: [], futureMilestone: [], unavailable: [] },
-      },
-    }).availabilityByMilestone['pallet-town'].availableNow.at(0)?.moveId).toBe(10001);
     expect(() => parseFireRedIndexes({ ...validIndexes, provenance: [] })).toThrow();
     expect(() => parseFireRedIndexes({
       ...validIndexes,
@@ -158,6 +153,7 @@ describe('FireRed pack contracts', () => {
     })).toThrow();
     expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByType: { ...genIIITypeIndex, fairy: [] } })).toThrow();
     expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByType: { ...genIIITypeIndex, sound: [] } })).toThrow();
+    expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByType: { ...genIIITypeIndex, unknown: [] } })).toThrow();
     const { fighting: _fighting, ...missingType } = genIIITypeIndex;
     expect(() => parseFireRedIndexes({ ...validIndexes, pokemonByType: missingType })).toThrow();
   });
@@ -165,18 +161,18 @@ describe('FireRed pack contracts', () => {
   it('parses bounded strict move records', () => {
     const move = { id: 247, slug: 'shadow-ball', name: 'Shadow Ball', type: 'ghost', damageClass: 'physical', power: 80, accuracy: 100, pp: 15, priority: 0, shortEffect: 'Deals damage.', provenance };
     expect(parseMoveRecords([move]).at(0)?.id).toBe(247);
-    expect(parseMoveRecords([{ ...move, id: 10001, slug: 'shadow-rush', name: 'Shadow Rush' }]).at(0)?.id).toBe(10001);
+    expect(parseMoveRecords([{ ...move, id: 174, slug: 'curse', name: 'Curse', type: 'unknown', damageClass: 'status', power: null, accuracy: null, pp: 10 }]).at(0)?.type).toBe('unknown');
     expect(() => parseMoveRecords([{ ...move, id: 355 }])).toThrow();
-    expect(() => parseMoveRecords([{ ...move, id: 10019 }])).toThrow();
+    expect(() => parseMoveRecords([{ ...move, id: 10001 }])).toThrow();
     expect(() => parseMoveRecords([{ ...move, unexpected: true }])).toThrow();
   });
 
   it('parses bounded strict learnset records', () => {
     const learnset = { pokemonId: 386, moves: [{ method: 'machine', moveId: 247, acquisitionIds: ['tm30'] }], provenance };
     expect(parseLearnsetRecords([learnset]).at(0)?.pokemonId).toBe(386);
-    expect(parseLearnsetRecords([{ ...learnset, moves: [{ method: 'transfer', moveId: 10001, reason: 'Shadow move evidence.' }] }]).at(0)?.moves.at(0)?.moveId).toBe(10001);
     expect(() => parseLearnsetRecords([{ ...learnset, pokemonId: 387 }])).toThrow();
     expect(() => parseLearnsetRecords([{ ...learnset, moves: [{ method: 'machine', moveId: 355, acquisitionIds: ['tm30'] }] }])).toThrow();
+    expect(() => parseLearnsetRecords([{ ...learnset, moves: [{ method: 'transfer', moveId: 10001, reason: 'Orre-only.' }] }])).toThrow();
   });
 
   it('parses bounded strict encounter areas', () => {
@@ -192,8 +188,8 @@ describe('FireRed pack contracts', () => {
   it('parses bounded strict acquisition records', () => {
     const machine = { id: 'tm30', name: 'TM30', subject: { kind: 'tm', moveId: 247, itemId: 420, machineNumber: 30 }, milestoneId: 'pallet-town', prerequisites: [], repeatable: false, status: 'standard', provenance };
     expect(parseAcquisitionRecords([machine]).at(0)?.id).toBe('tm30');
-    expect(parseAcquisitionRecords([{ ...machine, subject: { ...machine.subject, moveId: 10001 } }]).at(0)?.subject).toMatchObject({ moveId: 10001 });
     expect(() => parseAcquisitionRecords([{ ...machine, subject: { ...machine.subject, moveId: 355 } }])).toThrow();
+    expect(() => parseAcquisitionRecords([{ ...machine, subject: { ...machine.subject, moveId: 10001 } }])).toThrow();
     expect(() => parseAcquisitionRecords([{ ...machine, subject: { kind: 'gift', pokemonId: 387 } }])).toThrow();
     expect(() => parseAcquisitionRecords([{ ...machine, unexpected: true }])).toThrow();
   });

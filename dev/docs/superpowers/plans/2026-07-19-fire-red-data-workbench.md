@@ -15,8 +15,8 @@
 - The production application is fully static and has no required backend or browser-time PokéAPI dependency.
 - FireRed scope keys are version ID `10`, version-group ID `7`, and generation ID `3`; never treat them as interchangeable.
 - Pin and consume PokeAPI `api-data` revision `0fb5313cb77f46269502e987a53a0bf751ae883d`.
-- Compile all 386 species introduced in Generations I–III and all 372 moves introduced in Generations I–III, including version-valid transfer-only records with explicit availability evidence.
-- Apply Generation III historical stats, types, abilities, move values, and the type-based physical/special split; exclude Hidden Abilities, Fairy, later ability slots, later evolutions, and later mechanics.
+- Compile all 386 species introduced in Generations I–III and all 354 moves legal in the main-series Generation III ruleset, including version-valid transfer-only records with explicit availability evidence. Exclude the 18 Orre-only Shadow moves (PokeAPI IDs `10001..10018`): they use the non-FireRed `shadow` type, have no FireRed learnset, and cannot be transferred while retained.
+- Apply Generation III historical stats, types, abilities, move values, and the type-based physical/special split; exclude Hidden Abilities, Fairy, later ability slots, later evolutions, and later mechanics. Preserve Curse's Generation III `???` move type as the normalized move-only value `unknown`; it is not a Pokémon type or type-chart entry.
 - Canonical data is generated at build time and emitted as immutable static assets; IndexedDB stores user state and referenced IDs only.
 - Every generated or manually researched fact retains source revision, locator, import method, and confidence; provisional facts fail the verified pack build.
 - Treat `pret/pokefirered` commit `df4449a27cd78dd747ce269e47d3ab4a0149d8f4` as an accuracy reference only. Do not clone it into the project, mechanically extract it into served assets, copy its source, or represent it as licensed.
@@ -218,7 +218,7 @@ Start with current values, then apply `past_abilities`, `past_types`, and `past_
 
 - [ ] **Step 7: Add catalog coverage assertions and run GREEN**
 
-The pinned-source integration test must assert 386 Pokémon, 372 moves, 17 types, no hidden abilities, every Pokémon has one learnset record, and all emitted references resolve.
+The pinned-source integration test must assert 386 Pokémon, 354 FireRed-compatible moves, 17 Pokémon/type-chart types, no hidden abilities, every Pokémon has one learnset record, and all emitted references resolve. It must explicitly reject Orre-only Shadow moves rather than mapping their `shadow` type into FireRed and must retain Curse as move-only type `unknown`.
 
 Run: `npm run test -- scripts/data/firered/compiler-context.test.ts scripts/data/firered/normalizer.test.ts`
 
@@ -428,7 +428,7 @@ git commit -m "feat: index FireRed milestone availability"
 
 - [ ] **Step 1: Write validation RED tests**
 
-Reject unknown cross-file IDs, missing provenance, provisional facts, duplicate slugs, missing required assets, a future move in current availability, an unmapped encounter area, or a species without acquisition classification. Require the exact 386/372/17 coverage and version 10/group 7/generation 3 identity.
+Reject unknown cross-file IDs, missing provenance, provisional facts, duplicate slugs, missing required assets, a future move in current availability, an unmapped encounter area, or a species without acquisition classification. Require the exact 386/354/17 coverage and version 10/group 7/generation 3 identity, with PokeAPI Shadow move IDs `10001..10018` excluded as non-FireRed data.
 
 - [ ] **Step 2: Run and verify RED**
 
@@ -731,7 +731,7 @@ git commit -m "feat: complete FireRed planning workbench"
 - [ ] Re-run `npm run data:sync`, then `npm run data:verify`; record exact catalog, encounter, acquisition, and provisional counts from the report.
 - [ ] Run `npm run test`, `npm run typecheck`, and `npm run build` separately with fresh output.
 - [ ] Confirm the generated pack contains all required Plan 2 assets and no `opponents.json`.
-- [ ] Confirm all 386 species, 372 moves, 17 types, FireRed version 10 encounters, version-group 7 learnsets, and Generation III mechanics validate.
+- [ ] Confirm all 386 species, 354 FireRed-compatible moves, 17 Pokémon/type-chart types, FireRed version 10 encounters, version-group 7 learnsets, and Generation III mechanics validate; confirm Curse retains move-only type `unknown` and all 18 Orre-only Shadow moves are excluded.
 - [ ] Confirm Route 22 → Mankey → planned level → current/future moves → TM/HM drawers → primary/reserve assignment → reload works in component integration tests.
 - [ ] Confirm IndexedDB records and exports contain user state only and invalid imports cannot overwrite a valid record.
 - [ ] Confirm disabled selector entries use native disabled controls; narrow layout remains table-first; focus is visible; essential tooltip content is visible without hover.
