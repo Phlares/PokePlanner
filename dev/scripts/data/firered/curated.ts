@@ -4,8 +4,11 @@ import {
   type ProgressionNode,
   type RouteProgression,
 } from '../../../src/domain/progression';
+import { parseAcquisitionRecords, type AcquisitionRecord, type LearnsetRecord } from '../../../src/domain/pack';
+import type { NormalizedLearnsetRecord } from './normalizer';
 import progressionInput from '../../../data/firered/progression.json';
 import sourcesInput from '../../../data/firered/sources.json';
+import acquisitionsInput from '../../../data/firered/acquisitions.json';
 
 /**
  * The canonical set of FireRed (version 10) encounter-bearing PokeAPI location-area IDs,
@@ -121,6 +124,92 @@ function buildAreaIndex(nodes: readonly ProgressionNode[]): Map<number, string> 
     }
   }
   return nodeByAreaId;
+}
+
+/**
+ * Load and validate the curated non-wild / TM / HM / tutor acquisition facts
+ * (`acquisitions.json`). Beyond the shared zod contract, this asserts that every
+ * provenance entry resolves to a declared research source at the pinned revision
+ * (the progression registry is the source of truth for the Bulbapedia references)
+ * and rejects provisional confidence, so shipped acquisition facts stay grounded.
+ */
+export function loadFireRedAcquisitions(): AcquisitionRecord[] {
+  const records = parseAcquisitionRecords(acquisitionsInput);
+  const sources = new Map(loadFireRedProgression().sources.map((source) => [source.id, source.revision]));
+  const seen = new Set<string>();
+  for (const record of records) {
+    if (seen.has(record.id)) throw new Error(`Duplicate acquisition id "${record.id}"`);
+    seen.add(record.id);
+    for (const entry of record.provenance) {
+      const revision = sources.get(entry.sourceId);
+      if (revision === undefined || revision !== entry.revision) {
+        throw new Error(`Acquisition "${record.id}" cites unresolved source ${entry.sourceId}@${entry.revision}`);
+      }
+      if (entry.confidence === 'provisional') {
+        throw new Error(`Acquisition "${record.id}" carries provisional provenance; shipped facts must be verified or cross-checked`);
+      }
+    }
+  }
+  return records;
+}
+
+/**
+ * Join the pre-acquisition normalized learnsets (Task 2) to validated acquisition
+ * facts. Every `machine`/`tutor` learn entry is resolved to EVERY matching concrete
+ * acquisition id (by move + kind); level-up/egg/transfer methods pass through
+ * unchanged. Fails loudly if a machine/tutor entry resolves to zero acquisitions or
+ * if any produced acquisition id does not resolve to a known record.
+ */
+export function attachAcquisitionIds(
+  normalizedLearnsets: NormalizedLearnsetRecord[],
+  acquisitions: AcquisitionRecord[],
+): LearnsetRecord[] {
+  const machineByMove = new Map<number, string[]>();
+  const tutorByMove = new Map<number, string[]>();
+  const knownIds = new Set<string>();
+  for (const record of acquisitions) {
+    knownIds.add(record.id);
+    if (record.subject.kind === 'tm' || record.subject.kind === 'hm') {
+      const ids = machineByMove.get(record.subject.moveId) ?? [];
+      ids.push(record.id);
+      machineByMove.set(record.subject.moveId, ids);
+    } else if (record.subject.kind === 'tutor') {
+      const ids = tutorByMove.get(record.subject.moveId) ?? [];
+      ids.push(record.id);
+      tutorByMove.set(record.subject.moveId, ids);
+    }
+  }
+
+  const resolve = (lookup: Map<number, string[]>, moveId: number, kind: string, pokemonId: number): string[] => {
+    const ids = [...(lookup.get(moveId) ?? [])].sort();
+    if (ids.length === 0) {
+      throw new Error(`Pokemon ${pokemonId} ${kind} move ${moveId} resolves to zero acquisitions`);
+    }
+    for (const id of ids) {
+      if (!knownIds.has(id)) throw new Error(`Unresolved acquisition id "${id}" for move ${moveId}`);
+    }
+    return ids;
+  };
+
+  return normalizedLearnsets.map((record) => {
+    const moves: LearnsetRecord['moves'] = record.moves.map((move) => {
+      switch (move.method) {
+        case 'level-up':
+          return { method: 'level-up', moveId: move.moveId, level: move.level };
+        case 'egg':
+          return { method: 'egg', moveId: move.moveId };
+        case 'machine':
+          return { method: 'machine', moveId: move.moveId, acquisitionIds: resolve(machineByMove, move.moveId, 'machine', record.pokemonId) };
+        case 'tutor':
+          return { method: 'tutor', moveId: move.moveId, acquisitionIds: resolve(tutorByMove, move.moveId, 'tutor', record.pokemonId) };
+        default: {
+          const exhaustive: never = move;
+          throw new Error(`Unsupported learn method: ${JSON.stringify(exhaustive)}`);
+        }
+      }
+    });
+    return { pokemonId: record.pokemonId, moves, provenance: record.provenance };
+  });
 }
 
 export interface AreaToNodeMapping {
