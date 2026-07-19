@@ -56,6 +56,27 @@ describe('source lock', () => {
     })).toThrow(ZodError);
   });
 
+  it.each([
+    ['scheme shorthand', 'https:example.test/data.git'],
+    ['single slash', 'https:/example.test/data.git'],
+    ['backslashes', String.raw`https:\example.test\data.git`],
+    ['internal tab', 'https://example.test/da\tta.git'],
+    ['internal newline', 'https://example.test/data\n.git'],
+  ])('rejects a raw repository with WHATWG-normalized %s', (_case, repository) => {
+    expect(() => parseSourceLock({
+      schemaVersion: 1,
+      sources: [
+        REQUIRED_POKEAPI_SOURCE,
+        {
+          id: 'additional-source',
+          repository,
+          revision: '0123456789abcdef0123456789abcdef01234567',
+          license: null,
+        },
+      ],
+    })).toThrow(ZodError);
+  });
+
   it('rejects a different PokeAPI revision', () => {
     expect(() => parseSourceLock(foundationLock({
       revision: '0123456789abcdef0123456789abcdef01234567',

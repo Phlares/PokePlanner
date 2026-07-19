@@ -13,6 +13,27 @@ const sourceLockEntrySchema = z.object({
       });
       return;
     }
+    if (!value.startsWith('https://')) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Repository URL must start exactly with https://',
+      });
+      return;
+    }
+    if (/\p{White_Space}/u.test(value)) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Repository URL must not contain whitespace',
+      });
+      return;
+    }
+    if (value.includes('\\')) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Repository URL must not contain backslashes',
+      });
+      return;
+    }
 
     let repository: URL;
     try {
@@ -80,17 +101,22 @@ const sourceLockSchema = z.object({
 
 export type SourceLockFile = z.infer<typeof sourceLockSchema>;
 
+function readUnknownField(input: unknown, field: string): unknown {
+  if (typeof input !== 'object' || input === null) return undefined;
+  return Reflect.get(input, field);
+}
+
 export function parseSourceLockEntry(input: unknown): SourceLockEntry {
   const result = sourceLockEntrySchema.safeParse(input);
   if (result.success) return result.data;
 
   const field = result.error.issues[0]?.path[0];
-  if (field === 'id') throw new Error(`Invalid source ID: ${String((input as { id?: unknown })?.id)}`);
+  if (field === 'id') throw new Error(`Invalid source ID: ${String(readUnknownField(input, 'id'))}`);
   if (field === 'repository') {
-    throw new Error(`Invalid source repository: ${String((input as { repository?: unknown })?.repository)}`);
+    throw new Error(`Invalid source repository: ${String(readUnknownField(input, 'repository'))}`);
   }
   if (field === 'revision') {
-    throw new Error(`Invalid source revision: ${String((input as { revision?: unknown })?.revision)}`);
+    throw new Error(`Invalid source revision: ${String(readUnknownField(input, 'revision'))}`);
   }
   throw new Error(`Invalid source lock entry: ${z.prettifyError(result.error)}`);
 }
