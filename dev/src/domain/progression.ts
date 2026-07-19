@@ -174,7 +174,6 @@ function validateSemantics(progression: RouteProgression): string[] {
   });
 
   const nodeIndexById = new Map<string, number>();
-  const nodeIndexByOrder = new Map<number, number>();
   const eventOwnerById = new Map<string, { nodeId: string; nodeIndex: number; eventIndex: number }>();
 
   progression.nodes.forEach((node, nodeIndex) => {
@@ -187,17 +186,6 @@ function validateSemantics(progression: RouteProgression): string[] {
       ));
     } else {
       nodeIndexById.set(node.id, nodeIndex);
-    }
-
-    const firstOrderIndex = nodeIndexByOrder.get(node.goldenPathOrder);
-    if (firstOrderIndex !== undefined) {
-      errors.push(semanticError(
-        `/nodes/${nodeIndex}/goldenPathOrder`,
-        'uniqueOrder',
-        `must be unique; duplicates /nodes/${firstOrderIndex}/goldenPathOrder`,
-      ));
-    } else {
-      nodeIndexByOrder.set(node.goldenPathOrder, nodeIndex);
     }
 
     const eventIndexByOrder = new Map<number, number>();
@@ -350,12 +338,12 @@ function validatePrerequisiteCycles(
       const dependencyState = state.get(dependency.nodeId);
       if (dependencyState === 'visiting') {
         const cycleStart = activeIndexById.get(dependency.nodeId) ?? 0;
-        const cycle = [...activePath.slice(cycleStart), dependency.nodeId].join(' -> ');
         errors.push(semanticError(
           dependency.path,
           'cycle',
-          `prerequisite dependency creates a cycle: ${cycle}`,
+          `prerequisite dependency creates a cycle: ${formatCycleWitness(activePath, cycleStart, dependency.nodeId)}`,
         ));
+        return;
       } else if (dependencyState !== 'visited') {
         state.set(dependency.nodeId, 'visiting');
         activeIndexById.set(dependency.nodeId, activePath.length);
@@ -364,6 +352,26 @@ function validatePrerequisiteCycles(
       }
     }
   }
+}
+
+function formatCycleWitness(activePath: string[], cycleStart: number, closingNodeId: string): string {
+  const maxIdLength = 40;
+  const maxCycleNodes = 8;
+  const cycleLength = activePath.length - cycleStart;
+  const witness: string[] = [];
+
+  if (cycleLength <= maxCycleNodes) {
+    for (let index = cycleStart; index < activePath.length; index += 1) witness.push(activePath[index]);
+  } else {
+    for (let index = cycleStart; index < cycleStart + 4; index += 1) witness.push(activePath[index]);
+    witness.push('...');
+    for (let index = activePath.length - 3; index < activePath.length; index += 1) witness.push(activePath[index]);
+  }
+  witness.push(closingNodeId);
+
+  return witness.map((nodeId) => (
+    nodeId.length <= maxIdLength ? nodeId : `${nodeId.slice(0, maxIdLength - 3)}...`
+  )).join(' -> ');
 }
 
 function validateMainPath(
@@ -387,33 +395,17 @@ function validateMainPath(
     }
   }
 
-  const mainRoots = mainNodes.filter((node) => !incomingNodeIds.has(node.id));
-  if (mainRoots.length === 0) {
-    errors.push(semanticError(
-      '/nodes',
-      'mainPath',
-      'must contain a main root with no incoming nextNodeIds',
-    ));
-    return;
-  }
-
-  if (mainRoots.length > 1) {
-    errors.push(semanticError(
-      '/nodes',
-      'mainPath',
-      `a main root must reach every main node; disconnected main root IDs: ${mainRoots.map((node) => node.id).join(', ')}`,
-    ));
-    return;
-  }
-
+  const graphRoots = uniqueNodes.filter((node) => !incomingNodeIds.has(node.id));
   const reachable = new Set<string>();
-  const pending = [mainRoots[0].id];
+  const pending = graphRoots.map((node) => node.id);
   while (pending.length > 0) {
     const nodeId = pending.pop();
     if (nodeId === undefined || reachable.has(nodeId)) continue;
     reachable.add(nodeId);
     const node = nodeById.get(nodeId);
-    if (node) pending.push(...node.nextNodeIds);
+    if (node) {
+      for (const nextNodeId of node.nextNodeIds) pending.push(nextNodeId);
+    }
   }
 
   const unreachable = mainNodes.filter((node) => !reachable.has(node.id)).map((node) => node.id);
@@ -422,7 +414,7 @@ function validateMainPath(
   errors.push(semanticError(
     '/nodes',
     'mainPath',
-    `a main root must reach every main node through nextNodeIds; unreachable main node IDs: ${unreachable.join(', ')}`,
+    `every main node must be reachable from the graph roots through nextNodeIds; unreachable main node IDs: ${unreachable.join(', ')}`,
   ));
 }
 

@@ -159,6 +159,18 @@ describe('validateRouteProgression', () => {
     expect(validateRouteProgression(input)).toEqual({ valid: true });
   });
 
+  it.each(['optional', 'alternate'] as const)(
+    'accepts a main node and an %s node with the same goldenPathOrder',
+    (branch) => {
+      const input = makeProgression({ nodes: [
+        makeNode({ id: 'main-node', goldenPathOrder: 10 }),
+        makeNode({ id: `${branch}-node`, goldenPathOrder: 10, branch }),
+      ] });
+
+      expect(validateRouteProgression(input)).toEqual({ valid: true });
+    },
+  );
+
   it('preserves JSON Schema errors', () => {
     const input = makeProgression();
     input.nodes[0].provenance = [];
@@ -175,7 +187,7 @@ describe('validateRouteProgression', () => {
 
   it('rejects duplicate node IDs', () => {
     const input = makeProgression();
-    input.nodes.push(makeNode());
+    input.nodes.push(makeNode({ goldenPathOrder: 2 }));
 
     expectInvalidWith(input, '/nodes/1/id uniqueId');
   });
@@ -186,13 +198,6 @@ describe('validateRouteProgression', () => {
     input.nodes[1].events[0].id = 'duplicate-event';
 
     expectInvalidWith(input, '/nodes/1/events/0/id uniqueId');
-  });
-
-  it('rejects duplicate goldenPathOrder values globally', () => {
-    const input = makePositiveGraph();
-    input.nodes[1].goldenPathOrder = input.nodes[0].goldenPathOrder;
-
-    expectInvalidWith(input, '/nodes/1/goldenPathOrder uniqueOrder');
   });
 
   it('rejects duplicate event order values within a node', () => {
@@ -291,6 +296,30 @@ describe('validateRouteProgression', () => {
     expectInvalidWith(input, 'cycle: prerequisite dependency creates a cycle');
   });
 
+  it('reports one bounded witness for a large prerequisite dependency cycle', () => {
+    const nodeCount = 100;
+    const input = makeProgression({
+      nodes: Array.from({ length: nodeCount }, (_, index) => makeNode({
+        id: `cycle-node-${index}`,
+        goldenPathOrder: index,
+        prerequisiteEventIds: index === 0
+          ? ['cycle-event-1', 'cycle-event-0']
+          : [`cycle-event-${(index + 1) % nodeCount}`],
+        nextNodeIds: index + 1 < nodeCount ? [`cycle-node-${index + 1}`] : [],
+        events: [makeEvent({ id: `cycle-event-${index}` })],
+      })),
+    });
+
+    const result = validateRouteProgression(input);
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      const cycleErrors = result.errors.filter((error) => error.includes(' cycle:'));
+      expect(cycleErrors).toHaveLength(1);
+      expect(cycleErrors[0].length).toBeLessThan(512);
+      expect(cycleErrors[0]).toContain('...');
+    }
+  });
+
   it('rejects a graph without any main node', () => {
     const input = makeProgression();
     input.nodes[0].branch = 'optional';
@@ -298,13 +327,42 @@ describe('validateRouteProgression', () => {
     expectInvalidWith(input, '/nodes mainPath');
   });
 
-  it('rejects disconnected main nodes', () => {
+  it('accepts multiple independent roots whose union reaches every main node', () => {
     const input = makeProgression({ nodes: [
       makeNode({ id: 'main-a', goldenPathOrder: 0 }),
       makeNode({ id: 'main-b', goldenPathOrder: 1, branch: 'main' }),
     ] });
 
-    expectInvalidWith(input, '/nodes mainPath');
+    expect(validateRouteProgression(input)).toEqual({ valid: true });
+  });
+
+  it('accepts a main path entered from an optional root', () => {
+    const input = makeProgression({ nodes: [
+      makeNode({
+        id: 'optional-root',
+        goldenPathOrder: 0,
+        branch: 'optional',
+        nextNodeIds: ['main-node'],
+      }),
+      makeNode({ id: 'main-node', goldenPathOrder: 1, branch: 'main' }),
+    ] });
+
+    expect(validateRouteProgression(input)).toEqual({ valid: true });
+  });
+
+  it('accepts a main cycle reached from an external optional root', () => {
+    const input = makeProgression({ nodes: [
+      makeNode({
+        id: 'optional-root',
+        goldenPathOrder: 0,
+        branch: 'optional',
+        nextNodeIds: ['main-a'],
+      }),
+      makeNode({ id: 'main-a', goldenPathOrder: 1, nextNodeIds: ['main-b'] }),
+      makeNode({ id: 'main-b', goldenPathOrder: 2, branch: 'main', nextNodeIds: ['main-a'] }),
+    ] });
+
+    expect(validateRouteProgression(input)).toEqual({ valid: true });
   });
 
   it('rejects a rootless cycle of main nodes', () => {
@@ -321,7 +379,13 @@ describe('validateRouteProgression', () => {
     input.sources.push({ ...input.sources[0] });
     input.nodes[0].nextNodeIds = ['missing-node'];
 
-    expectInvalidWith(input, '/sources/1/id uniqueId', '/nodes/0/nextNodeIds/0 reference');
+    expect(validateRouteProgression(input)).toEqual({
+      valid: false,
+      errors: [
+        '/sources/1/id uniqueId: must be unique; duplicates /sources/0/id',
+        '/nodes/0/nextNodeIds/0 reference: must resolve to a declared node; unknown node ID "missing-node"',
+      ],
+    });
   });
 
   it('does not throw for a deep acyclic prerequisite graph', () => {
@@ -334,6 +398,23 @@ describe('validateRouteProgression', () => {
         nextNodeIds: index + 1 < nodeCount ? [`node-${index + 1}`] : [],
         events: [makeEvent({ id: `event-${index}` })],
       })),
+    });
+
+    expect(validateRouteProgression(input)).toEqual({ valid: true });
+  });
+
+  it('does not throw for a node wider than V8 argument limits', () => {
+    const childCount = 130_000;
+    const childIds = Array.from({ length: childCount }, (_, index) => `wide-child-${index}`);
+    const input = makeProgression({
+      nodes: [
+        makeNode({ id: 'wide-root', goldenPathOrder: 0, nextNodeIds: childIds }),
+        ...childIds.map((id, index) => makeNode({
+          id,
+          goldenPathOrder: index + 1,
+          branch: 'optional',
+        })),
+      ],
     });
 
     expect(validateRouteProgression(input)).toEqual({ valid: true });
