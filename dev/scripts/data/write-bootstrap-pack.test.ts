@@ -43,8 +43,9 @@ describe('bootstrap pack generator', () => {
     const serialized = serializeBootstrapManifest(buildBootstrapManifest(lock));
     expect(serialized).toBe(`${JSON.stringify(buildBootstrapManifest(lock), null, 2)}\n`);
     expect(serialized.endsWith('\n\n')).toBe(false);
-    expect(Buffer.from(serialized)).toContainEqual(0xc3);
-    expect(Buffer.from(serialized)).toContainEqual(0xa9);
+    expect(Buffer.from(serialized).indexOf(Buffer.from([
+      0x50, 0x6f, 0x6b, 0xc3, 0xa9, 0x6d, 0x6f, 0x6e, 0x20, 0x46, 0x69, 0x72, 0x65, 0x52, 0x65, 0x64,
+    ]))).toBeGreaterThanOrEqual(0);
   });
 
   it('writes the bootstrap manifest beneath the supplied project root', () => {
