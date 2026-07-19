@@ -100,23 +100,31 @@ describe('FireRed pack contracts', () => {
       itemId: null,
       locationId: null,
       status: 'standard',
+      milestoneId: null,
       reason: null,
       provenance,
     }])).toThrow();
   });
 
-  it('accepts a valid bounded evolution edge', () => {
-    expect(parseEvolutionEdges([{
-      fromPokemonId: 56,
-      toPokemonId: 57,
-      trigger: 'level',
-      minimumLevel: 28,
+  it('accepts a milestone-gated evolution edge and enforces its strict shape', () => {
+    const edge = {
+      fromPokemonId: 42,
+      toPokemonId: 169,
+      trigger: 'friendship',
+      minimumLevel: null,
       itemId: null,
       locationId: null,
-      status: 'standard',
+      status: 'postgame',
+      milestoneId: 'national-dex',
       reason: null,
       provenance,
-    }]).at(0)?.toPokemonId).toBe(57);
+    };
+
+    expect(parseEvolutionEdges([edge]).at(0)?.milestoneId).toBe('national-dex');
+    const { milestoneId: _milestoneId, ...missingMilestone } = edge;
+    expect(() => parseEvolutionEdges([missingMilestone])).toThrow();
+    expect(() => parseEvolutionEdges([{ ...edge, milestoneId: 'National Dex' }])).toThrow();
+    expect(() => parseEvolutionEdges([{ ...edge, gate: 'national-dex' }])).toThrow();
   });
 
   it('does not admit future moves in an available-now index', () => {

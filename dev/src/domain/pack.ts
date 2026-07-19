@@ -145,6 +145,7 @@ export const evolutionEdgeSchema = z.object({
   itemId: positiveInteger.nullable(),
   locationId: positiveInteger.nullable(),
   status: z.enum(['standard', 'postgame', 'version-exclusive', 'event-only', 'transfer-only', 'unavailable']),
+  milestoneId: slug.nullable(),
   reason: z.string().nullable(),
   provenance: provenanceList,
 }).strict().refine((edge) => edge.fromPokemonId !== edge.toPokemonId, 'Evolution must change Pokemon');
