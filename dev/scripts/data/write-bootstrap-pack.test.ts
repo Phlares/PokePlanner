@@ -1,20 +1,28 @@
-import { resolve } from 'node:path';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { FIRERED_CONTEXT } from '../../src/domain/game';
+import { REQUIRED_POKEAPI_SOURCE } from './source-lock';
 import {
   buildBootstrapManifest,
   serializeBootstrapManifest,
+  runBootstrapPack,
   writeBootstrapPack,
   type SourceLock,
 } from './write-bootstrap-pack';
 
 const lock: SourceLock = {
-  sources: [{
-    id: 'alternate-locked-source',
-    revision: '0123456789abcdef0123456789abcdef01234567',
-    repository: 'https://example.test/data.git',
-    license: 'BSD-3-Clause',
-  }],
+  schemaVersion: 1,
+  sources: [
+    REQUIRED_POKEAPI_SOURCE,
+    {
+      id: 'alternate-locked-source',
+      revision: '0123456789abcdef0123456789abcdef01234567',
+      repository: 'https://example.test/data.git',
+      license: 'BSD-3-Clause',
+    },
+  ],
 };
 
 describe('bootstrap pack generator', () => {
@@ -23,7 +31,10 @@ describe('bootstrap pack generator', () => {
       schemaVersion: 1,
       packVersion: 'firered-bootstrap-1',
       game: FIRERED_CONTEXT,
-      sources: [{ id: 'alternate-locked-source', revision: '0123456789abcdef0123456789abcdef01234567' }],
+      sources: [
+        { id: REQUIRED_POKEAPI_SOURCE.id, revision: REQUIRED_POKEAPI_SOURCE.revision },
+        { id: 'alternate-locked-source', revision: '0123456789abcdef0123456789abcdef01234567' },
+      ],
       files: {},
     });
   });
@@ -44,5 +55,26 @@ describe('bootstrap pack generator', () => {
     const output = resolve('C:/repo/dev', 'public/data/firered/manifest.json');
     expect(mkdir).toHaveBeenCalledWith(resolve(output, '..'), { recursive: true });
     expect(writeFile).toHaveBeenCalledWith(output, serializeBootstrapManifest(buildBootstrapManifest(lock)), 'utf8');
+  });
+
+  it('rejects an invalid on-disk lock before writing the manifest', () => {
+    const projectRoot = mkdtempSync(join(tmpdir(), 'pokeplanner-bootstrap-'));
+    try {
+      mkdirSync(resolve(projectRoot, 'data'), { recursive: true });
+      writeFileSync(resolve(projectRoot, 'data/sources.lock.json'), JSON.stringify({
+        schemaVersion: 1,
+        sources: [{
+          id: 'pokeapi-api-data',
+          repository: 'https://github.com/PokeAPI/api-data.git',
+          revision: 'main',
+          license: 'BSD-3-Clause',
+        }],
+      }), 'utf8');
+
+      expect(() => runBootstrapPack(projectRoot)).toThrow();
+      expect(existsSync(resolve(projectRoot, 'public/data/firered/manifest.json'))).toBe(false);
+    } finally {
+      rmSync(projectRoot, { recursive: true, force: true });
+    }
   });
 });

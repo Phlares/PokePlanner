@@ -3,22 +3,22 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { FIRERED_CONTEXT } from '../../src/domain/game';
 import { parseGamePackManifest, type GamePackManifest } from '../../src/data/manifest';
+import { parseSourceLock, type SourceLockFile } from './source-lock';
 
-export type SourceLock = {
-  sources: Array<{ id: string; revision: string; [key: string]: unknown }>;
-};
+export type SourceLock = SourceLockFile;
 
 interface BootstrapPackWriter {
   mkdir: typeof mkdirSync;
   writeFile: typeof writeFileSync;
 }
 
-export function buildBootstrapManifest(lock: SourceLock): GamePackManifest {
+export function buildBootstrapManifest(lock: unknown): GamePackManifest {
+  const validatedLock = parseSourceLock(lock);
   return parseGamePackManifest({
     schemaVersion: 1,
     packVersion: 'firered-bootstrap-1',
     game: FIRERED_CONTEXT,
-    sources: lock.sources.map(({ id, revision }) => ({ id, revision })),
+    sources: validatedLock.sources.map(({ id, revision }) => ({ id, revision })),
     files: {},
   });
 }
@@ -29,7 +29,7 @@ export function serializeBootstrapManifest(manifest: GamePackManifest): string {
 
 export function writeBootstrapPack(
   projectRoot: string,
-  lock: SourceLock,
+  lock: unknown,
   { mkdir, writeFile }: BootstrapPackWriter = { mkdir: mkdirSync, writeFile: writeFileSync },
 ): void {
   const output = resolve(projectRoot, 'public/data/firered/manifest.json');
@@ -38,7 +38,7 @@ export function writeBootstrapPack(
 }
 
 export function runBootstrapPack(projectRoot = process.cwd()): void {
-  const lock = JSON.parse(readFileSync(resolve(projectRoot, 'data/sources.lock.json'), 'utf8')) as SourceLock;
+  const lock: unknown = JSON.parse(readFileSync(resolve(projectRoot, 'data/sources.lock.json'), 'utf8'));
   writeBootstrapPack(projectRoot, lock);
 }
 

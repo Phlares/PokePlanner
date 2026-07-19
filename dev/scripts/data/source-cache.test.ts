@@ -75,7 +75,8 @@ describe('source cache', () => {
 
   it('fetches only the pinned revision and verifies HEAD', () => {
     const runGit = vi.fn().mockReturnValueOnce(undefined).mockReturnValueOnce(undefined)
-      .mockReturnValueOnce(undefined).mockReturnValueOnce(undefined).mockReturnValueOnce(lock.revision);
+      .mockReturnValueOnce(undefined).mockReturnValueOnce(undefined).mockReturnValueOnce(lock.revision)
+      .mockReturnValueOnce('');
     const mkdir = vi.fn();
     syncSource('C:/repo/dev', lock, {
       runGit,
@@ -90,6 +91,7 @@ describe('source cache', () => {
       ['fetch', '--depth', '1', 'origin', lock.revision],
       ['checkout', '--detach', 'FETCH_HEAD'],
       ['rev-parse', 'HEAD'],
+      ['status', '--porcelain=v1', '--untracked-files=all'],
     ]);
   });
 
@@ -104,8 +106,46 @@ describe('source cache', () => {
       .toThrow('Source revision mismatch');
   });
 
+  it('rejects an existing cache with a tracked modification', () => {
+    const runGit = vi.fn()
+      .mockReturnValueOnce(lock.revision)
+      .mockReturnValueOnce(' M data/api/v2/pokemon/56/index.json\n');
+
+    expect(() => syncSource('C:/repo/dev', lock, {
+      runGit,
+      exists: () => true,
+      mkdir: vi.fn(),
+      ...promotionDependencies(),
+    })).toThrow(/source (working tree|cache) integrity/i);
+
+    expect(runGit.mock.calls.map((call) => call[1])).toEqual([
+      ['rev-parse', 'HEAD'],
+      ['status', '--porcelain=v1', '--untracked-files=all'],
+    ]);
+  });
+
+  it('rejects an existing cache with an untracked file', () => {
+    const runGit = vi.fn()
+      .mockReturnValueOnce(lock.revision)
+      .mockReturnValueOnce('?? local-note.txt\n');
+
+    expect(() => syncSource('C:/repo/dev', lock, {
+      runGit,
+      exists: () => true,
+      mkdir: vi.fn(),
+      ...promotionDependencies(),
+    })).toThrow(/source (working tree|cache) integrity/i);
+
+    expect(runGit.mock.calls.map((call) => call[1])).toEqual([
+      ['rev-parse', 'HEAD'],
+      ['status', '--porcelain=v1', '--untracked-files=all'],
+    ]);
+  });
+
   it('accepts an existing cache at the exact pinned revision without fetching', () => {
-    const runGit = vi.fn().mockReturnValue(lock.revision);
+    const runGit = vi.fn()
+      .mockReturnValueOnce(lock.revision)
+      .mockReturnValueOnce('');
     const target = syncSource('C:/repo/dev', lock, {
       runGit,
       exists: () => true,
@@ -113,8 +153,9 @@ describe('source cache', () => {
       ...promotionDependencies(),
     });
     expect(target).toBe(sourceCachePath('C:/repo/dev', lock));
-    expect(runGit).toHaveBeenCalledTimes(1);
+    expect(runGit).toHaveBeenCalledTimes(2);
     expect(runGit).toHaveBeenCalledWith(target, ['rev-parse', 'HEAD']);
+    expect(runGit).toHaveBeenCalledWith(target, ['status', '--porcelain=v1', '--untracked-files=all']);
   });
 
   it('rejects a temporary target outside the resolved cache root before creating it', () => {
@@ -128,6 +169,31 @@ describe('source cache', () => {
       remove: vi.fn(),
     })).toThrow('Unsafe temporary source cache path');
     expect(mkdir).not.toHaveBeenCalled();
+  });
+
+  it('cleans a dirty temporary checkout instead of promoting it', () => {
+    const target = sourceCachePath('C:/repo/dev', lock);
+    const temporaryTarget = `${target}.partial-test`;
+    const paths = new Set<string>();
+    const remove = vi.fn((path: string) => paths.delete(path));
+    const rename = vi.fn();
+    const runGit = vi.fn((_cwd: string, args: string[]) => {
+      if (args[0] === 'rev-parse') return lock.revision;
+      if (args[0] === 'status') return '?? generated-local-file.json\n';
+      return undefined;
+    });
+
+    expect(() => syncSource('C:/repo/dev', lock, {
+      runGit,
+      exists: (path) => paths.has(path),
+      mkdir: (path) => { paths.add(path); },
+      temporaryTarget: () => temporaryTarget,
+      rename,
+      remove,
+    })).toThrow(/source cache integrity/i);
+
+    expect(remove).toHaveBeenCalledWith(temporaryTarget);
+    expect(rename).not.toHaveBeenCalled();
   });
 
   it('cleans a failed temporary checkout and allows a later retry', () => {
@@ -157,7 +223,9 @@ describe('source cache', () => {
     expect(mkdir).not.toHaveBeenCalledWith(target);
     expect(remove).toHaveBeenCalledWith(temporaryTarget);
 
-    const retryGit = vi.fn().mockReturnValue(lock.revision);
+    const retryGit = vi.fn((_cwd: string, args: string[]) => (
+      args[0] === 'rev-parse' ? lock.revision : ''
+    ));
     expect(() => syncSource('C:/repo/dev', lock, { ...dependencies, runGit: retryGit })).not.toThrow();
     expect(rename).toHaveBeenCalledWith(temporaryTarget, target);
   });
