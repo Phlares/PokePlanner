@@ -14,7 +14,7 @@ function withLock(overrides: Partial<SourceLock>): SourceLock {
 
 function promotionDependencies() {
   return {
-    temporaryTarget: (target: string) => `${target}.partial-test`,
+    temporaryTarget: vi.fn((target: string) => `${target}.partial-test`),
     rename: vi.fn(),
     remove: vi.fn(),
   };
@@ -37,6 +37,27 @@ describe('source cache', () => {
       .toThrow('Invalid source revision');
     expect(() => sourceCachePath('C:/repo/dev', withLock({ revision: '--upload-pack=evil' })))
       .toThrow('Invalid source revision');
+  });
+
+  it('rejects uppercase revisions before calling dependencies', () => {
+    const runGit = vi.fn();
+    const exists = vi.fn();
+    const mkdir = vi.fn();
+    const promotion = promotionDependencies();
+
+    expect(() => syncSource('C:/repo/dev', withLock({ revision: lock.revision.toUpperCase() }), {
+      runGit,
+      exists,
+      mkdir,
+      ...promotion,
+    })).toThrow('Invalid source revision');
+
+    expect(runGit).not.toHaveBeenCalled();
+    expect(exists).not.toHaveBeenCalled();
+    expect(mkdir).not.toHaveBeenCalled();
+    expect(promotion.temporaryTarget).not.toHaveBeenCalled();
+    expect(promotion.rename).not.toHaveBeenCalled();
+    expect(promotion.remove).not.toHaveBeenCalled();
   });
 
   it('rejects unsafe repository URLs before filesystem or Git use', () => {

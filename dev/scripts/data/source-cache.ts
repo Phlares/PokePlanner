@@ -72,7 +72,7 @@ export function syncSource(
 }
 
 const SOURCE_ID_PATTERN = /^[a-z][a-z0-9-]*$/;
-const REVISION_PATTERN = /^[0-9a-f]{40}$/i;
+const REVISION_PATTERN = /^[0-9a-f]{40}$/;
 
 function validateSourceLock(lock: SourceLock): void {
   if (!SOURCE_ID_PATTERN.test(lock.id)) throw new Error(`Invalid source ID: ${lock.id}`);

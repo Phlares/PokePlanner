@@ -24,4 +24,11 @@ describe('game pack manifest', () => {
     const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify(validManifest)));
     await expect(loadGamePackManifest(fetcher, '/data/firered/manifest.json')).resolves.toEqual(validManifest);
   });
+
+  it('reports an HTTP error from the injected fetcher', async () => {
+    const fetcher = vi.fn().mockResolvedValue(new Response('', { status: 404 }));
+
+    await expect(loadGamePackManifest(fetcher, '/data/firered/manifest.json'))
+      .rejects.toThrow('Unable to load game pack manifest: 404');
+  });
 });
