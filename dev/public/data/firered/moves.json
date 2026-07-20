@@ -1,0 +1,7790 @@
+[
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 1,
+    "name": "Pound",
+    "power": 40,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/1",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "pound",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 2,
+    "name": "Karate Chop",
+    "power": 50,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/2",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit.",
+    "slug": "karate-chop",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 3,
+    "name": "Double Slap",
+    "power": 15,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/3",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "double-slap",
+    "type": "normal"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 4,
+    "name": "Comet Punch",
+    "power": 18,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/4",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "comet-punch",
+    "type": "normal"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 5,
+    "name": "Mega Punch",
+    "power": 80,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/5",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "mega-punch",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 6,
+    "name": "Pay Day",
+    "power": 40,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/6",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Scatters money on the ground worth five times the user’s level.",
+    "slug": "pay-day",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 7,
+    "name": "Fire Punch",
+    "power": 75,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/7",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to burn the target.",
+    "slug": "fire-punch",
+    "type": "fire"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 8,
+    "name": "Ice Punch",
+    "power": 75,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/8",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to freeze the target.",
+    "slug": "ice-punch",
+    "type": "ice"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 9,
+    "name": "Thunder Punch",
+    "power": 75,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/9",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "thunder-punch",
+    "type": "electric"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 10,
+    "name": "Scratch",
+    "power": 40,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/10",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "scratch",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 11,
+    "name": "Vise Grip",
+    "power": 55,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/11",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "vice-grip",
+    "type": "normal"
+  },
+  {
+    "accuracy": 30,
+    "damageClass": "physical",
+    "id": 12,
+    "name": "Guillotine",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/12",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Causes a one-hit KO.",
+    "slug": "guillotine",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 13,
+    "name": "Razor Wind",
+    "power": 80,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/13",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Requires a turn to charge before attacking.",
+    "slug": "razor-wind",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 14,
+    "name": "Swords Dance",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/14",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Attack by two stages.",
+    "slug": "swords-dance",
+    "type": "normal"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 15,
+    "name": "Cut",
+    "power": 50,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/15",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "cut",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 16,
+    "name": "Gust",
+    "power": 40,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/16",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage and can hit Pokémon in the air.",
+    "slug": "gust",
+    "type": "flying"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 17,
+    "name": "Wing Attack",
+    "power": 60,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/17",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "wing-attack",
+    "type": "flying"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 18,
+    "name": "Whirlwind",
+    "power": null,
+    "pp": 20,
+    "priority": -6,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/18",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Immediately ends wild battles.  Forces trainers to switch Pokémon.",
+    "slug": "whirlwind",
+    "type": "normal"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 19,
+    "name": "Fly",
+    "power": 70,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/19",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User flies high into the air, dodging all attacks, and hits next turn.",
+    "slug": "fly",
+    "type": "flying"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "physical",
+    "id": 20,
+    "name": "Bind",
+    "power": 15,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/20",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
+    "slug": "bind",
+    "type": "normal"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "physical",
+    "id": 21,
+    "name": "Slam",
+    "power": 80,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/21",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "slam",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 22,
+    "name": "Vine Whip",
+    "power": 35,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/22",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "vine-whip",
+    "type": "grass"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 23,
+    "name": "Stomp",
+    "power": 65,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/23",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "stomp",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 24,
+    "name": "Double Kick",
+    "power": 30,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/24",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits twice in one turn.",
+    "slug": "double-kick",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "physical",
+    "id": 25,
+    "name": "Mega Kick",
+    "power": 120,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/25",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "mega-kick",
+    "type": "normal"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 26,
+    "name": "Jump Kick",
+    "power": 70,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/26",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "If this move misses, the user takes damage equal to half of its max HP rounded down.",
+    "slug": "jump-kick",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 27,
+    "name": "Rolling Kick",
+    "power": 60,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/27",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "rolling-kick",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 28,
+    "name": "Sand Attack",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/28",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s accuracy by one stage.",
+    "slug": "sand-attack",
+    "type": "ground"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 29,
+    "name": "Headbutt",
+    "power": 70,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/29",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "headbutt",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 30,
+    "name": "Horn Attack",
+    "power": 65,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/30",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "horn-attack",
+    "type": "normal"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 31,
+    "name": "Fury Attack",
+    "power": 15,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/31",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "fury-attack",
+    "type": "normal"
+  },
+  {
+    "accuracy": 30,
+    "damageClass": "physical",
+    "id": 32,
+    "name": "Horn Drill",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/32",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Causes a one-hit KO.",
+    "slug": "horn-drill",
+    "type": "normal"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 33,
+    "name": "Tackle",
+    "power": 35,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/33",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "tackle",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 34,
+    "name": "Body Slam",
+    "power": 85,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/34",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "body-slam",
+    "type": "normal"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 35,
+    "name": "Wrap",
+    "power": 15,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/35",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
+    "slug": "wrap",
+    "type": "normal"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 36,
+    "name": "Take Down",
+    "power": 90,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/36",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User receives 1/4 the damage it inflicts in recoil.",
+    "slug": "take-down",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 37,
+    "name": "Thrash",
+    "power": 90,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/37",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits every turn for 2-3 turns, then confuses the user.",
+    "slug": "thrash",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 38,
+    "name": "Double-Edge",
+    "power": 120,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/38",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User receives 1/3 the damage inflicted in recoil.",
+    "slug": "double-edge",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 39,
+    "name": "Tail Whip",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/39",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Defense by one stage.",
+    "slug": "tail-whip",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 40,
+    "name": "Poison Sting",
+    "power": 15,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/40",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to poison the target.",
+    "slug": "poison-sting",
+    "type": "poison"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 41,
+    "name": "Twineedle",
+    "power": 25,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/41",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits twice in the same turn.  Has a chance to poison the target.",
+    "slug": "twineedle",
+    "type": "bug"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 42,
+    "name": "Pin Missile",
+    "power": 14,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/42",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "pin-missile",
+    "type": "bug"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 43,
+    "name": "Leer",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/43",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Defense by one stage.",
+    "slug": "leer",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 44,
+    "name": "Bite",
+    "power": 60,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/44",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "bite",
+    "type": "dark"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 45,
+    "name": "Growl",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/45",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Attack by one stage.",
+    "slug": "growl",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 46,
+    "name": "Roar",
+    "power": null,
+    "pp": 20,
+    "priority": -6,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/46",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Immediately ends wild battles.  Forces trainers to switch Pokémon.",
+    "slug": "roar",
+    "type": "normal"
+  },
+  {
+    "accuracy": 55,
+    "damageClass": "status",
+    "id": 47,
+    "name": "Sing",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/47",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Puts the target to sleep.",
+    "slug": "sing",
+    "type": "normal"
+  },
+  {
+    "accuracy": 55,
+    "damageClass": "status",
+    "id": 48,
+    "name": "Supersonic",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/48",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Confuses the target.",
+    "slug": "supersonic",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 49,
+    "name": "Sonic Boom",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/49",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts 20 points of damage.",
+    "slug": "sonic-boom",
+    "type": "normal"
+  },
+  {
+    "accuracy": 55,
+    "damageClass": "status",
+    "id": 50,
+    "name": "Disable",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/50",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Disables the target’s last used move for 1-8 turns.",
+    "slug": "disable",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 51,
+    "name": "Acid",
+    "power": 40,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/51",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Special Defense by one stage.",
+    "slug": "acid",
+    "type": "poison"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 52,
+    "name": "Ember",
+    "power": 40,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/52",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to burn the target.",
+    "slug": "ember",
+    "type": "fire"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 53,
+    "name": "Flamethrower",
+    "power": 95,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/53",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to burn the target.",
+    "slug": "flamethrower",
+    "type": "fire"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 54,
+    "name": "Mist",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/54",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Protects the user’s stats from being changed by enemy moves.",
+    "slug": "mist",
+    "type": "ice"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 55,
+    "name": "Water Gun",
+    "power": 40,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/55",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "water-gun",
+    "type": "water"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "special",
+    "id": 56,
+    "name": "Hydro Pump",
+    "power": 120,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/56",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "hydro-pump",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 57,
+    "name": "Surf",
+    "power": 95,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/57",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage and can hit Dive users.",
+    "slug": "surf",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 58,
+    "name": "Ice Beam",
+    "power": 95,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/58",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to freeze the target.",
+    "slug": "ice-beam",
+    "type": "ice"
+  },
+  {
+    "accuracy": 70,
+    "damageClass": "special",
+    "id": 59,
+    "name": "Blizzard",
+    "power": 120,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/59",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Does not interact with Hail.",
+    "slug": "blizzard",
+    "type": "ice"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 60,
+    "name": "Psybeam",
+    "power": 65,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/60",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to confuse the target.",
+    "slug": "psybeam",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 61,
+    "name": "Bubble Beam",
+    "power": 65,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/61",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Speed by one stage.",
+    "slug": "bubble-beam",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 62,
+    "name": "Aurora Beam",
+    "power": 65,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/62",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Attack by one stage.",
+    "slug": "aurora-beam",
+    "type": "ice"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 63,
+    "name": "Hyper Beam",
+    "power": 150,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/63",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User foregoes its next turn to recharge.",
+    "slug": "hyper-beam",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 64,
+    "name": "Peck",
+    "power": 35,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/64",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "peck",
+    "type": "flying"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 65,
+    "name": "Drill Peck",
+    "power": 80,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/65",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "drill-peck",
+    "type": "flying"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "physical",
+    "id": 66,
+    "name": "Submission",
+    "power": 80,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/66",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User receives 1/4 the damage it inflicts in recoil.",
+    "slug": "submission",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 67,
+    "name": "Low Kick",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/67",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts more damage to heavier targets, with a maximum of 120 power.",
+    "slug": "low-kick",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 68,
+    "name": "Counter",
+    "power": null,
+    "pp": 20,
+    "priority": -5,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/68",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts twice the damage the user received from the last physical hit it took.",
+    "slug": "counter",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 69,
+    "name": "Seismic Toss",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/69",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts damage equal to the user’s level.",
+    "slug": "seismic-toss",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 70,
+    "name": "Strength",
+    "power": 80,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/70",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "strength",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 71,
+    "name": "Absorb",
+    "power": 20,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/71",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Drains half the damage inflicted to heal the user.",
+    "slug": "absorb",
+    "type": "grass"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 72,
+    "name": "Mega Drain",
+    "power": 40,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/72",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Drains half the damage inflicted to heal the user.",
+    "slug": "mega-drain",
+    "type": "grass"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "status",
+    "id": 73,
+    "name": "Leech Seed",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/73",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Seeds the target, stealing HP from it every turn.",
+    "slug": "leech-seed",
+    "type": "grass"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 74,
+    "name": "Growth",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/74",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Attack and Special Attack by one stage.",
+    "slug": "growth",
+    "type": "normal"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "special",
+    "id": 75,
+    "name": "Razor Leaf",
+    "power": 55,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/75",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit.",
+    "slug": "razor-leaf",
+    "type": "grass"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 76,
+    "name": "Solar Beam",
+    "power": 120,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/76",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Requires a turn to charge before attacking.",
+    "slug": "solar-beam",
+    "type": "grass"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "status",
+    "id": 77,
+    "name": "Poison Powder",
+    "power": null,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/77",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Poisons the target.",
+    "slug": "poison-powder",
+    "type": "poison"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "status",
+    "id": 78,
+    "name": "Stun Spore",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/78",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Paralyzes the target.",
+    "slug": "stun-spore",
+    "type": "grass"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "status",
+    "id": 79,
+    "name": "Sleep Powder",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/79",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Puts the target to sleep.",
+    "slug": "sleep-powder",
+    "type": "grass"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 80,
+    "name": "Petal Dance",
+    "power": 70,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/80",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits every turn for 2-3 turns, then confuses the user.",
+    "slug": "petal-dance",
+    "type": "grass"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "status",
+    "id": 81,
+    "name": "String Shot",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/81",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Speed by two stages.",
+    "slug": "string-shot",
+    "type": "bug"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 82,
+    "name": "Dragon Rage",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/82",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts 40 points of damage.",
+    "slug": "dragon-rage",
+    "type": "dragon"
+  },
+  {
+    "accuracy": 70,
+    "damageClass": "special",
+    "id": 83,
+    "name": "Fire Spin",
+    "power": 15,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/83",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
+    "slug": "fire-spin",
+    "type": "fire"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 84,
+    "name": "Thunder Shock",
+    "power": 40,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/84",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "thunder-shock",
+    "type": "electric"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 85,
+    "name": "Thunderbolt",
+    "power": 95,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/85",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "thunderbolt",
+    "type": "electric"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 86,
+    "name": "Thunder Wave",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/86",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Paralyzes the target.",
+    "slug": "thunder-wave",
+    "type": "electric"
+  },
+  {
+    "accuracy": 70,
+    "damageClass": "special",
+    "id": 87,
+    "name": "Thunder",
+    "power": 120,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/87",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "thunder",
+    "type": "electric"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 88,
+    "name": "Rock Throw",
+    "power": 50,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/88",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "rock-throw",
+    "type": "rock"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 89,
+    "name": "Earthquake",
+    "power": 100,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/89",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage and can hit Dig users.",
+    "slug": "earthquake",
+    "type": "ground"
+  },
+  {
+    "accuracy": 30,
+    "damageClass": "physical",
+    "id": 90,
+    "name": "Fissure",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/90",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Causes a one-hit KO.",
+    "slug": "fissure",
+    "type": "ground"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 91,
+    "name": "Dig",
+    "power": 60,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/91",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User digs underground, dodging all attacks, and hits next turn.",
+    "slug": "dig",
+    "type": "ground"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "status",
+    "id": 92,
+    "name": "Toxic",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/92",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Badly poisons the target, inflicting more damage every turn.",
+    "slug": "toxic",
+    "type": "poison"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 93,
+    "name": "Confusion",
+    "power": 50,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/93",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to confuse the target.",
+    "slug": "confusion",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 94,
+    "name": "Psychic",
+    "power": 90,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/94",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Special Defense by one stage.",
+    "slug": "psychic",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 60,
+    "damageClass": "status",
+    "id": 95,
+    "name": "Hypnosis",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/95",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Puts the target to sleep.",
+    "slug": "hypnosis",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 96,
+    "name": "Meditate",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/96",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Attack by one stage.",
+    "slug": "meditate",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 97,
+    "name": "Agility",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/97",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Speed by two stages.",
+    "slug": "agility",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 98,
+    "name": "Quick Attack",
+    "power": 40,
+    "pp": 30,
+    "priority": 1,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/98",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "quick-attack",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 99,
+    "name": "Rage",
+    "power": 20,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/99",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "If the user is hit after using this move, its Attack rises by one stage.",
+    "slug": "rage",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 100,
+    "name": "Teleport",
+    "power": null,
+    "pp": 20,
+    "priority": -6,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/100",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Immediately ends wild battles.  No effect otherwise.",
+    "slug": "teleport",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 101,
+    "name": "Night Shade",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/101",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts damage equal to the user’s level.",
+    "slug": "night-shade",
+    "type": "ghost"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 102,
+    "name": "Mimic",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/102",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Copies the target’s last used move.",
+    "slug": "mimic",
+    "type": "normal"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "status",
+    "id": 103,
+    "name": "Screech",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/103",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Defense by two stages.",
+    "slug": "screech",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 104,
+    "name": "Double Team",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/104",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s evasion by one stage.",
+    "slug": "double-team",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 105,
+    "name": "Recover",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/105",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Heals the user by half its max HP.",
+    "slug": "recover",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 106,
+    "name": "Harden",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/106",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Defense by one stage.",
+    "slug": "harden",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 107,
+    "name": "Minimize",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/107",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises evasion by one stage.",
+    "slug": "minimize",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 108,
+    "name": "Smokescreen",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/108",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s accuracy by one stage.",
+    "slug": "smokescreen",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 109,
+    "name": "Confuse Ray",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/109",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Confuses the target.",
+    "slug": "confuse-ray",
+    "type": "ghost"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 110,
+    "name": "Withdraw",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/110",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Defense by one stage.",
+    "slug": "withdraw",
+    "type": "water"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 111,
+    "name": "Defense Curl",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/111",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises user’s Defense by one stage.",
+    "slug": "defense-curl",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 112,
+    "name": "Barrier",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/112",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Defense by two stages.",
+    "slug": "barrier",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 113,
+    "name": "Light Screen",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/113",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Reduces damage from special attacks by 50% for five turns.",
+    "slug": "light-screen",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 114,
+    "name": "Haze",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/114",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Resets all Pokémon’s stats, accuracy, and evasion.",
+    "slug": "haze",
+    "type": "ice"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 115,
+    "name": "Reflect",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/115",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Reduces damage from physical attacks by half.",
+    "slug": "reflect",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 116,
+    "name": "Focus Energy",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/116",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Increases the user’s chance to score a critical hit.",
+    "slug": "focus-energy",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "physical",
+    "id": 117,
+    "name": "Bide",
+    "power": null,
+    "pp": 10,
+    "priority": 1,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/117",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lasts either two or three turns.",
+    "slug": "bide",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 118,
+    "name": "Metronome",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/118",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Randomly selects and uses any move in the game.",
+    "slug": "metronome",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 119,
+    "name": "Mirror Move",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/119",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Uses the target’s last used move.",
+    "slug": "mirror-move",
+    "type": "flying"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 120,
+    "name": "Self-Destruct",
+    "power": 200,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/120",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Halves the target’s Defense for damage calculation, which is similar to doubling the attack’s power.",
+    "slug": "self-destruct",
+    "type": "normal"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "physical",
+    "id": 121,
+    "name": "Egg Bomb",
+    "power": 100,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/121",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "egg-bomb",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 122,
+    "name": "Lick",
+    "power": 20,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/122",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "lick",
+    "type": "ghost"
+  },
+  {
+    "accuracy": 70,
+    "damageClass": "physical",
+    "id": 123,
+    "name": "Smog",
+    "power": 20,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/123",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to poison the target.",
+    "slug": "smog",
+    "type": "poison"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 124,
+    "name": "Sludge",
+    "power": 65,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/124",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to poison the target.",
+    "slug": "sludge",
+    "type": "poison"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 125,
+    "name": "Bone Club",
+    "power": 65,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/125",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "bone-club",
+    "type": "ground"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "special",
+    "id": 126,
+    "name": "Fire Blast",
+    "power": 120,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/126",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to burn the target.",
+    "slug": "fire-blast",
+    "type": "fire"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 127,
+    "name": "Waterfall",
+    "power": 80,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/127",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "waterfall",
+    "type": "water"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "special",
+    "id": 128,
+    "name": "Clamp",
+    "power": 35,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/128",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
+    "slug": "clamp",
+    "type": "water"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "physical",
+    "id": 129,
+    "name": "Swift",
+    "power": 60,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/129",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Never misses.",
+    "slug": "swift",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 130,
+    "name": "Skull Bash",
+    "power": 100,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/130",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Defense by one stage.  User charges for one turn before attacking.",
+    "slug": "skull-bash",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 131,
+    "name": "Spike Cannon",
+    "power": 20,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/131",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "spike-cannon",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 132,
+    "name": "Constrict",
+    "power": 10,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/132",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Speed by one stage.",
+    "slug": "constrict",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 133,
+    "name": "Amnesia",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/133",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Special Defense by two stages.",
+    "slug": "amnesia",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "status",
+    "id": 134,
+    "name": "Kinesis",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/134",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s accuracy by one stage.",
+    "slug": "kinesis",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 135,
+    "name": "Soft-Boiled",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/135",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Heals the user by half its max HP.",
+    "slug": "soft-boiled",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 136,
+    "name": "High Jump Kick",
+    "power": 85,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/136",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "If this move misses, the user takes damage equal to half of its max HP rounded down.",
+    "slug": "high-jump-kick",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "status",
+    "id": 137,
+    "name": "Glare",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/137",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Paralyzes the target.",
+    "slug": "glare",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 138,
+    "name": "Dream Eater",
+    "power": 100,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/138",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Only works on sleeping Pokémon.  Drains half the damage inflicted to heal the user.",
+    "slug": "dream-eater",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 55,
+    "damageClass": "status",
+    "id": 139,
+    "name": "Poison Gas",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/139",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Poisons the target.",
+    "slug": "poison-gas",
+    "type": "poison"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 140,
+    "name": "Barrage",
+    "power": 15,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/140",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "barrage",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 141,
+    "name": "Leech Life",
+    "power": 20,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/141",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Drains half the damage inflicted to heal the user.",
+    "slug": "leech-life",
+    "type": "bug"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "status",
+    "id": 142,
+    "name": "Lovely Kiss",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/142",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Puts the target to sleep.",
+    "slug": "lovely-kiss",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 143,
+    "name": "Sky Attack",
+    "power": 140,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/143",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User charges for one turn before attacking.  Has a chance to make the target flinch.",
+    "slug": "sky-attack",
+    "type": "flying"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 144,
+    "name": "Transform",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/144",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User becomes a copy of the target until it leaves battle.",
+    "slug": "transform",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 145,
+    "name": "Bubble",
+    "power": 20,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/145",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Speed by one stage.",
+    "slug": "bubble",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 146,
+    "name": "Dizzy Punch",
+    "power": 70,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/146",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to confuse the target.",
+    "slug": "dizzy-punch",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 147,
+    "name": "Spore",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/147",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Puts the target to sleep.",
+    "slug": "spore",
+    "type": "grass"
+  },
+  {
+    "accuracy": 70,
+    "damageClass": "status",
+    "id": 148,
+    "name": "Flash",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/148",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s accuracy by one stage.",
+    "slug": "flash",
+    "type": "normal"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "special",
+    "id": 149,
+    "name": "Psywave",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/149",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts damage between 50% and 150% of the user’s level.",
+    "slug": "psywave",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 150,
+    "name": "Splash",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/150",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Does nothing.",
+    "slug": "splash",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 151,
+    "name": "Acid Armor",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/151",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Defense by two stages.",
+    "slug": "acid-armor",
+    "type": "poison"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "special",
+    "id": 152,
+    "name": "Crabhammer",
+    "power": 90,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/152",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit.",
+    "slug": "crabhammer",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 153,
+    "name": "Explosion",
+    "power": 250,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/153",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Halves the target’s Defense for damage calculation, which is similar to doubling the attack’s power.",
+    "slug": "explosion",
+    "type": "normal"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "physical",
+    "id": 154,
+    "name": "Fury Swipes",
+    "power": 18,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/154",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "fury-swipes",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 155,
+    "name": "Bonemerang",
+    "power": 50,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/155",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits twice in one turn.",
+    "slug": "bonemerang",
+    "type": "ground"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 156,
+    "name": "Rest",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/156",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Works while asleep through Sleep Talk if not at full health.",
+    "slug": "rest",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 157,
+    "name": "Rock Slide",
+    "power": 75,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/157",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "rock-slide",
+    "type": "rock"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 158,
+    "name": "Hyper Fang",
+    "power": 80,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/158",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "hyper-fang",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 159,
+    "name": "Sharpen",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/159",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Attack by one stage.",
+    "slug": "sharpen",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 160,
+    "name": "Conversion",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/160",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User’s type changes to the type of one of its moves at random.",
+    "slug": "conversion",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 161,
+    "name": "Tri Attack",
+    "power": 80,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/161",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to burn, freeze, or paralyze the target.",
+    "slug": "tri-attack",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 162,
+    "name": "Super Fang",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/162",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts damage equal to half the target’s HP.",
+    "slug": "super-fang",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 163,
+    "name": "Slash",
+    "power": 70,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/163",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit.",
+    "slug": "slash",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 164,
+    "name": "Substitute",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/164",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Transfers 1/4 of the user’s max HP into a doll, protecting the user from further damage or status changes until it breaks.",
+    "slug": "substitute",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "physical",
+    "id": 165,
+    "name": "Struggle",
+    "power": 50,
+    "pp": 1,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/165",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "The user receieves 1/2 of the damage dealt in recoil.",
+    "slug": "struggle",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 166,
+    "name": "Sketch",
+    "power": null,
+    "pp": 1,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/166",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Permanently becomes the target’s last used move.",
+    "slug": "sketch",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 167,
+    "name": "Triple Kick",
+    "power": 10,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/167",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits three times, increasing power by 100% with each successful hit.",
+    "slug": "triple-kick",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 168,
+    "name": "Thief",
+    "power": 40,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/168",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Takes the target’s item.",
+    "slug": "thief",
+    "type": "dark"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 169,
+    "name": "Spider Web",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/169",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from leaving battle.",
+    "slug": "spider-web",
+    "type": "bug"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 170,
+    "name": "Mind Reader",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/170",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Ensures that the user’s next move will hit the target.",
+    "slug": "mind-reader",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 171,
+    "name": "Nightmare",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/171",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Target loses 1/4 its max HP every turn as long as it’s asleep.",
+    "slug": "nightmare",
+    "type": "ghost"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 172,
+    "name": "Flame Wheel",
+    "power": 60,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/172",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to burn the target.  Lets frozen Pokémon thaw themselves.",
+    "slug": "flame-wheel",
+    "type": "fire"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 173,
+    "name": "Snore",
+    "power": 40,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/173",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.  Only works if the user is sleeping.",
+    "slug": "snore",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 174,
+    "name": "Curse",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/174",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Ghosts pay half their max HP to hurt the target every turn.  Others decrease Speed but raise Attack and Defense.",
+    "slug": "curse",
+    "type": "unknown"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 175,
+    "name": "Flail",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/175",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.",
+    "slug": "flail",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 176,
+    "name": "Conversion 2",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/176",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Changes the user’s type to a random type either resistant or immune to the last move used against it.",
+    "slug": "conversion-2",
+    "type": "normal"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 177,
+    "name": "Aeroblast",
+    "power": 100,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/177",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit.",
+    "slug": "aeroblast",
+    "type": "flying"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "status",
+    "id": 178,
+    "name": "Cotton Spore",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/178",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Speed by two stages.",
+    "slug": "cotton-spore",
+    "type": "grass"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 179,
+    "name": "Reversal",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/179",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.",
+    "slug": "reversal",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 180,
+    "name": "Spite",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/180",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the PP of the target’s last used move by 4.",
+    "slug": "spite",
+    "type": "ghost"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 181,
+    "name": "Powder Snow",
+    "power": 40,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/181",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to freeze the target.",
+    "slug": "powder-snow",
+    "type": "ice"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 182,
+    "name": "Protect",
+    "power": null,
+    "pp": 10,
+    "priority": 4,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/182",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents any moves from hitting the user this turn.",
+    "slug": "protect",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 183,
+    "name": "Mach Punch",
+    "power": 40,
+    "pp": 30,
+    "priority": 1,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/183",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "mach-punch",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "status",
+    "id": 184,
+    "name": "Scary Face",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/184",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Speed by two stages.",
+    "slug": "scary-face",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "special",
+    "id": 185,
+    "name": "Feint Attack",
+    "power": 60,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/185",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Never misses.",
+    "slug": "feint-attack",
+    "type": "dark"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "status",
+    "id": 186,
+    "name": "Sweet Kiss",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/186",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Confuses the target.",
+    "slug": "sweet-kiss",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 187,
+    "name": "Belly Drum",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/187",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User pays half its max HP to max out its Attack.",
+    "slug": "belly-drum",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 188,
+    "name": "Sludge Bomb",
+    "power": 90,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/188",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to poison the target.",
+    "slug": "sludge-bomb",
+    "type": "poison"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 189,
+    "name": "Mud-Slap",
+    "power": 20,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/189",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s accuracy by one stage.",
+    "slug": "mud-slap",
+    "type": "ground"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "special",
+    "id": 190,
+    "name": "Octazooka",
+    "power": 65,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/190",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s accuracy by one stage.",
+    "slug": "octazooka",
+    "type": "water"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 191,
+    "name": "Spikes",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/191",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Scatters Spikes, hurting opposing Pokémon that switch in.",
+    "slug": "spikes",
+    "type": "ground"
+  },
+  {
+    "accuracy": 50,
+    "damageClass": "special",
+    "id": 192,
+    "name": "Zap Cannon",
+    "power": 100,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/192",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "zap-cannon",
+    "type": "electric"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 193,
+    "name": "Foresight",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/193",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Forces the target to have no Evade, and allows it to be hit by Normal and Fighting moves even if it’s a Ghost.",
+    "slug": "foresight",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 194,
+    "name": "Destiny Bond",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/194",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "If the user faints this turn, the target automatically will, too.",
+    "slug": "destiny-bond",
+    "type": "ghost"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 195,
+    "name": "Perish Song",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/195",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User and target both faint after three turns.",
+    "slug": "perish-song",
+    "type": "normal"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "special",
+    "id": 196,
+    "name": "Icy Wind",
+    "power": 55,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/196",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Speed by one stage.",
+    "slug": "icy-wind",
+    "type": "ice"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 197,
+    "name": "Detect",
+    "power": null,
+    "pp": 5,
+    "priority": 4,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/197",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents any moves from hitting the user this turn.",
+    "slug": "detect",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "physical",
+    "id": 198,
+    "name": "Bone Rush",
+    "power": 25,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/198",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "bone-rush",
+    "type": "ground"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 199,
+    "name": "Lock-On",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/199",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Ensures that the user’s next move will hit the target.",
+    "slug": "lock-on",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 200,
+    "name": "Outrage",
+    "power": 90,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/200",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits every turn for 2-3 turns, then confuses the user.",
+    "slug": "outrage",
+    "type": "dragon"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 201,
+    "name": "Sandstorm",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/201",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Changes the weather to a sandstorm for five turns.",
+    "slug": "sandstorm",
+    "type": "rock"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 202,
+    "name": "Giga Drain",
+    "power": 60,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/202",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Drains half the damage inflicted to heal the user.",
+    "slug": "giga-drain",
+    "type": "grass"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 203,
+    "name": "Endure",
+    "power": null,
+    "pp": 10,
+    "priority": 4,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/203",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the user’s HP from lowering below 1 this turn.",
+    "slug": "endure",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 204,
+    "name": "Charm",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/204",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Attack by two stages.",
+    "slug": "charm",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 205,
+    "name": "Rollout",
+    "power": 30,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/205",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power doubles every turn this move is used in succession after the first, resetting after five turns.",
+    "slug": "rollout",
+    "type": "rock"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 206,
+    "name": "False Swipe",
+    "power": 40,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/206",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Cannot lower the target’s HP below 1.",
+    "slug": "false-swipe",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "status",
+    "id": 207,
+    "name": "Swagger",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/207",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the target’s Attack by two stages and confuses the target.",
+    "slug": "swagger",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 208,
+    "name": "Milk Drink",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/208",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Heals the user by half its max HP.",
+    "slug": "milk-drink",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 209,
+    "name": "Spark",
+    "power": 65,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/209",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "spark",
+    "type": "electric"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 210,
+    "name": "Fury Cutter",
+    "power": 10,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/210",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power doubles every turn this move is used in succession after the first, maxing out after five turns.",
+    "slug": "fury-cutter",
+    "type": "bug"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 211,
+    "name": "Steel Wing",
+    "power": 70,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/211",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to raise the user’s Defense by one stage.",
+    "slug": "steel-wing",
+    "type": "steel"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 212,
+    "name": "Mean Look",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/212",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from leaving battle.",
+    "slug": "mean-look",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 213,
+    "name": "Attract",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/213",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Target falls in love if it has the opposite gender, and has a 50% chance to refuse attacking the user.",
+    "slug": "attract",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 214,
+    "name": "Sleep Talk",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/214",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Randomly uses one of the user’s other three moves.  Only works if the user is sleeping.",
+    "slug": "sleep-talk",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 215,
+    "name": "Heal Bell",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/215",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Cures the entire party of major status effects.",
+    "slug": "heal-bell",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 216,
+    "name": "Return",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/216",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power increases with happiness, up to a maximum of 102.",
+    "slug": "return",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 217,
+    "name": "Present",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/217",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Randomly inflicts damage with power from 40 to 120 or heals the target for 1/4 its max HP.",
+    "slug": "present",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 218,
+    "name": "Frustration",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/218",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power increases as happiness decreases, up to a maximum of 102.",
+    "slug": "frustration",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 219,
+    "name": "Safeguard",
+    "power": null,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/219",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Protects the user’s field from major status ailments and confusion for five turns.",
+    "slug": "safeguard",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 220,
+    "name": "Pain Split",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/220",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Sets the user’s and targets’s HP to the average of their current HP.",
+    "slug": "pain-split",
+    "type": "normal"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "special",
+    "id": 221,
+    "name": "Sacred Fire",
+    "power": 100,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/221",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to burn the target.  Lets frozen Pokémon thaw themselves.",
+    "slug": "sacred-fire",
+    "type": "fire"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 222,
+    "name": "Magnitude",
+    "power": null,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/222",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power varies randomly from 10 to 150.",
+    "slug": "magnitude",
+    "type": "ground"
+  },
+  {
+    "accuracy": 50,
+    "damageClass": "physical",
+    "id": 223,
+    "name": "Dynamic Punch",
+    "power": 100,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/223",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to confuse the target.",
+    "slug": "dynamic-punch",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 224,
+    "name": "Megahorn",
+    "power": 120,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/224",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "megahorn",
+    "type": "bug"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 225,
+    "name": "Dragon Breath",
+    "power": 60,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/225",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to paralyze the target.",
+    "slug": "dragon-breath",
+    "type": "dragon"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 226,
+    "name": "Baton Pass",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/226",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Allows the trainer to switch out the user and pass effects along to its replacement.",
+    "slug": "baton-pass",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 227,
+    "name": "Encore",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/227",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Forces the target to repeat its last used move every turn for 2 to 6 turns.",
+    "slug": "encore",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 228,
+    "name": "Pursuit",
+    "power": 40,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/228",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has double power against, and can hit, Pokémon attempting to switch out.",
+    "slug": "pursuit",
+    "type": "dark"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 229,
+    "name": "Rapid Spin",
+    "power": 20,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/229",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Frees the user from binding moves, removes Leech Seed, and blows away Spikes.",
+    "slug": "rapid-spin",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 230,
+    "name": "Sweet Scent",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/230",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s evasion by one stage.",
+    "slug": "sweet-scent",
+    "type": "normal"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "physical",
+    "id": 231,
+    "name": "Iron Tail",
+    "power": 100,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/231",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Defense by one stage.",
+    "slug": "iron-tail",
+    "type": "steel"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 232,
+    "name": "Metal Claw",
+    "power": 50,
+    "pp": 35,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/232",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to raise the user’s Attack by one stage.",
+    "slug": "metal-claw",
+    "type": "steel"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "physical",
+    "id": 233,
+    "name": "Vital Throw",
+    "power": 70,
+    "pp": 10,
+    "priority": -1,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/233",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Never misses.",
+    "slug": "vital-throw",
+    "type": "fighting"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 234,
+    "name": "Morning Sun",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/234",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Heals the user by half its max HP.  Affected by weather.",
+    "slug": "morning-sun",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 235,
+    "name": "Synthesis",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/235",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Heals the user by half its max HP.  Affected by weather.",
+    "slug": "synthesis",
+    "type": "grass"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 236,
+    "name": "Moonlight",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/236",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Heals the user by half its max HP.  Affected by weather.",
+    "slug": "moonlight",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 237,
+    "name": "Hidden Power",
+    "power": 1,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/237",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power and type depend upon user’s IVs.  Power can range from 30 to 70.",
+    "slug": "hidden-power",
+    "type": "normal"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "physical",
+    "id": 238,
+    "name": "Cross Chop",
+    "power": 100,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/238",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit.",
+    "slug": "cross-chop",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 239,
+    "name": "Twister",
+    "power": 40,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/239",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "twister",
+    "type": "dragon"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 240,
+    "name": "Rain Dance",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/240",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Changes the weather to rain for five turns.",
+    "slug": "rain-dance",
+    "type": "water"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 241,
+    "name": "Sunny Day",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/241",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Changes the weather to sunny for five turns.",
+    "slug": "sunny-day",
+    "type": "fire"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 242,
+    "name": "Crunch",
+    "power": 80,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/242",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Defense by one stage.",
+    "slug": "crunch",
+    "type": "dark"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 243,
+    "name": "Mirror Coat",
+    "power": null,
+    "pp": 20,
+    "priority": -5,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/243",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts twice the damage the user received from the last special hit it took.",
+    "slug": "mirror-coat",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 244,
+    "name": "Psych Up",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/244",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Discards the user’s stat changes and copies the target’s.",
+    "slug": "psych-up",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 245,
+    "name": "Extreme Speed",
+    "power": 80,
+    "pp": 5,
+    "priority": 2,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/245",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "extreme-speed",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 246,
+    "name": "Ancient Power",
+    "power": 60,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/246",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to raise all of the user’s stats by one stage.",
+    "slug": "ancient-power",
+    "type": "rock"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 247,
+    "name": "Shadow Ball",
+    "power": 80,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/247",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Special Defense by one stage.",
+    "slug": "shadow-ball",
+    "type": "ghost"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 248,
+    "name": "Future Sight",
+    "power": 80,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/248",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits the target two turns later.",
+    "slug": "future-sight",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 249,
+    "name": "Rock Smash",
+    "power": 20,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/249",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Defense by one stage.",
+    "slug": "rock-smash",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 70,
+    "damageClass": "special",
+    "id": 250,
+    "name": "Whirlpool",
+    "power": 15,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/250",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from leaving battle and inflicts 1/16 its max HP in damage for 2-5 turns.",
+    "slug": "whirlpool",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 251,
+    "name": "Beat Up",
+    "power": 10,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/251",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Determines damage using each participant’s base Attack and the opponent’s base Defense in place of calculated stats.",
+    "slug": "beat-up",
+    "type": "dark"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 252,
+    "name": "Fake Out",
+    "power": 40,
+    "pp": 10,
+    "priority": 3,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/252",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Can only be used as the first move after the user enters battle.  Causes the target to flinch.",
+    "slug": "fake-out",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 253,
+    "name": "Uproar",
+    "power": 50,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/253",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Forced to use this move for several turns.  Pokémon cannot fall asleep in that time.",
+    "slug": "uproar",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 254,
+    "name": "Stockpile",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/254",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Does not raise Defense or Special Defense.",
+    "slug": "stockpile",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 255,
+    "name": "Spit Up",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/255",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power is 100 times the amount of energy Stockpiled.",
+    "slug": "spit-up",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 256,
+    "name": "Swallow",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/256",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Recovers 1/4 HP after one Stockpile, 1/2 HP after two Stockpiles, or full HP after three Stockpiles.",
+    "slug": "swallow",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 257,
+    "name": "Heat Wave",
+    "power": 100,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/257",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to burn the target.",
+    "slug": "heat-wave",
+    "type": "fire"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 258,
+    "name": "Hail",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/258",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Changes the weather to a hailstorm for five turns.",
+    "slug": "hail",
+    "type": "ice"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 259,
+    "name": "Torment",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/259",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from using the same move twice in a row.",
+    "slug": "torment",
+    "type": "dark"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 260,
+    "name": "Flatter",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/260",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the target’s Special Attack by one stage and confuses the target.",
+    "slug": "flatter",
+    "type": "dark"
+  },
+  {
+    "accuracy": 75,
+    "damageClass": "status",
+    "id": 261,
+    "name": "Will-O-Wisp",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/261",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Burns the target.",
+    "slug": "will-o-wisp",
+    "type": "fire"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 262,
+    "name": "Memento",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/262",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Attack and Special Attack by two stages.  User faints.",
+    "slug": "memento",
+    "type": "dark"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 263,
+    "name": "Facade",
+    "power": 70,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/263",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power doubles if user is burned, paralyzed, or poisoned.",
+    "slug": "facade",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 264,
+    "name": "Focus Punch",
+    "power": 150,
+    "pp": 20,
+    "priority": -3,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/264",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "If the user takes damage before attacking, the attack is canceled.",
+    "slug": "focus-punch",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 265,
+    "name": "Smelling Salts",
+    "power": 60,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/265",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "If the target is paralyzed, inflicts double damage and cures the paralysis.",
+    "slug": "smelling-salts",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 266,
+    "name": "Follow Me",
+    "power": null,
+    "pp": 20,
+    "priority": 2,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/266",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Redirects the target’s single-target effects to the user for this turn.",
+    "slug": "follow-me",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 267,
+    "name": "Nature Power",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/267",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Uses a move which depends upon the terrain.",
+    "slug": "nature-power",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 268,
+    "name": "Charge",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/268",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Does not raise the user’s Special Defense.",
+    "slug": "charge",
+    "type": "electric"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 269,
+    "name": "Taunt",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/269",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "For the next few turns, the target can only use damaging moves.",
+    "slug": "taunt",
+    "type": "dark"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 270,
+    "name": "Helping Hand",
+    "power": null,
+    "pp": 20,
+    "priority": 5,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/270",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Ally’s next move inflicts half more damage.",
+    "slug": "helping-hand",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 271,
+    "name": "Trick",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/271",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User and target swap items.",
+    "slug": "trick",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 272,
+    "name": "Role Play",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/272",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Copies the target’s ability.",
+    "slug": "role-play",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 273,
+    "name": "Wish",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/273",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Heals replacement Pokémon by half of their max HP.",
+    "slug": "wish",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 274,
+    "name": "Assist",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/274",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Randomly selects and uses one of the trainer’s other Pokémon’s moves.",
+    "slug": "assist",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 275,
+    "name": "Ingrain",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/275",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the user from leaving battle.  User regains 1/16 of its max HP every turn.",
+    "slug": "ingrain",
+    "type": "grass"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 276,
+    "name": "Superpower",
+    "power": 120,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/276",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the user’s Attack and Defense by one stage after inflicting damage.",
+    "slug": "superpower",
+    "type": "fighting"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 277,
+    "name": "Magic Coat",
+    "power": null,
+    "pp": 15,
+    "priority": 4,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/277",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Reflects back the first effect move used on the user this turn.",
+    "slug": "magic-coat",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 278,
+    "name": "Recycle",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/278",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User recovers the item it last used up.",
+    "slug": "recycle",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 279,
+    "name": "Revenge",
+    "power": 60,
+    "pp": 10,
+    "priority": -4,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/279",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts double damage if the user takes damage before attacking this turn.",
+    "slug": "revenge",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 280,
+    "name": "Brick Break",
+    "power": 75,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/280",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "The barriers are destroyed even if this move has no effect.",
+    "slug": "brick-break",
+    "type": "fighting"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 281,
+    "name": "Yawn",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/281",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Target sleeps at the end of the next turn.",
+    "slug": "yawn",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 282,
+    "name": "Knock Off",
+    "power": 20,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/282",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Target drops its held item.",
+    "slug": "knock-off",
+    "type": "dark"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 283,
+    "name": "Endeavor",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/283",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s HP to equal the user’s.",
+    "slug": "endeavor",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 284,
+    "name": "Eruption",
+    "power": 150,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/284",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts more damage when the user has more HP remaining, with a maximum of 150 power.",
+    "slug": "eruption",
+    "type": "fire"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 285,
+    "name": "Skill Swap",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/285",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User and target swap abilities.",
+    "slug": "skill-swap",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 286,
+    "name": "Imprison",
+    "power": null,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/286",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from using any moves that the user also knows.",
+    "slug": "imprison",
+    "type": "psychic"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 287,
+    "name": "Refresh",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/287",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Cleanses the user of a burn, paralysis, or poison.",
+    "slug": "refresh",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 288,
+    "name": "Grudge",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/288",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "If the user faints this turn, the PP of the move that fainted it drops to 0.",
+    "slug": "grudge",
+    "type": "ghost"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 289,
+    "name": "Snatch",
+    "power": null,
+    "pp": 10,
+    "priority": 4,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/289",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Steals the target’s move, if it’s self-targeted.",
+    "slug": "snatch",
+    "type": "dark"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 290,
+    "name": "Secret Power",
+    "power": 70,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/290",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to inflict a status effect which depends upon the terrain.",
+    "slug": "secret-power",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 291,
+    "name": "Dive",
+    "power": 60,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/291",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User dives underwater, dodging all attacks, and hits next turn.",
+    "slug": "dive",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 292,
+    "name": "Arm Thrust",
+    "power": 15,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/292",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "arm-thrust",
+    "type": "fighting"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 293,
+    "name": "Camouflage",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/293",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User’s type changes to match the terrain.",
+    "slug": "camouflage",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 294,
+    "name": "Tail Glow",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/294",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Special Attack by three stages.",
+    "slug": "tail-glow",
+    "type": "bug"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 295,
+    "name": "Luster Purge",
+    "power": 95,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/295",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Special Defense by one stage.",
+    "slug": "luster-purge",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 296,
+    "name": "Mist Ball",
+    "power": 70,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/296",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Special Attack by one stage.",
+    "slug": "mist-ball",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 297,
+    "name": "Feather Dance",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/297",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Attack by two stages.",
+    "slug": "feather-dance",
+    "type": "flying"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 298,
+    "name": "Teeter Dance",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/298",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Confuses the target.",
+    "slug": "teeter-dance",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 299,
+    "name": "Blaze Kick",
+    "power": 85,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/299",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit and a chance to burn the target.",
+    "slug": "blaze-kick",
+    "type": "fire"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 300,
+    "name": "Mud Sport",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/300",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Halves all Electric-type damage.",
+    "slug": "mud-sport",
+    "type": "ground"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 301,
+    "name": "Ice Ball",
+    "power": 30,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/301",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Power doubles every turn this move is used in succession after the first, resetting after five turns.",
+    "slug": "ice-ball",
+    "type": "ice"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 302,
+    "name": "Needle Arm",
+    "power": 60,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/302",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "needle-arm",
+    "type": "grass"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 303,
+    "name": "Slack Off",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/303",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Heals the user by half its max HP.",
+    "slug": "slack-off",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 304,
+    "name": "Hyper Voice",
+    "power": 90,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/304",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "hyper-voice",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 305,
+    "name": "Poison Fang",
+    "power": 50,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/305",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to badly poison the target.",
+    "slug": "poison-fang",
+    "type": "poison"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 306,
+    "name": "Crush Claw",
+    "power": 75,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/306",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Defense by one stage.",
+    "slug": "crush-claw",
+    "type": "normal"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 307,
+    "name": "Blast Burn",
+    "power": 150,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/307",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User foregoes its next turn to recharge.",
+    "slug": "blast-burn",
+    "type": "fire"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 308,
+    "name": "Hydro Cannon",
+    "power": 150,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/308",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User foregoes its next turn to recharge.",
+    "slug": "hydro-cannon",
+    "type": "water"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 309,
+    "name": "Meteor Mash",
+    "power": 100,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/309",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to raise the user’s Attack by one stage.",
+    "slug": "meteor-mash",
+    "type": "steel"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 310,
+    "name": "Astonish",
+    "power": 30,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/310",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "astonish",
+    "type": "ghost"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 311,
+    "name": "Weather Ball",
+    "power": 50,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/311",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "If there be weather, this move has doubled power and the weather’s type.",
+    "slug": "weather-ball",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 312,
+    "name": "Aromatherapy",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/312",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Cures the entire party of major status effects.",
+    "slug": "aromatherapy",
+    "type": "grass"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 313,
+    "name": "Fake Tears",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/313",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Special Defense by two stages.",
+    "slug": "fake-tears",
+    "type": "dark"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 314,
+    "name": "Air Cutter",
+    "power": 55,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/314",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit.",
+    "slug": "air-cutter",
+    "type": "flying"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 315,
+    "name": "Overheat",
+    "power": 140,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/315",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the user’s Special Attack by two stages after inflicting damage.",
+    "slug": "overheat",
+    "type": "fire"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 316,
+    "name": "Odor Sleuth",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/316",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Forces the target to have no Evade, and allows it to be hit by Normal and Fighting moves even if it’s a Ghost.",
+    "slug": "odor-sleuth",
+    "type": "normal"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "physical",
+    "id": 317,
+    "name": "Rock Tomb",
+    "power": 50,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/317",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Speed by one stage.",
+    "slug": "rock-tomb",
+    "type": "rock"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 318,
+    "name": "Silver Wind",
+    "power": 60,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/318",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to raise all of the user’s stats by one stage.",
+    "slug": "silver-wind",
+    "type": "bug"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "status",
+    "id": 319,
+    "name": "Metal Sound",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/319",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Special Defense by two stages.",
+    "slug": "metal-sound",
+    "type": "steel"
+  },
+  {
+    "accuracy": 55,
+    "damageClass": "status",
+    "id": 320,
+    "name": "Grass Whistle",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/320",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Puts the target to sleep.",
+    "slug": "grass-whistle",
+    "type": "grass"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "status",
+    "id": 321,
+    "name": "Tickle",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/321",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the target’s Attack and Defense by one stage.",
+    "slug": "tickle",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 322,
+    "name": "Cosmic Power",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/322",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Defense and Special Defense by one stage.",
+    "slug": "cosmic-power",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 323,
+    "name": "Water Spout",
+    "power": 150,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/323",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts more damage when the user has more HP remaining, with a maximum of 150 power.",
+    "slug": "water-spout",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 324,
+    "name": "Signal Beam",
+    "power": 75,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/324",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to confuse the target.",
+    "slug": "signal-beam",
+    "type": "bug"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "physical",
+    "id": 325,
+    "name": "Shadow Punch",
+    "power": 60,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/325",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Never misses.",
+    "slug": "shadow-punch",
+    "type": "ghost"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 326,
+    "name": "Extrasensory",
+    "power": 80,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/326",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to make the target flinch.",
+    "slug": "extrasensory",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "physical",
+    "id": 327,
+    "name": "Sky Uppercut",
+    "power": 85,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/327",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage and can hit Bounce and Fly users.",
+    "slug": "sky-uppercut",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 70,
+    "damageClass": "physical",
+    "id": 328,
+    "name": "Sand Tomb",
+    "power": 15,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/328",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
+    "slug": "sand-tomb",
+    "type": "ground"
+  },
+  {
+    "accuracy": 30,
+    "damageClass": "special",
+    "id": 329,
+    "name": "Sheer Cold",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/329",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Causes a one-hit KO.",
+    "slug": "sheer-cold",
+    "type": "ice"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "special",
+    "id": 330,
+    "name": "Muddy Water",
+    "power": 95,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/330",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s accuracy by one stage.",
+    "slug": "muddy-water",
+    "type": "water"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 331,
+    "name": "Bullet Seed",
+    "power": 10,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/331",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "bullet-seed",
+    "type": "grass"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "physical",
+    "id": 332,
+    "name": "Aerial Ace",
+    "power": 60,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/332",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Never misses.",
+    "slug": "aerial-ace",
+    "type": "flying"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 333,
+    "name": "Icicle Spear",
+    "power": 10,
+    "pp": 30,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/333",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "icicle-spear",
+    "type": "ice"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 334,
+    "name": "Iron Defense",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/334",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Defense by two stages.",
+    "slug": "iron-defense",
+    "type": "steel"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 335,
+    "name": "Block",
+    "power": null,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/335",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Prevents the target from leaving battle.",
+    "slug": "block",
+    "type": "normal"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 336,
+    "name": "Howl",
+    "power": null,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/336",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Attack by one stage.",
+    "slug": "howl",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 337,
+    "name": "Dragon Claw",
+    "power": 80,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/337",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Inflicts regular damage with no additional effect.",
+    "slug": "dragon-claw",
+    "type": "dragon"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 338,
+    "name": "Frenzy Plant",
+    "power": 150,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/338",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User foregoes its next turn to recharge.",
+    "slug": "frenzy-plant",
+    "type": "grass"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 339,
+    "name": "Bulk Up",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/339",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Attack and Defense by one stage.",
+    "slug": "bulk-up",
+    "type": "fighting"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 340,
+    "name": "Bounce",
+    "power": 85,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/340",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User bounces high into the air, dodging all attacks, and hits next turn.",
+    "slug": "bounce",
+    "type": "flying"
+  },
+  {
+    "accuracy": 95,
+    "damageClass": "physical",
+    "id": 341,
+    "name": "Mud Shot",
+    "power": 55,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/341",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to lower the target’s Speed by one stage.",
+    "slug": "mud-shot",
+    "type": "ground"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 342,
+    "name": "Poison Tail",
+    "power": 50,
+    "pp": 25,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/342",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit and a chance to poison the target.",
+    "slug": "poison-tail",
+    "type": "poison"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "physical",
+    "id": 343,
+    "name": "Covet",
+    "power": 40,
+    "pp": 40,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/343",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Takes the target’s item.",
+    "slug": "covet",
+    "type": "normal"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 344,
+    "name": "Volt Tackle",
+    "power": 120,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/344",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "User takes 1/3 the damage inflicted in recoil.  Has a chance to paralyze the target.",
+    "slug": "volt-tackle",
+    "type": "electric"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "special",
+    "id": 345,
+    "name": "Magical Leaf",
+    "power": 60,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/345",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Never misses.",
+    "slug": "magical-leaf",
+    "type": "grass"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 346,
+    "name": "Water Sport",
+    "power": null,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/346",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Halves all Fire-type damage.",
+    "slug": "water-sport",
+    "type": "water"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 347,
+    "name": "Calm Mind",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/347",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Special Attack and Special Defense by one stage.",
+    "slug": "calm-mind",
+    "type": "psychic"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 348,
+    "name": "Leaf Blade",
+    "power": 70,
+    "pp": 15,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/348",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has an increased chance for a critical hit.",
+    "slug": "leaf-blade",
+    "type": "grass"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "status",
+    "id": 349,
+    "name": "Dragon Dance",
+    "power": null,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/349",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Raises the user’s Attack and Speed by one stage.",
+    "slug": "dragon-dance",
+    "type": "dragon"
+  },
+  {
+    "accuracy": 80,
+    "damageClass": "physical",
+    "id": 350,
+    "name": "Rock Blast",
+    "power": 25,
+    "pp": 10,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/350",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits 2-5 times in one turn.",
+    "slug": "rock-blast",
+    "type": "rock"
+  },
+  {
+    "accuracy": null,
+    "damageClass": "special",
+    "id": 351,
+    "name": "Shock Wave",
+    "power": 60,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/351",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Never misses.",
+    "slug": "shock-wave",
+    "type": "electric"
+  },
+  {
+    "accuracy": 100,
+    "damageClass": "special",
+    "id": 352,
+    "name": "Water Pulse",
+    "power": 60,
+    "pp": 20,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/352",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Has a chance to confuse the target.",
+    "slug": "water-pulse",
+    "type": "water"
+  },
+  {
+    "accuracy": 85,
+    "damageClass": "physical",
+    "id": 353,
+    "name": "Doom Desire",
+    "power": 120,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/353",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Hits the target two turns later.",
+    "slug": "doom-desire",
+    "type": "steel"
+  },
+  {
+    "accuracy": 90,
+    "damageClass": "special",
+    "id": 354,
+    "name": "Psycho Boost",
+    "power": 140,
+    "pp": 5,
+    "priority": 0,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "move/354",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "shortEffect": "Lowers the user’s Special Attack by two stages after inflicting damage.",
+    "slug": "psycho-boost",
+    "type": "psychic"
+  }
+]

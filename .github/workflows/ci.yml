@@ -26,5 +26,6 @@ jobs:
           test "$(node --version)" = "v22.17.1"
           test "$(npm --version)" = "11.5.1"
       - run: npm ci
-      - run: npm run check
+      - run: npm run data:sync
       - run: npm run data:verify
+      - run: npm run check

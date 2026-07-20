@@ -1,0 +1,4568 @@
+{
+  "game": {
+    "generationId": 3,
+    "id": "firered",
+    "name": "Pokémon FireRed",
+    "regionId": 1,
+    "versionGroupId": 7,
+    "versionId": 10
+  },
+  "nodes": [
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "Select Bulbasaur, Charmander, or Squirtle to begin the journey.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "starter-selection",
+          "name": "Choose a starter from Professor Oak",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 1: Pallet Town",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "choice",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 0,
+      "id": "pallet-town",
+      "kind": "town",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          285
+        ],
+        "pokeApiLocationId": 86,
+        "sourceMapIds": [
+          "pallet-town"
+        ]
+      },
+      "name": "Pallet Town",
+      "nextNodeIds": [
+        "kanto-route-1"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-opening",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/86",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 1: Pallet Town",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "data/maps (map connectivity for Pallet Town)",
+          "method": "inferred",
+          "note": "Reference only; pret source not redistributed.",
+          "sourceId": "pret-pokefirered"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 1,
+      "id": "kanto-route-1",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          295
+        ],
+        "pokeApiLocationId": 88,
+        "sourceMapIds": [
+          "kanto-route-1"
+        ]
+      },
+      "name": "Route 1",
+      "nextNodeIds": [
+        "viridian-city"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-opening",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/88",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 2: Route 1",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "Return the parcel to Professor Oak to receive the Pokédex.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "viridian-oaks-parcel",
+          "name": "Deliver Oak's Parcel",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 2: Viridian City",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "story",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        },
+        {
+          "conditions": [
+            {
+              "kind": "milestone-complete",
+              "note": null,
+              "operator": "equals",
+              "value": "blaine-gym"
+            }
+          ],
+          "description": "The eighth Gym, opened only after the other seven badges are earned.",
+          "flags": {
+            "bossFight": true,
+            "gym": true,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "giovanni-gym",
+          "name": "Viridian Gym — Giovanni (Earth Badge)",
+          "order": 1,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 15: Viridian Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "gym",
+          "unlocks": [
+            {
+              "kind": "service",
+              "note": "Enables Route 22/23 access to Victory Road.",
+              "refId": "earth-badge"
+            }
+          ],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 2,
+      "id": "viridian-city",
+      "kind": "city",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          280
+        ],
+        "pokeApiLocationId": 154,
+        "sourceMapIds": [
+          "viridian-city"
+        ]
+      },
+      "name": "Viridian City",
+      "nextNodeIds": [
+        "kanto-route-22"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-opening",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/154",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 2: Viridian City",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [
+        {
+          "conditions": [],
+          "description": "A rival battle available west of Viridian City before challenging Brock.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": true,
+            "rivalFight": true,
+            "storyFight": false
+          },
+          "id": "route-22-rival-early",
+          "name": "Optional early Rival battle",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 2: Route 22",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "rival",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        },
+        {
+          "conditions": [
+            {
+              "kind": "milestone-complete",
+              "note": null,
+              "operator": "equals",
+              "value": "giovanni-gym"
+            }
+          ],
+          "description": "The later Route 22 traversal to Route 23 opens once all eight badges are earned.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "route-22-victory-road-access",
+          "name": "Return through Route 22 toward Victory Road",
+          "order": 1,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 16: Route 22",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "checkpoint",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 3,
+      "id": "kanto-route-22",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          313
+        ],
+        "pokeApiLocationId": 102,
+        "sourceMapIds": [
+          "kanto-route-22"
+        ]
+      },
+      "name": "Route 22",
+      "nextNodeIds": [
+        "kanto-route-2"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-opening",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/102",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 2 (early) / Part 16 (Victory Road): Route 22",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "data/maps (map connectivity for Route 22)",
+          "method": "inferred",
+          "note": "Reference only; pret source not redistributed.",
+          "sourceId": "pret-pokefirered"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 4,
+      "id": "kanto-route-2",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          296
+        ],
+        "pokeApiLocationId": 99,
+        "sourceMapIds": [
+          "kanto-route-2"
+        ]
+      },
+      "name": "Route 2",
+      "nextNodeIds": [
+        "viridian-forest"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-forest",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/99",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 2: Route 2",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 5,
+      "id": "viridian-forest",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          321
+        ],
+        "pokeApiLocationId": 155,
+        "sourceMapIds": [
+          "viridian-forest"
+        ]
+      },
+      "name": "Viridian Forest",
+      "nextNodeIds": [
+        "pewter-city"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-forest",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/155",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 3: Viridian Forest",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The first Gym; victory awards the Boulder Badge and TM39.",
+          "flags": {
+            "bossFight": true,
+            "gym": true,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "brock-gym",
+          "name": "Pewter Gym — Brock (Boulder Badge)",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 3: Pewter Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            },
+            {
+              "confidence": "cross-checked",
+              "locator": "TM39 Rock Tomb — Pewter Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-gen3-tm-hm-locations"
+            }
+          ],
+          "type": "gym",
+          "unlocks": [
+            {
+              "kind": "tm",
+              "note": "TM39 Rock Tomb awarded on victory.",
+              "refId": "tm39"
+            }
+          ],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 6,
+      "id": "pewter-city",
+      "kind": "city",
+      "location": {
+        "pokeApiLocationAreaIds": [],
+        "pokeApiLocationId": null,
+        "sourceMapIds": [
+          "pewter-city"
+        ]
+      },
+      "name": "Pewter City",
+      "nextNodeIds": [
+        "kanto-route-3"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-forest",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 3: Pewter City",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 7,
+      "id": "kanto-route-3",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          297,
+          832
+        ],
+        "pokeApiLocationId": 109,
+        "sourceMapIds": [
+          "kanto-route-3"
+        ]
+      },
+      "name": "Route 3",
+      "nextNodeIds": [
+        "mt-moon"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-moon",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/109",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 4: Route 3",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 8,
+      "id": "mt-moon",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          290,
+          326,
+          327
+        ],
+        "pokeApiLocationId": 80,
+        "sourceMapIds": [
+          "mt-moon"
+        ]
+      },
+      "name": "Mt. Moon",
+      "nextNodeIds": [
+        "kanto-route-4"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-moon",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/80",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 4: Mt. Moon",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 9,
+      "id": "kanto-route-4",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          298,
+          761
+        ],
+        "pokeApiLocationId": 120,
+        "sourceMapIds": [
+          "kanto-route-4"
+        ]
+      },
+      "name": "Route 4",
+      "nextNodeIds": [
+        "cerulean-city"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-moon",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/120",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 4: Route 4",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The second Gym; the Cascade Badge enables field use of HM01 Cut.",
+          "flags": {
+            "bossFight": true,
+            "gym": true,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "misty-gym",
+          "name": "Cerulean Gym — Misty (Cascade Badge)",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 5: Cerulean Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "gym",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 10,
+      "id": "cerulean-city",
+      "kind": "city",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          281
+        ],
+        "pokeApiLocationId": 68,
+        "sourceMapIds": [
+          "cerulean-city"
+        ]
+      },
+      "name": "Cerulean City",
+      "nextNodeIds": [
+        "kanto-route-24"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cerulean",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/68",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 5: Cerulean City",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 11,
+      "id": "kanto-route-24",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          314
+        ],
+        "pokeApiLocationId": 103,
+        "sourceMapIds": [
+          "kanto-route-24"
+        ]
+      },
+      "name": "Route 24",
+      "nextNodeIds": [
+        "kanto-route-25"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cerulean",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/103",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 5: Route 24",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 12,
+      "id": "kanto-route-25",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          315
+        ],
+        "pokeApiLocationId": 104,
+        "sourceMapIds": [
+          "kanto-route-25"
+        ]
+      },
+      "name": "Route 25",
+      "nextNodeIds": [
+        "kanto-route-5"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cerulean",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/104",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 5: Route 25",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 13,
+      "id": "kanto-route-5",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          299
+        ],
+        "pokeApiLocationId": 130,
+        "sourceMapIds": [
+          "kanto-route-5"
+        ]
+      },
+      "name": "Route 5",
+      "nextNodeIds": [
+        "kanto-route-6"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-vermilion",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/130",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 5: Route 5",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 14,
+      "id": "kanto-route-6",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          300
+        ],
+        "pokeApiLocationId": 131,
+        "sourceMapIds": [
+          "kanto-route-6"
+        ]
+      },
+      "name": "Route 6",
+      "nextNodeIds": [
+        "vermilion-city"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-vermilion",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/131",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 6: Route 6",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The third Gym; the Thunder Badge enables field use of HM06 Rock Smash.",
+          "flags": {
+            "bossFight": true,
+            "gym": true,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "surge-gym",
+          "name": "Vermilion Gym — Lt. Surge (Thunder Badge)",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 6: Vermilion Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "gym",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 15,
+      "id": "vermilion-city",
+      "kind": "city",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          282
+        ],
+        "pokeApiLocationId": 151,
+        "sourceMapIds": [
+          "vermilion-city"
+        ]
+      },
+      "name": "Vermilion City",
+      "nextNodeIds": [
+        "ss-anne"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-vermilion",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/151",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 6: Vermilion City",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The captain of the S.S. Anne gives HM01 Cut.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "ss-anne-hm01-cut",
+          "name": "Receive HM01 Cut",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 6: S.S. Anne",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            },
+            {
+              "confidence": "cross-checked",
+              "locator": "HM01 Cut — S.S. Anne",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-gen3-tm-hm-locations"
+            }
+          ],
+          "type": "tm-hm",
+          "unlocks": [
+            {
+              "kind": "hm",
+              "note": "Cut; field use requires the Cascade Badge.",
+              "refId": "hm01"
+            }
+          ],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 16,
+      "id": "ss-anne",
+      "kind": "facility",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          461
+        ],
+        "pokeApiLocationId": 498,
+        "sourceMapIds": [
+          "ss-anne"
+        ]
+      },
+      "name": "S.S. Anne",
+      "nextNodeIds": [
+        "kanto-route-11"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-vermilion",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/498",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 6: S.S. Anne",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 17,
+      "id": "kanto-route-11",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          305
+        ],
+        "pokeApiLocationId": 90,
+        "sourceMapIds": [
+          "kanto-route-11"
+        ]
+      },
+      "name": "Route 11",
+      "nextNodeIds": [
+        "digletts-cave"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-eastern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/90",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 7: Route 11",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 18,
+      "id": "digletts-cave",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          317
+        ],
+        "pokeApiLocationId": 73,
+        "sourceMapIds": [
+          "digletts-cave"
+        ]
+      },
+      "name": "Diglett's Cave",
+      "nextNodeIds": [
+        "kanto-route-9"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-eastern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/73",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 7: Diglett's Cave",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 19,
+      "id": "kanto-route-9",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          303
+        ],
+        "pokeApiLocationId": 134,
+        "sourceMapIds": [
+          "kanto-route-9"
+        ]
+      },
+      "name": "Route 9",
+      "nextNodeIds": [
+        "kanto-route-10"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-eastern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/134",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 7: Route 9",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 20,
+      "id": "kanto-route-10",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          304
+        ],
+        "pokeApiLocationId": 89,
+        "sourceMapIds": [
+          "kanto-route-10"
+        ]
+      },
+      "name": "Route 10",
+      "nextNodeIds": [
+        "rock-tunnel"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-eastern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/89",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 7: Route 10",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 21,
+      "id": "rock-tunnel",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          292,
+          293
+        ],
+        "pokeApiLocationId": 87,
+        "sourceMapIds": [
+          "rock-tunnel"
+        ]
+      },
+      "name": "Rock Tunnel",
+      "nextNodeIds": [
+        "lavender-town"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-eastern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/87",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 8: Rock Tunnel",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 22,
+      "id": "lavender-town",
+      "kind": "town",
+      "location": {
+        "pokeApiLocationAreaIds": [],
+        "pokeApiLocationId": null,
+        "sourceMapIds": [
+          "lavender-town"
+        ]
+      },
+      "name": "Lavender Town",
+      "nextNodeIds": [
+        "kanto-route-8"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-lavender",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 8: Lavender Town",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 23,
+      "id": "kanto-route-8",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          302
+        ],
+        "pokeApiLocationId": 133,
+        "sourceMapIds": [
+          "kanto-route-8"
+        ]
+      },
+      "name": "Route 8",
+      "nextNodeIds": [
+        "kanto-route-7"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-lavender",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/133",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 8: Route 8",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 24,
+      "id": "kanto-route-7",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          301
+        ],
+        "pokeApiLocationId": 132,
+        "sourceMapIds": [
+          "kanto-route-7"
+        ]
+      },
+      "name": "Route 7",
+      "nextNodeIds": [
+        "celadon-city"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-celadon",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/132",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 8: Route 7",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The fourth Gym, hidden behind the Celadon department store.",
+          "flags": {
+            "bossFight": true,
+            "gym": true,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "erika-gym",
+          "name": "Celadon Gym — Erika (Rainbow Badge)",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 9: Celadon Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "gym",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        },
+        {
+          "conditions": [],
+          "description": "Clearing the Game Corner hideout yields the Silph Scope.",
+          "flags": {
+            "bossFight": true,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": true
+          },
+          "id": "rocket-hideout",
+          "name": "Rocket Hideout — Giovanni (first encounter)",
+          "order": 1,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 9: Rocket Hideout",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "boss",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 25,
+      "id": "celadon-city",
+      "kind": "city",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          283,
+          763,
+          1300
+        ],
+        "pokeApiLocationId": 67,
+        "sourceMapIds": [
+          "celadon-city"
+        ]
+      },
+      "name": "Celadon City",
+      "nextNodeIds": [
+        "pokemon-tower"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-celadon",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/67",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 9: Celadon City",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "Clearing Pokémon Tower with the Silph Scope frees Mr. Fuji, who gives the Poké Flute.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": true
+          },
+          "id": "pokemon-tower-rescue",
+          "name": "Rescue Mr. Fuji — receive the Poké Flute",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 9: Pokémon Tower",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "story",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 26,
+      "id": "pokemon-tower",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          336,
+          337,
+          338,
+          339,
+          340
+        ],
+        "pokeApiLocationId": 160,
+        "sourceMapIds": [
+          "pokemon-tower"
+        ]
+      },
+      "name": "Pokémon Tower",
+      "nextNodeIds": [
+        "kanto-route-12"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-lavender",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/160",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 9: Pokémon Tower",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 27,
+      "id": "kanto-route-12",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          276
+        ],
+        "pokeApiLocationId": 91,
+        "sourceMapIds": [
+          "kanto-route-12"
+        ]
+      },
+      "name": "Route 12",
+      "nextNodeIds": [
+        "kanto-route-13"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-southern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/91",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Route 12",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 28,
+      "id": "kanto-route-13",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          306
+        ],
+        "pokeApiLocationId": 92,
+        "sourceMapIds": [
+          "kanto-route-13"
+        ]
+      },
+      "name": "Route 13",
+      "nextNodeIds": [
+        "kanto-route-14"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-southern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/92",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Route 13",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 29,
+      "id": "kanto-route-14",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          307
+        ],
+        "pokeApiLocationId": 93,
+        "sourceMapIds": [
+          "kanto-route-14"
+        ]
+      },
+      "name": "Route 14",
+      "nextNodeIds": [
+        "kanto-route-15"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-southern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/93",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Route 14",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 30,
+      "id": "kanto-route-15",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          308
+        ],
+        "pokeApiLocationId": 94,
+        "sourceMapIds": [
+          "kanto-route-15"
+        ]
+      },
+      "name": "Route 15",
+      "nextNodeIds": [
+        "fuchsia-city"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-southern",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/94",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Route 15",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The fifth Gym; the Soul Badge enables field use of HM03 Surf.",
+          "flags": {
+            "bossFight": true,
+            "gym": true,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "koga-gym",
+          "name": "Fuchsia Gym — Koga (Soul Badge)",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 10: Fuchsia Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "gym",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 31,
+      "id": "fuchsia-city",
+      "kind": "city",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          284
+        ],
+        "pokeApiLocationId": 76,
+        "sourceMapIds": [
+          "fuchsia-city"
+        ]
+      },
+      "name": "Fuchsia City",
+      "nextNodeIds": [
+        "kanto-safari-zone"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-fuchsia",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/76",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Fuchsia City",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The Secret House in Area 3 of the Safari Zone holds HM03 Surf.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "safari-hm03-surf",
+          "name": "Receive HM03 Surf (Secret House)",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 10: Safari Zone",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            },
+            {
+              "confidence": "cross-checked",
+              "locator": "HM03 Surf — Safari Zone Secret House",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-gen3-tm-hm-locations"
+            }
+          ],
+          "type": "tm-hm",
+          "unlocks": [
+            {
+              "kind": "hm",
+              "note": "Surf; field use requires the Soul Badge.",
+              "refId": "hm03"
+            }
+          ],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        },
+        {
+          "conditions": [],
+          "description": "Returning the Gold Teeth to the Warden yields HM04 Strength.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "safari-gold-teeth",
+          "name": "Recover the Gold Teeth",
+          "order": 1,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 10: Safari Zone",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "item",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 32,
+      "id": "kanto-safari-zone",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          345,
+          346,
+          347,
+          348
+        ],
+        "pokeApiLocationId": 162,
+        "sourceMapIds": [
+          "kanto-safari-zone"
+        ]
+      },
+      "name": "Safari Zone",
+      "nextNodeIds": [
+        "kanto-route-16"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-fuchsia",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/162",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Safari Zone",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 33,
+      "id": "kanto-route-16",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          309
+        ],
+        "pokeApiLocationId": 95,
+        "sourceMapIds": [
+          "kanto-route-16"
+        ]
+      },
+      "name": "Route 16",
+      "nextNodeIds": [
+        "kanto-route-17"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cycling",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/95",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Route 16",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 34,
+      "id": "kanto-route-17",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          310
+        ],
+        "pokeApiLocationId": 96,
+        "sourceMapIds": [
+          "kanto-route-17"
+        ]
+      },
+      "name": "Route 17",
+      "nextNodeIds": [
+        "kanto-route-18"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cycling",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/96",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Route 17",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 35,
+      "id": "kanto-route-18",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          311
+        ],
+        "pokeApiLocationId": 97,
+        "sourceMapIds": [
+          "kanto-route-18"
+        ]
+      },
+      "name": "Route 18",
+      "nextNodeIds": [
+        "saffron-city"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cycling",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/97",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 10: Route 18",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "Liberating Silph Co. from Team Rocket clears the path to the Saffron Gym.",
+          "flags": {
+            "bossFight": true,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": true
+          },
+          "id": "silph-co",
+          "name": "Silph Co. — Giovanni (second encounter)",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 11: Silph Co.",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "boss",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        },
+        {
+          "conditions": [],
+          "description": "The sixth Gym, a warp-tile puzzle.",
+          "flags": {
+            "bossFight": true,
+            "gym": true,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "sabrina-gym",
+          "name": "Saffron Gym — Sabrina (Marsh Badge)",
+          "order": 1,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 11: Saffron Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "gym",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 36,
+      "id": "saffron-city",
+      "kind": "city",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          762,
+          764
+        ],
+        "pokeApiLocationId": 234,
+        "sourceMapIds": [
+          "saffron-city"
+        ]
+      },
+      "name": "Saffron City",
+      "nextNodeIds": [
+        "kanto-sea-route-19"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-saffron",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/234",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 11: Saffron City",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 37,
+      "id": "kanto-sea-route-19",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          277
+        ],
+        "pokeApiLocationId": 98,
+        "sourceMapIds": [
+          "kanto-sea-route-19"
+        ]
+      },
+      "name": "Sea Route 19",
+      "nextNodeIds": [
+        "kanto-sea-route-20"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-water",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/98",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 12: Sea Route 19",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 38,
+      "id": "kanto-sea-route-20",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          278
+        ],
+        "pokeApiLocationId": 100,
+        "sourceMapIds": [
+          "kanto-sea-route-20"
+        ]
+      },
+      "name": "Sea Route 20",
+      "nextNodeIds": [
+        "seafoam-islands"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-water",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/100",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 12: Sea Route 20",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The Legendary bird Articuno waits in the depths of the Seafoam Islands.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": true,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "articuno",
+          "name": "Articuno",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 12: Seafoam Islands",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "static-encounter",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 39,
+      "id": "seafoam-islands",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          258,
+          259,
+          260,
+          261,
+          262
+        ],
+        "pokeApiLocationId": 136,
+        "sourceMapIds": [
+          "seafoam-islands"
+        ]
+      },
+      "name": "Seafoam Islands",
+      "nextNodeIds": [
+        "cinnabar-island"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-water",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/136",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 12: Seafoam Islands",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The seventh Gym; its door is unlocked with the Secret Key from the Pokémon Mansion.",
+          "flags": {
+            "bossFight": true,
+            "gym": true,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "blaine-gym",
+          "name": "Cinnabar Gym — Blaine (Volcano Badge)",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 13: Cinnabar Gym",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "gym",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 40,
+      "id": "cinnabar-island",
+      "kind": "city",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          279,
+          833
+        ],
+        "pokeApiLocationId": 71,
+        "sourceMapIds": [
+          "cinnabar-island"
+        ]
+      },
+      "name": "Cinnabar Island",
+      "nextNodeIds": [
+        "pokemon-mansion"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cinnabar",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/71",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 13: Cinnabar Island",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The Secret Key deep in the Pokémon Mansion unlocks the Cinnabar Gym.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "mansion-secret-key",
+          "name": "Recover the Secret Key",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 13: Pokémon Mansion",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "item",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 41,
+      "id": "pokemon-mansion",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          341,
+          342,
+          343,
+          344
+        ],
+        "pokeApiLocationId": 161,
+        "sourceMapIds": [
+          "pokemon-mansion"
+        ]
+      },
+      "name": "Pokémon Mansion",
+      "nextNodeIds": [
+        "kanto-sea-route-21"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cinnabar",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/161",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 13: Pokémon Mansion",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 42,
+      "id": "kanto-sea-route-21",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          312
+        ],
+        "pokeApiLocationId": 101,
+        "sourceMapIds": [
+          "kanto-sea-route-21"
+        ]
+      },
+      "name": "Sea Route 21",
+      "nextNodeIds": [
+        "kanto-power-plant"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-cinnabar",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/101",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 13: Sea Route 21",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The Legendary bird Zapdos resides in the abandoned Power Plant.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": true,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "zapdos",
+          "name": "Zapdos",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 15: Power Plant",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "static-encounter",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 43,
+      "id": "kanto-power-plant",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          330
+        ],
+        "pokeApiLocationId": 158,
+        "sourceMapIds": [
+          "kanto-power-plant"
+        ]
+      },
+      "name": "Kanto Power Plant",
+      "nextNodeIds": [
+        "kanto-route-23"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-endgame",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/158",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 15: Kanto Power Plant",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [
+            {
+              "kind": "milestone-complete",
+              "note": null,
+              "operator": "equals",
+              "value": "giovanni-gym"
+            }
+          ],
+          "description": "The guards on Route 23 stand aside only for a Trainer with all eight badges.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "route-23-badge-check",
+          "name": "Victory Road badge checkpoint",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 16: Route 23",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "checkpoint",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 44,
+      "id": "kanto-route-23",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          329
+        ],
+        "pokeApiLocationId": 157,
+        "sourceMapIds": [
+          "kanto-route-23"
+        ]
+      },
+      "name": "Route 23",
+      "nextNodeIds": [
+        "kanto-victory-road"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-endgame",
+      "prerequisiteEventIds": [
+        "giovanni-gym"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/157",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 16: Route 23",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [],
+      "goldenPathOrder": 45,
+      "id": "kanto-victory-road",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          331,
+          332,
+          333
+        ],
+        "pokeApiLocationId": 159,
+        "sourceMapIds": [
+          "kanto-victory-road-2"
+        ]
+      },
+      "name": "Victory Road",
+      "nextNodeIds": [
+        "indigo-plateau"
+      ],
+      "parentNodeId": null,
+      "phase": "kanto-endgame",
+      "prerequisiteEventIds": [
+        "route-23-badge-check"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/159",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 16: Victory Road",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "main",
+      "events": [
+        {
+          "conditions": [],
+          "description": "Lorelei, Bruno, Agatha, and Lance in succession.",
+          "flags": {
+            "bossFight": true,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "elite-four",
+          "name": "Elite Four",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 17: Elite Four",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "boss",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        },
+        {
+          "conditions": [],
+          "description": "Defeating the Champion enters the Hall of Fame and, after retrieving the gems, unlocks the National Dex quest.",
+          "flags": {
+            "bossFight": true,
+            "gym": false,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": true,
+            "storyFight": false
+          },
+          "id": "champion",
+          "name": "Champion — Rival",
+          "order": 1,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 17: Indigo Plateau",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "boss",
+          "unlocks": [
+            {
+              "kind": "service",
+              "note": "Enables the Sevii Islands postgame and National Dex.",
+              "refId": "hall-of-fame"
+            }
+          ],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 46,
+      "id": "indigo-plateau",
+      "kind": "landmark",
+      "location": {
+        "pokeApiLocationAreaIds": [],
+        "pokeApiLocationId": null,
+        "sourceMapIds": [
+          "indigo-plateau"
+        ]
+      },
+      "name": "Indigo Plateau",
+      "nextNodeIds": [
+        "one-island"
+      ],
+      "parentNodeId": null,
+      "phase": "elite-four",
+      "prerequisiteEventIds": [
+        "route-23-badge-check"
+      ],
+      "provenance": [
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 17: Indigo Plateau",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [
+        {
+          "conditions": [],
+          "description": "Celio asks for help repairing the Network Machine that links to distant regions.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "sevii-celio-help",
+          "name": "Help Celio at the Pokémon Network Center",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 14: One Island",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "story",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        },
+        {
+          "conditions": [
+            {
+              "kind": "milestone-complete",
+              "note": null,
+              "operator": "equals",
+              "value": "champion"
+            }
+          ],
+          "description": "Delivering the Ruby and Sapphire lets Celio finish the Network Machine, restoring trade/link and the National sightings that reopen Cerulean Cave.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": true,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "network-machine-restored",
+          "name": "Network Machine restored",
+          "order": 1,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 20: Cerulean Cave",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "story",
+          "unlocks": [
+            {
+              "kind": "service",
+              "note": "Restored link enables access to Cerulean Cave.",
+              "refId": "cerulean-cave-access"
+            }
+          ],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 47,
+      "id": "one-island",
+      "kind": "landmark",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          561
+        ],
+        "pokeApiLocationId": 526,
+        "sourceMapIds": [
+          "one-island"
+        ]
+      },
+      "name": "One Island",
+      "nextNodeIds": [
+        "mt-ember"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-early",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/526",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 14: One Island",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "data/maps (map connectivity for One Island)",
+          "method": "inferred",
+          "note": "Reference only; pret source not redistributed.",
+          "sourceId": "pret-pokefirered"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [
+        {
+          "conditions": [],
+          "description": "The Legendary bird Moltres nests near the summit of Mt. Ember.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": true,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "moltres",
+          "name": "Moltres",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 14: Mt. Ember",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "static-encounter",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 48,
+      "id": "mt-ember",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          488,
+          489,
+          490,
+          491,
+          492,
+          493,
+          494,
+          825
+        ],
+        "pokeApiLocationId": 500,
+        "sourceMapIds": [
+          "mt-ember"
+        ]
+      },
+      "name": "Mt. Ember",
+      "nextNodeIds": [
+        "kindle-road"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-early",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/500",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 14: Mt. Ember",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 49,
+      "id": "kindle-road",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          512
+        ],
+        "pokeApiLocationId": 505,
+        "sourceMapIds": [
+          "kindle-road"
+        ]
+      },
+      "name": "Kindle Road",
+      "nextNodeIds": [
+        "treasure-beach"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-early",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/505",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 14: Kindle Road",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 50,
+      "id": "treasure-beach",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          513
+        ],
+        "pokeApiLocationId": 506,
+        "sourceMapIds": [
+          "treasure-beach"
+        ]
+      },
+      "name": "Treasure Beach",
+      "nextNodeIds": [
+        "cape-brink"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-early",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/506",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 14: Treasure Beach",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [
+        {
+          "conditions": [],
+          "description": "A tutor teaches Blast Burn, Frenzy Plant, or Hydro Cannon to a fully evolved starter.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": false,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "cape-brink-tutors",
+          "name": "Cape Brink starter move tutors",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Move Tutor: Cape Brink (Two Island)",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-move-tutors"
+            }
+          ],
+          "type": "tutor",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 51,
+      "id": "cape-brink",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          514
+        ],
+        "pokeApiLocationId": 507,
+        "sourceMapIds": [
+          "cape-brink"
+        ]
+      },
+      "name": "Cape Brink",
+      "nextNodeIds": [
+        "bond-bridge"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-early",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/507",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 14: Cape Brink",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 52,
+      "id": "bond-bridge",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          515
+        ],
+        "pokeApiLocationId": 508,
+        "sourceMapIds": [
+          "bond-bridge"
+        ]
+      },
+      "name": "Bond Bridge",
+      "nextNodeIds": [
+        "three-isle-port"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-early",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/508",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 14: Bond Bridge",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 53,
+      "id": "three-isle-port",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          516
+        ],
+        "pokeApiLocationId": 509,
+        "sourceMapIds": [
+          "three-isle-port"
+        ]
+      },
+      "name": "Three Isle Port",
+      "nextNodeIds": [
+        "berry-forest"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-early",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/509",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 14: Three Isle Port",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "optional",
+      "events": [],
+      "goldenPathOrder": 54,
+      "id": "berry-forest",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          495
+        ],
+        "pokeApiLocationId": 501,
+        "sourceMapIds": [
+          "berry-forest"
+        ]
+      },
+      "name": "Berry Forest",
+      "nextNodeIds": [
+        "four-island"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-early",
+      "prerequisiteEventIds": [],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/501",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 14: Berry Forest",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 55,
+      "id": "four-island",
+      "kind": "landmark",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          562
+        ],
+        "pokeApiLocationId": 527,
+        "sourceMapIds": [
+          "four-island"
+        ]
+      },
+      "name": "Four Island",
+      "nextNodeIds": [
+        "icefall-cave"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/527",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 18: Four Island",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 56,
+      "id": "icefall-cave",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          496,
+          497,
+          498,
+          499
+        ],
+        "pokeApiLocationId": 502,
+        "sourceMapIds": [
+          "icefall-cave"
+        ]
+      },
+      "name": "Icefall Cave",
+      "nextNodeIds": [
+        "five-island"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/502",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 18: Icefall Cave",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 57,
+      "id": "five-island",
+      "kind": "landmark",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          563
+        ],
+        "pokeApiLocationId": 528,
+        "sourceMapIds": [
+          "five-island"
+        ]
+      },
+      "name": "Five Island",
+      "nextNodeIds": [
+        "five-isle-meadow"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/528",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Five Island",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 58,
+      "id": "five-isle-meadow",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          519
+        ],
+        "pokeApiLocationId": 512,
+        "sourceMapIds": [
+          "five-isle-meadow"
+        ]
+      },
+      "name": "Five Isle Meadow",
+      "nextNodeIds": [
+        "memorial-pillar"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/512",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Five Isle Meadow",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 59,
+      "id": "memorial-pillar",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          520
+        ],
+        "pokeApiLocationId": 513,
+        "sourceMapIds": [
+          "memorial-pillar"
+        ]
+      },
+      "name": "Memorial Pillar",
+      "nextNodeIds": [
+        "water-path"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/513",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Memorial Pillar",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 60,
+      "id": "water-path",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          523
+        ],
+        "pokeApiLocationId": 516,
+        "sourceMapIds": [
+          "water-path"
+        ]
+      },
+      "name": "Water Path",
+      "nextNodeIds": [
+        "resort-gorgeous"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/516",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Water Path",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 61,
+      "id": "resort-gorgeous",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          517
+        ],
+        "pokeApiLocationId": 510,
+        "sourceMapIds": [
+          "resort-gorgeous"
+        ]
+      },
+      "name": "Resort Gorgeous",
+      "nextNodeIds": [
+        "water-labyrinth"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/510",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Resort Gorgeous",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 62,
+      "id": "water-labyrinth",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          518
+        ],
+        "pokeApiLocationId": 511,
+        "sourceMapIds": [
+          "water-labyrinth"
+        ]
+      },
+      "name": "Water Labyrinth",
+      "nextNodeIds": [
+        "lost-cave"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/511",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Water Labyrinth",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 63,
+      "id": "lost-cave",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          501,
+          502,
+          503,
+          504,
+          505,
+          506,
+          507,
+          508,
+          509,
+          510,
+          511
+        ],
+        "pokeApiLocationId": 504,
+        "sourceMapIds": [
+          "lost-cave"
+        ]
+      },
+      "name": "Lost Cave",
+      "nextNodeIds": [
+        "pattern-bush"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/504",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 18: Lost Cave",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 64,
+      "id": "pattern-bush",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          500
+        ],
+        "pokeApiLocationId": 503,
+        "sourceMapIds": [
+          "pattern-bush"
+        ]
+      },
+      "name": "Pattern Bush",
+      "nextNodeIds": [
+        "green-path"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/503",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 18: Pattern Bush",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 65,
+      "id": "green-path",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          522
+        ],
+        "pokeApiLocationId": 515,
+        "sourceMapIds": [
+          "green-path"
+        ]
+      },
+      "name": "Green Path",
+      "nextNodeIds": [
+        "outcast-island"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/515",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Green Path",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 66,
+      "id": "outcast-island",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          521
+        ],
+        "pokeApiLocationId": 514,
+        "sourceMapIds": [
+          "outcast-island"
+        ]
+      },
+      "name": "Outcast Island",
+      "nextNodeIds": [
+        "ruin-valley"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/514",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Outcast Island",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 67,
+      "id": "ruin-valley",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          524
+        ],
+        "pokeApiLocationId": 517,
+        "sourceMapIds": [
+          "ruin-valley"
+        ]
+      },
+      "name": "Ruin Valley",
+      "nextNodeIds": [
+        "canyon-entrance"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/517",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Ruin Valley",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 68,
+      "id": "canyon-entrance",
+      "kind": "route",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          526
+        ],
+        "pokeApiLocationId": 519,
+        "sourceMapIds": [
+          "canyon-entrance"
+        ]
+      },
+      "name": "Canyon Entrance",
+      "nextNodeIds": [
+        "sevault-canyon"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/519",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Canyon Entrance",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 69,
+      "id": "sevault-canyon",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          527
+        ],
+        "pokeApiLocationId": 520,
+        "sourceMapIds": [
+          "sevault-canyon"
+        ]
+      },
+      "name": "Sevault Canyon",
+      "nextNodeIds": [
+        "trainer-tower"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/520",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Sevault Canyon",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 70,
+      "id": "trainer-tower",
+      "kind": "facility",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          525
+        ],
+        "pokeApiLocationId": 518,
+        "sourceMapIds": [
+          "trainer-tower"
+        ]
+      },
+      "name": "Trainer Tower",
+      "nextNodeIds": [
+        "tanoby-ruins"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/518",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Trainer Tower",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [
+        {
+          "conditions": [],
+          "description": "Opening the Tanoby Chambers reveals the Unown letters.",
+          "flags": {
+            "bossFight": false,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": true,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "tanoby-unown",
+          "name": "Unown chambers",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "cross-checked",
+              "locator": "Walkthrough Part 19: Tanoby Ruins",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "static-encounter",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 71,
+      "id": "tanoby-ruins",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          450,
+          451,
+          452,
+          453,
+          454,
+          455,
+          456,
+          528
+        ],
+        "pokeApiLocationId": 491,
+        "sourceMapIds": [
+          "monean-chamber",
+          "liptoo-chamber",
+          "weepth-chamber",
+          "dilford-chamber",
+          "scufib-chamber",
+          "rixy-chamber",
+          "viapos-chamber",
+          "tanoby-ruins"
+        ]
+      },
+      "name": "Tanoby Ruins",
+      "nextNodeIds": [
+        "altering-cave"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/491",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 19: Tanoby Ruins",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [],
+      "goldenPathOrder": 72,
+      "id": "altering-cave",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          564,
+          565,
+          566,
+          567,
+          568,
+          569,
+          570,
+          571,
+          572
+        ],
+        "pokeApiLocationId": 529,
+        "sourceMapIds": [
+          "kanto-altering-cave"
+        ]
+      },
+      "name": "Altering Cave",
+      "nextNodeIds": [
+        "cerulean-cave"
+      ],
+      "parentNodeId": null,
+      "phase": "sevii-postgame",
+      "prerequisiteEventIds": [
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/529",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 18: Altering Cave",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    },
+    {
+      "branch": "postgame",
+      "events": [
+        {
+          "conditions": [
+            {
+              "kind": "milestone-complete",
+              "note": null,
+              "operator": "equals",
+              "value": "network-machine-restored"
+            }
+          ],
+          "description": "Mewtwo waits at the heart of Cerulean Cave, reachable only after the Network Machine is restored.",
+          "flags": {
+            "bossFight": true,
+            "gym": false,
+            "keyMilestone": false,
+            "optional": true,
+            "rivalFight": false,
+            "storyFight": false
+          },
+          "id": "mewtwo",
+          "name": "Mewtwo",
+          "order": 0,
+          "provenance": [
+            {
+              "confidence": "verified",
+              "locator": "Walkthrough Part 20: Cerulean Cave",
+              "method": "manual",
+              "note": null,
+              "sourceId": "bulbapedia-frlg-walkthrough"
+            }
+          ],
+          "type": "static-encounter",
+          "unlocks": [],
+          "versionFlags": {
+            "firered": {
+              "available": true,
+              "exclusive": false
+            }
+          }
+        }
+      ],
+      "goldenPathOrder": 73,
+      "id": "cerulean-cave",
+      "kind": "dungeon",
+      "location": {
+        "pokeApiLocationAreaIds": [
+          323,
+          324,
+          325
+        ],
+        "pokeApiLocationId": 147,
+        "sourceMapIds": [
+          "cerulean-cave"
+        ]
+      },
+      "name": "Cerulean Cave",
+      "nextNodeIds": [],
+      "parentNodeId": null,
+      "phase": "postgame-legend",
+      "prerequisiteEventIds": [
+        "network-machine-restored",
+        "champion"
+      ],
+      "provenance": [
+        {
+          "confidence": "verified",
+          "locator": "location/147",
+          "method": "generated",
+          "note": "FireRed encounter areas bound from the pinned PokeAPI snapshot.",
+          "sourceId": "pokeapi-api-data"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "Walkthrough Part 20: Cerulean Cave",
+          "method": "manual",
+          "note": null,
+          "sourceId": "bulbapedia-frlg-walkthrough"
+        },
+        {
+          "confidence": "cross-checked",
+          "locator": "data/maps (map connectivity for Cerulean Cave)",
+          "method": "inferred",
+          "note": "Reference only; pret source not redistributed.",
+          "sourceId": "pret-pokefirered"
+        }
+      ],
+      "versionFlags": {
+        "firered": {
+          "available": true,
+          "exclusive": false
+        }
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "pokeapi-api-data",
+      "license": "BSD-3-Clause",
+      "name": "PokeAPI api-data snapshot",
+      "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+      "url": "https://github.com/PokeAPI/api-data"
+    },
+    {
+      "id": "pret-pokefirered",
+      "license": null,
+      "name": "pret/pokefirered decompilation (accuracy reference only)",
+      "revision": "df4449a27cd78dd747ce269e47d3ab4a0149d8f4",
+      "url": "https://github.com/pret/pokefirered"
+    },
+    {
+      "id": "bulbapedia-frlg-walkthrough",
+      "license": null,
+      "name": "Bulbapedia: FireRed and LeafGreen walkthrough",
+      "revision": "accessed-2026-07-19",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_FireRed_and_LeafGreen"
+    },
+    {
+      "id": "bulbapedia-gen3-tm-hm-locations",
+      "license": null,
+      "name": "Bulbapedia: List of TM and HM locations in Generation III",
+      "revision": "accessed-2026-07-19",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/List_of_TM_and_HM_locations_in_Generation_III"
+    },
+    {
+      "id": "bulbapedia-frlg-move-tutors",
+      "license": null,
+      "name": "Bulbapedia: Move Tutor",
+      "revision": "accessed-2026-07-19",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/Move_Tutor"
+    }
+  ]
+}

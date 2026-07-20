@@ -1,0 +1,1 @@
+{"id":17,"name":"dark","damage_relations":{"double_damage_from":[{"name":"fighting","url":"/api/v2/type/2/"}],"half_damage_from":[{"name":"ghost","url":"/api/v2/type/8/"}],"no_damage_from":[{"name":"psychic","url":"/api/v2/type/14/"}]}}

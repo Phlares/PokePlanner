@@ -1,0 +1,3986 @@
+[
+  {
+    "fromPokemonId": 1,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/1",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 2,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 2,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 32,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/1",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 3,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 4,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/2",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 5,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 5,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/2",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 6,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 7,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/3",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 8,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 8,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/3",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 9,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 10,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 7,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/4",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 11,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 11,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 10,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/4",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 12,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 13,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 7,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/5",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 14,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 14,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 10,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/5",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 15,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 16,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 18,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/6",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 17,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 17,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/6",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 18,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 19,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/7",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 20,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 21,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/8",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 22,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 23,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 22,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/9",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 24,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 25,
+    "itemId": 83,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/10",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 26,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 27,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 22,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/11",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 28,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 29,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/12",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 30,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 30,
+    "itemId": 81,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/12",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 31,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 32,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/13",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 33,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 33,
+    "itemId": 81,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/13",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 34,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 35,
+    "itemId": 81,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/14",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 36,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 37,
+    "itemId": 82,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/15",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 38,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 39,
+    "itemId": 81,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/16",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 40,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 41,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 22,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/17",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 42,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 42,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/17",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Golbat to Crobat",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 169,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 43,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 21,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/18",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 44,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 44,
+    "itemId": 85,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/18",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 45,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 44,
+    "itemId": 80,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/18",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Gloom to Bellossom",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 182,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 46,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 24,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/19",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 47,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 48,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 31,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/20",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 49,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 50,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 26,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/21",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 51,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 52,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 28,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/22",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 53,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 54,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 33,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/23",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 55,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 56,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 28,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/24",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 57,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 58,
+    "itemId": 82,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/25",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 59,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 60,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 25,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/26",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 61,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 61,
+    "itemId": 84,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/26",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 62,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 61,
+    "itemId": 198,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/26",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Poliwhirl to Politoed",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 186,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 63,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/27",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 64,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 64,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/27",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 65,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 66,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 28,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/28",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 67,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 67,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/28",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 68,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 69,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 21,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/29",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 70,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 70,
+    "itemId": 85,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/29",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 71,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 72,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/30",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 73,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 74,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 25,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/31",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 75,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 75,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/31",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 76,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 77,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 40,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/32",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 78,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 79,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 37,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/33",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 80,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 79,
+    "itemId": 198,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/33",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Slowpoke to Slowking",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 199,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 81,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/34",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 82,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 84,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 31,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/36",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 85,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 86,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 34,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/37",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 87,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 88,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 38,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/38",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 89,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 90,
+    "itemId": 84,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/39",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 91,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 92,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 25,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/40",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 93,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 93,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/40",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 94,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 95,
+    "itemId": 210,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/41",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Onix to Steelix",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 208,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 96,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 26,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/42",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 97,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 98,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 28,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/43",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 99,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 100,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/44",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 101,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 102,
+    "itemId": 85,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/45",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 103,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 104,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 28,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/46",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 105,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 109,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 35,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/49",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 110,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 111,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 42,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/50",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 112,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 113,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/51",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Chansey to Blissey",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 242,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 116,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 32,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/54",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 117,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 117,
+    "itemId": 212,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/54",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Seadra to Kingdra",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 230,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 118,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 33,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/55",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 119,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 120,
+    "itemId": 84,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/56",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 121,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 123,
+    "itemId": 210,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/58",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Scyther to Scizor",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 212,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 129,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/64",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 130,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 133,
+    "itemId": 84,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/67",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 134,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 133,
+    "itemId": 83,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/67",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 135,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 133,
+    "itemId": 82,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/67",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 136,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 133,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/67",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "Time-based evolution: Eevee to Espeon",
+        "method": "manual",
+        "note": "FireRed has no day and night cycle.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-methods-of-evolution"
+      }
+    ],
+    "reason": "no-day-night-cycle",
+    "status": "unavailable",
+    "toPokemonId": 196,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 133,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/67",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "Time-based evolution: Eevee to Umbreon",
+        "method": "manual",
+        "note": "FireRed has no day and night cycle.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-methods-of-evolution"
+      }
+    ],
+    "reason": "no-day-night-cycle",
+    "status": "unavailable",
+    "toPokemonId": 197,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 137,
+    "itemId": 229,
+    "locationId": null,
+    "milestoneId": "national-dex",
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/68",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "National Pokedex restriction: Porygon to Porygon2",
+        "method": "manual",
+        "note": "Requires the National Dex.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": null,
+    "status": "postgame",
+    "toPokemonId": 233,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 138,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 40,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/69",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 139,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 140,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 40,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/70",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 141,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 147,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/76",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 148,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 148,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 55,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/76",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 149,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 152,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/79",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 153,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 153,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 32,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/79",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 154,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 155,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 14,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/80",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 156,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 156,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/80",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 157,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 158,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 18,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/81",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 159,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 159,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/81",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 160,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 161,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 15,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/82",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 162,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 163,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/83",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 164,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 165,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 18,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/84",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 166,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 167,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 22,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/85",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 168,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 170,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 27,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/86",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 171,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 172,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/10",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 25,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 173,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/14",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 35,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 174,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/16",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 39,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 175,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/87",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 176,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 177,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 25,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/88",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 178,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 179,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 15,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/89",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 180,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 180,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/89",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 181,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 183,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 18,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/90",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 184,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 187,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 18,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/92",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 188,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 188,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 27,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/92",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 189,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 191,
+    "itemId": 80,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/94",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 192,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 194,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/96",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 195,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 204,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 31,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/102",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 205,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 209,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 23,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/105",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 210,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 216,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/110",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 217,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 218,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 38,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/111",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 219,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 220,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 33,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/112",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 221,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 223,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 25,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/114",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 224,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 228,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 24,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/118",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 229,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 231,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 25,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/119",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 232,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 236,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/47",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": "attack-greater-than-defense",
+    "status": "standard",
+    "toPokemonId": 106,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 236,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/47",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": "attack-less-than-defense",
+    "status": "standard",
+    "toPokemonId": 107,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 236,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/47",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": "attack-equals-defense",
+    "status": "standard",
+    "toPokemonId": 237,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 238,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/59",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 124,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 239,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/60",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 125,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 240,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/61",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 126,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 246,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/126",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 247,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 247,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 55,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/126",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 248,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 252,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/130",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 253,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 253,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/130",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 254,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 255,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/131",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 256,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 256,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/131",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 257,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 258,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 16,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/132",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 259,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 259,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/132",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 260,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 261,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 18,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/133",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 262,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 263,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/134",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 264,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 265,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 7,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/135",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "Wurmple evolution: Silcoon branch",
+        "method": "manual",
+        "note": "Personality value selects the branch.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-personality-values"
+      }
+    ],
+    "reason": "personality-value-branch",
+    "status": "standard",
+    "toPokemonId": 266,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 265,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 7,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/135",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "Wurmple evolution: Cascoon branch",
+        "method": "manual",
+        "note": "Personality value selects the branch.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-personality-values"
+      }
+    ],
+    "reason": "personality-value-branch",
+    "status": "standard",
+    "toPokemonId": 268,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 266,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 10,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/135",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 267,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 268,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 10,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/135",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 269,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 270,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 14,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/136",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 271,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 271,
+    "itemId": 84,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/136",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 272,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 273,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 14,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/137",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 274,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 274,
+    "itemId": 85,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/137",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 275,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 276,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 22,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/138",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 277,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 278,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 25,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/139",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 279,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 280,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/140",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 281,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 281,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/140",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 282,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 283,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 22,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/141",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 284,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 285,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 23,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/142",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 286,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 287,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 18,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/143",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 288,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 288,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/143",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 289,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 290,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/144",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 291,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 290,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/144",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "Evolution: Generation III Shedinja",
+        "method": "manual",
+        "note": "Requires an empty party slot.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-nincada"
+      }
+    ],
+    "reason": "empty-party-slot",
+    "status": "standard",
+    "toPokemonId": 292,
+    "trigger": "other"
+  },
+  {
+    "fromPokemonId": 293,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/145",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 294,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 294,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 40,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/145",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 295,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 296,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 24,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/146",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 297,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 298,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/90",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 183,
+    "trigger": "friendship"
+  },
+  {
+    "fromPokemonId": 300,
+    "itemId": 81,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/148",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 301,
+    "trigger": "item"
+  },
+  {
+    "fromPokemonId": 304,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 32,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/151",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 305,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 305,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 42,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/151",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 306,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 307,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 37,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/152",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 308,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 309,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 26,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/153",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 310,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 316,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 26,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/159",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 317,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 318,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/160",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 319,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 320,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 40,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/161",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 321,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 322,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 33,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/162",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 323,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 325,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 32,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/164",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 326,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 328,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 35,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/166",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 329,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 329,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 45,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/166",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 330,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 331,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 32,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/167",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 332,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 333,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 35,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/168",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 334,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 339,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/173",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 340,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 341,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/174",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 342,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 343,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 36,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/175",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 344,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 345,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 40,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/176",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 346,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 347,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 40,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/177",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 348,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 349,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/178",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      },
+      {
+        "confidence": "verified",
+        "locator": "Feebas evolution in FireRed and LeafGreen",
+        "method": "manual",
+        "note": "Beauty must be raised before transfer.",
+        "revision": "accessed-2026-07-19",
+        "sourceId": "bulbapedia-evolution-prevention"
+      }
+    ],
+    "reason": "requires-pre-raised-beauty",
+    "status": "transfer-only",
+    "toPokemonId": 350,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 353,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 37,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/181",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 354,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 355,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 37,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/182",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 356,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 360,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 15,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/100",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 202,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 361,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 42,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/186",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 362,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 363,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 32,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/187",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 364,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 364,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 44,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/187",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 365,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 366,
+    "itemId": 203,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/188",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 367,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 366,
+    "itemId": 204,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": null,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/188",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 368,
+    "trigger": "trade"
+  },
+  {
+    "fromPokemonId": 371,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 30,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/191",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 372,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 372,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 50,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/191",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 373,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 374,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 20,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/192",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 375,
+    "trigger": "level"
+  },
+  {
+    "fromPokemonId": 375,
+    "itemId": null,
+    "locationId": null,
+    "milestoneId": null,
+    "minimumLevel": 45,
+    "provenance": [
+      {
+        "confidence": "verified",
+        "locator": "evolution-chain/192",
+        "method": "generated",
+        "note": null,
+        "revision": "0fb5313cb77f46269502e987a53a0bf751ae883d",
+        "sourceId": "pokeapi-api-data"
+      }
+    ],
+    "reason": null,
+    "status": "standard",
+    "toPokemonId": 376,
+    "trigger": "level"
+  }
+]

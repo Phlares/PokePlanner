@@ -1,0 +1,122 @@
+[
+  {
+    "fromPokemonId": 42,
+    "toPokemonId": 169,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Golbat to Crobat", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 44,
+    "toPokemonId": 182,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Gloom to Bellossom", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 61,
+    "toPokemonId": 186,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Poliwhirl to Politoed", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 79,
+    "toPokemonId": 199,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Slowpoke to Slowking", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 95,
+    "toPokemonId": 208,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Onix to Steelix", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 113,
+    "toPokemonId": 242,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Chansey to Blissey", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 117,
+    "toPokemonId": 230,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Seadra to Kingdra", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 123,
+    "toPokemonId": 212,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Scyther to Scizor", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 133,
+    "toPokemonId": 196,
+    "status": "unavailable",
+    "milestoneId": null,
+    "reason": "no-day-night-cycle",
+    "provenance": [{ "sourceId": "bulbapedia-methods-of-evolution", "revision": "accessed-2026-07-19", "locator": "Time-based evolution: Eevee to Espeon", "method": "manual", "confidence": "verified", "note": "FireRed has no day and night cycle." }]
+  },
+  {
+    "fromPokemonId": 133,
+    "toPokemonId": 197,
+    "status": "unavailable",
+    "milestoneId": null,
+    "reason": "no-day-night-cycle",
+    "provenance": [{ "sourceId": "bulbapedia-methods-of-evolution", "revision": "accessed-2026-07-19", "locator": "Time-based evolution: Eevee to Umbreon", "method": "manual", "confidence": "verified", "note": "FireRed has no day and night cycle." }]
+  },
+  {
+    "fromPokemonId": 137,
+    "toPokemonId": 233,
+    "status": "postgame",
+    "milestoneId": "national-dex",
+    "reason": null,
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "National Pokedex restriction: Porygon to Porygon2", "method": "manual", "confidence": "verified", "note": "Requires the National Dex." }]
+  },
+  {
+    "fromPokemonId": 265,
+    "toPokemonId": 266,
+    "status": "standard",
+    "milestoneId": null,
+    "reason": "personality-value-branch",
+    "provenance": [{ "sourceId": "bulbapedia-personality-values", "revision": "accessed-2026-07-19", "locator": "Wurmple evolution: Silcoon branch", "method": "manual", "confidence": "verified", "note": "Personality value selects the branch." }]
+  },
+  {
+    "fromPokemonId": 265,
+    "toPokemonId": 268,
+    "status": "standard",
+    "milestoneId": null,
+    "reason": "personality-value-branch",
+    "provenance": [{ "sourceId": "bulbapedia-personality-values", "revision": "accessed-2026-07-19", "locator": "Wurmple evolution: Cascoon branch", "method": "manual", "confidence": "verified", "note": "Personality value selects the branch." }]
+  },
+  {
+    "fromPokemonId": 290,
+    "toPokemonId": 292,
+    "status": "standard",
+    "milestoneId": null,
+    "reason": "empty-party-slot",
+    "provenance": [{ "sourceId": "bulbapedia-nincada", "revision": "accessed-2026-07-19", "locator": "Evolution: Generation III Shedinja", "method": "manual", "confidence": "verified", "note": "Requires an empty party slot." }]
+  },
+  {
+    "fromPokemonId": 349,
+    "toPokemonId": 350,
+    "status": "transfer-only",
+    "milestoneId": null,
+    "reason": "requires-pre-raised-beauty",
+    "provenance": [{ "sourceId": "bulbapedia-evolution-prevention", "revision": "accessed-2026-07-19", "locator": "Feebas evolution in FireRed and LeafGreen", "method": "manual", "confidence": "verified", "note": "Beauty must be raised before transfer." }]
+  }
+]
