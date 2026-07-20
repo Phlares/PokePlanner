@@ -1,10 +1,9 @@
-import type { EvolutionEdge, PokemonRecord, Provenance } from '../../../src/domain/pack';
+import type { EvolutionEdge, PokemonRecord } from '../../../src/domain/pack';
 import { z } from 'zod';
 import { assertFireRedSourceContext } from './compiler-context';
-import { REQUIRED_POKEAPI_SOURCE } from '../source-lock';
+import { asArray, asObject, generatedProvenance, type Endpoint } from './pokeapi-endpoint';
 import evolutionSourcesInput from '../../../data/firered/sources.json';
 
-type Endpoint = Record<string, unknown>;
 type Reader = {
   read(resource: string, id: number): unknown;
   readVersion(id: number): unknown;
@@ -89,16 +88,6 @@ interface ChainNode {
   evolution_details: unknown;
 }
 
-function asObject(value: unknown, label: string): Endpoint {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new Error(`Expected ${label} endpoint`);
-  return value as Endpoint;
-}
-
-function asArray(value: unknown, label: string): unknown[] {
-  if (!Array.isArray(value)) throw new Error(`Expected ${label} list`);
-  return value;
-}
-
 function asChainNode(value: unknown, label: string): ChainNode {
   const endpoint = asObject(value, label);
   return { species: endpoint.species, evolves_to: endpoint.evolves_to, evolution_details: endpoint.evolution_details };
@@ -116,17 +105,6 @@ function nullablePositiveInteger(value: unknown, label: string): number | null {
   if (value === null) return null;
   if (typeof value !== 'number' || !Number.isInteger(value) || value < 1) throw new Error(`Expected ${label}`);
   return value;
-}
-
-function sourceProvenance(chainId: number): Provenance[] {
-  return [{
-    sourceId: REQUIRED_POKEAPI_SOURCE.id,
-    revision: REQUIRED_POKEAPI_SOURCE.revision,
-    locator: `evolution-chain/${chainId}`,
-    method: 'generated',
-    confidence: 'verified',
-    note: null,
-  }];
 }
 
 function normalizeTrigger(detail: Endpoint): EvolutionEdge['trigger'] {
@@ -181,7 +159,7 @@ function compileSourceEdge(fromPokemonId: number, toPokemonId: number, detail: E
     status: 'standard',
     milestoneId: null,
     reason: sourceReason(detail),
-    provenance: sourceProvenance(chainId),
+    provenance: generatedProvenance(`evolution-chain/${chainId}`),
   };
 }
 

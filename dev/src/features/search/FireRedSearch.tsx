@@ -7,6 +7,7 @@ import {
   type SearchQuery,
   type SearchResult,
 } from '../../domain/search';
+import { titleCase } from '../text';
 
 /** The most results rendered at once, so a broad filter stays a restrained list, not a wall. */
 const RESULT_LIMIT = 50;
@@ -18,13 +19,6 @@ const OBTAIN_LABEL: Record<ObtainabilityStatus, string> = {
   'event-only': 'Event only',
   'transfer-only': 'Transfer only',
 };
-
-function titleCase(slug: string): string {
-  return slug
-    .split('-')
-    .map((part) => (part.length === 0 ? part : part[0].toUpperCase() + part.slice(1)))
-    .join(' ');
-}
 
 export interface FireRedSearchProps {
   pack: FireRedPack;

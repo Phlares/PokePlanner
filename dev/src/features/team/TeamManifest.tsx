@@ -12,6 +12,7 @@ import {
   type TeamState,
 } from '../../domain/team';
 import type { MemberDraft } from '../workbench/PokemonInspector';
+import { titleCase } from '../text';
 
 const MAX_MOVES = 4;
 
@@ -25,13 +26,6 @@ function memberPackView(pack: FireRedPack): MemberPackView {
     isVersionValidMove: (id, moveId) =>
       (learnsetByPokemon.get(id)?.moves ?? []).some((move) => move.moveId === moveId),
   };
-}
-
-function titleCase(slug: string): string {
-  return slug
-    .split('-')
-    .map((part) => (part.length === 0 ? part : part[0].toUpperCase() + part.slice(1)))
-    .join(' ');
 }
 
 /** The future-planning label a planned move carries, or null for a currently-available move. */

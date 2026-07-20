@@ -1,8 +1,7 @@
 import type { EncounterArea } from '../../../src/domain/pack';
-import { REQUIRED_POKEAPI_SOURCE } from '../source-lock';
 import { assertFireRedSourceContext, FIRERED_IDS } from './compiler-context';
+import { asArray, asObject, endpointId, generatedProvenance, integer, resourceName, text, title, type Endpoint } from './pokeapi-endpoint';
 
-type Endpoint = Record<string, unknown>;
 type EncounterMethod = EncounterArea['methods'][number]['method'];
 type Reader = {
   read(resource: string, id: number): unknown;
@@ -27,45 +26,10 @@ const METHOD_CATEGORIES = new Map<string, EncounterMethod>([
   ['colosseum-bonus-disc-jpn', 'event'],
 ]);
 
-function asObject(value: unknown, label: string): Endpoint {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new Error(`Expected ${label} endpoint`);
-  return value as Endpoint;
-}
-
-function asArray(value: unknown, label: string): unknown[] {
-  if (!Array.isArray(value)) throw new Error(`Expected ${label} list`);
-  return value;
-}
-
-function text(value: unknown, label: string): string {
-  if (typeof value !== 'string' || value.trim() === '') throw new Error(`Expected ${label}`);
-  return value;
-}
-
-function integer(value: unknown, label: string): number {
-  if (!Number.isInteger(value)) throw new Error(`Expected ${label}`);
-  return value as number;
-}
-
 function boundedInteger(value: unknown, label: string): number {
   const parsed = integer(value, label);
   if (parsed < 0 || parsed > 100) throw new Error(`Expected ${label} from 0 through 100`);
   return parsed;
-}
-
-function endpointId(value: unknown, resource: string): number {
-  const url = text(asObject(value, resource).url, `${resource} URL`);
-  const match = new RegExp(`^/api/v2/${resource}/([1-9][0-9]*)/$`).exec(url);
-  if (match === null) throw new Error(`Expected ${resource} reference`);
-  return Number(match[1]);
-}
-
-function resourceName(value: unknown, resource: string): string {
-  return text(asObject(value, resource).name, `${resource} name`);
-}
-
-function title(slug: string): string {
-  return slug.split('-').map((part) => `${part.slice(0, 1).toUpperCase()}${part.slice(1)}`).join(' ');
 }
 
 function englishName(endpoint: Endpoint): string {
@@ -79,17 +43,6 @@ function categoryFor(sourceMethod: string, areaId: number): EncounterMethod {
   const category = METHOD_CATEGORIES.get(sourceMethod);
   if (category === undefined) throw new Error(`Unsupported FireRed encounter method: ${sourceMethod} in location area ${areaId}`);
   return category;
-}
-
-function provenance(areaId: number): EncounterArea['provenance'] {
-  return [{
-    sourceId: REQUIRED_POKEAPI_SOURCE.id,
-    revision: REQUIRED_POKEAPI_SOURCE.revision,
-    locator: `location-area/${areaId}`,
-    method: 'generated',
-    confidence: 'verified',
-    note: null,
-  }];
 }
 
 function isFireRedVersion(value: unknown): boolean {
@@ -176,7 +129,7 @@ export function compileFireRedEncounters(reader: Reader): EncounterArea[] {
             || right.chance - left.chance
             || left.conditions.join(',').localeCompare(right.conditions.join(','))),
         })),
-      provenance: provenance(locationAreaId),
+      provenance: generatedProvenance(`location-area/${locationAreaId}`),
     }];
   });
 }

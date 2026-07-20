@@ -1,8 +1,7 @@
 import type { LearnsetRecord, MoveRecord, PokemonRecord, TypeChart } from '../../../src/domain/pack';
 import { assertFireRedSourceContext, FIRERED_IDS } from './compiler-context';
-import { REQUIRED_POKEAPI_SOURCE } from '../source-lock';
+import { asArray, asObject, endpointId, generatedProvenance, integer, resourceName, text, title, type Endpoint } from './pokeapi-endpoint';
 
-type Endpoint = Record<string, unknown>;
 type Reader = {
   read(resource: string, id: number): unknown;
   readPokemon(id: number): unknown;
@@ -19,37 +18,6 @@ const GEN_III_TYPES = new Set<PokemonRecord['types'][number]>([
   'fire', 'water', 'grass', 'electric', 'psychic', 'ice', 'dragon', 'dark',
 ]);
 
-function asObject(value: unknown, label: string): Endpoint {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new Error(`Expected ${label} endpoint`);
-  return value as Endpoint;
-}
-
-function asArray(value: unknown, label: string): unknown[] {
-  if (!Array.isArray(value)) throw new Error(`Expected ${label} list`);
-  return value;
-}
-
-function text(value: unknown, label: string): string {
-  if (typeof value !== 'string' || value.trim() === '') throw new Error(`Expected ${label}`);
-  return value;
-}
-
-function integer(value: unknown, label: string): number {
-  if (!Number.isInteger(value)) throw new Error(`Expected ${label}`);
-  return value as number;
-}
-
-function endpointId(value: unknown, resource: string): number {
-  const url = text(asObject(value, resource).url, `${resource} URL`);
-  const match = new RegExp(`^/api/v2/${resource}/([1-9][0-9]*)/$`).exec(url);
-  if (match === null) throw new Error(`Expected ${resource} reference`);
-  return Number(match[1]);
-}
-
-function resourceName(value: unknown, resource: string): string {
-  return text(asObject(value, resource).name, `${resource} name`);
-}
-
 function typeName(value: unknown): PokemonRecord['types'][number] {
   const name = resourceName(value, 'type');
   if (!GEN_III_TYPES.has(name as PokemonRecord['types'][number])) throw new Error(`Unsupported Generation III type: ${name}`);
@@ -60,10 +28,6 @@ function moveTypeName(value: unknown): MoveRecord['type'] {
   const name = resourceName(value, 'type');
   if (name === 'unknown') return name as MoveRecord['type'];
   return typeName(value) as MoveRecord['type'];
-}
-
-function title(value: string): string {
-  return value.split('-').map((part) => `${part.slice(0, 1).toUpperCase()}${part.slice(1)}`).join(' ');
 }
 
 function englishName(endpoint: Endpoint): string {
@@ -78,17 +42,6 @@ function englishShortEffect(entries: unknown, label: string): string {
   const short = entry.short_effect;
   if (typeof short === 'string' && short.trim() !== '') return short;
   return text(entry.effect, `${label} effect`).replaceAll('\n', ' ');
-}
-
-function provenance(locator: string) {
-  return [{
-    sourceId: REQUIRED_POKEAPI_SOURCE.id,
-    revision: REQUIRED_POKEAPI_SOURCE.revision,
-    locator,
-    method: 'generated' as const,
-    confidence: 'verified' as const,
-    note: null,
-  }];
 }
 
 export type NormalizedLearnsetMove =
@@ -244,7 +197,7 @@ export function normalizePokemonCatalog(reader: Reader): PokemonRecord[] {
       evYield: normalizeStats(historicalStats, 'effort'),
       captureRate: integer(species.capture_rate, 'capture rate'),
       sprite: null,
-      provenance: provenance(`pokemon/${mechanicsId}`),
+      provenance: generatedProvenance(`pokemon/${mechanicsId}`),
     };
   });
 }
@@ -266,7 +219,7 @@ function normalizeMove(reader: Reader, id: number): MoveRecord {
     pp: values.pp === null ? 1 : integer(values.pp, 'move pp'),
     priority: integer(values.priority, 'move priority'),
     shortEffect: englishShortEffect(effects, 'move effects'),
-    provenance: provenance(`move/${id}`),
+    provenance: generatedProvenance(`move/${id}`),
   };
 }
 
@@ -299,7 +252,7 @@ export function normalizeLearnsets(reader: Reader): NormalizedLearnsetRecord[] {
         });
     });
     if (moves.length === 0) throw new Error(`Expected FireRed learnset for Pokemon ${pokemonId}`);
-    return { pokemonId, moves, provenance: provenance(`pokemon/${mechanicsId}`) };
+    return { pokemonId, moves, provenance: generatedProvenance(`pokemon/${mechanicsId}`) };
   });
 }
 
@@ -318,5 +271,5 @@ export function normalizeTypeChart(reader: Reader): TypeChart {
       immuneTo: names('no_damage_from'),
     }];
   }));
-  return { ...chart, provenance: provenance('type') } as TypeChart;
+  return { ...chart, provenance: generatedProvenance('type') } as TypeChart;
 }

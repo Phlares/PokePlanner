@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { FIRERED_CONTEXT } from '../../../src/domain/game';
 import { parseFireRedPackManifest, type FireRedPackManifest } from '../../../src/domain/pack';
 import { classifyFireRedAvailability } from './indexes';
-import type { FireRedPackData } from './validate-pack';
+import { typeCount, type FireRedPackData } from './validate-pack';
 import evolutionOverridesInput from '../../../data/firered/evolution-overrides.json';
 
 export interface ManifestSource {
@@ -97,10 +97,6 @@ function buildFilesTree(shaByPath: Map<string, string>): FireRedPackManifest['fi
   };
 }
 
-function countTypes(data: FireRedPackData): number {
-  return Object.keys(data.typeChart).filter((key) => key !== 'provenance').length;
-}
-
 /**
  * Build the manifest object from the assembled pack and the deterministic pinned
  * `builtAt`. `packVersion` is a pure content address (SHA-256 of the canonical
@@ -117,7 +113,7 @@ export function buildFireRedManifest(
     valid: true as const,
     pokemonCount: data.pokemon.length,
     moveCount: data.moves.length,
-    typeCount: countTypes(data),
+    typeCount: typeCount(data.typeChart),
   };
   const packVersion = `firered-${sha256Hex(serializeCanonical({ game: FIRERED_CONTEXT, sources: options.sources, files }))}`;
   return parseFireRedPackManifest({
@@ -243,7 +239,7 @@ function buildReportModel(data: FireRedPackData, options: PackWriterOptions): Re
 
   const conflicts: ResearchReport['conflicts'] = [
     { topic: 'Curse move type', resolution: `Curse retains the Generation III "???" type, normalized as the move-only value "${curse?.type ?? 'unknown'}"; it is never a Pokemon type or type-chart entry.` },
-    { topic: 'Fairy type', resolution: `No Fairy type or Fairy relations exist; the type chart holds exactly ${countTypes(data)} Generation III types.` },
+    { topic: 'Fairy type', resolution: `No Fairy type or Fairy relations exist; the type chart holds exactly ${typeCount(data.typeChart)} Generation III types.` },
     { topic: 'Hidden abilities', resolution: 'Hidden (Dream World) abilities are excluded; only Generation III ability slots 1 and 2 are retained.' },
     { topic: 'Orre-only Shadow moves', resolution: 'PokeAPI move IDs 10001-10018 (the shadow type) are excluded as non-FireRed data with no FireRed learnset.' },
     { topic: 'Physical/special split', resolution: 'Damage class is derived from the Generation III type-based physical/special split rather than per-move categories.' },
@@ -256,7 +252,7 @@ function buildReportModel(data: FireRedPackData, options: PackWriterOptions): Re
     scope: {
       pokemonCount: data.pokemon.length,
       moveCount: data.moves.length,
-      typeCount: countTypes(data),
+      typeCount: typeCount(data.typeChart),
       versionId: FIRERED_CONTEXT.versionId,
       versionGroupId: FIRERED_CONTEXT.versionGroupId,
       generationId: FIRERED_CONTEXT.generationId,
@@ -274,7 +270,7 @@ function buildReportModel(data: FireRedPackData, options: PackWriterOptions): Re
       pokemon: data.pokemon.length,
       tms: data.acquisitions.filter((record) => record.subject.kind === 'tm').length,
       tutors: data.acquisitions.filter((record) => record.subject.kind === 'tutor').length,
-      types: countTypes(data),
+      types: typeCount(data.typeChart),
     },
     coverageMatrix: { availabilityByStatus, acquisitionsByKind, encountersByMethod },
     conflicts,

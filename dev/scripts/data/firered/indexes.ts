@@ -6,11 +6,10 @@ import type {
   LearnsetRecord,
   MoveRecord,
   PokemonRecord,
-  Provenance,
 } from '../../../src/domain/pack';
 import type { RouteProgression } from '../../../src/domain/progression';
-import { REQUIRED_POKEAPI_SOURCE } from '../source-lock';
 import { mapEncounterAreasToNodes } from './curated';
+import { generatedProvenance } from './pokeapi-endpoint';
 
 export interface FireRedPackInputs {
   pokemon: PokemonRecord[];
@@ -56,17 +55,6 @@ function milestoneOrdinal(milestoneId: string | null): number {
   const index = MILESTONE_ORDER.indexOf(milestoneId as (typeof MILESTONE_ORDER)[number]);
   if (index === -1) throw new Error(`Unknown acquisition milestone "${milestoneId}"`);
   return index + 1;
-}
-
-function indexProvenance(): Provenance[] {
-  return [{
-    sourceId: REQUIRED_POKEAPI_SOURCE.id,
-    revision: REQUIRED_POKEAPI_SOURCE.revision,
-    locator: 'derived/firered-indexes',
-    method: 'generated',
-    confidence: 'verified',
-    note: 'Search indexes and per-milestone availability derived from the pinned FireRed catalogs, encounters, evolutions, and curated acquisitions.',
-  }];
 }
 
 function buildIdIndex(pairs: Iterable<[string, number]>): Record<string, number[]> {
@@ -289,6 +277,9 @@ export function buildFireRedIndexes(inputs: FireRedPackInputs): FireRedIndexes {
     pokemonByAbility,
     routesByPokemon,
     availabilityByMilestone,
-    provenance: indexProvenance(),
+    provenance: generatedProvenance(
+      'derived/firered-indexes',
+      'Search indexes and per-milestone availability derived from the pinned FireRed catalogs, encounters, evolutions, and curated acquisitions.',
+    ),
   };
 }

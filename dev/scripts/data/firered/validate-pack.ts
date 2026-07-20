@@ -47,7 +47,8 @@ function toInputs(data: FireRedPackData): FireRedPackInputs {
   return { pokemon, moves, learnsets, encounters, evolutions, acquisitions, progression };
 }
 
-function typeCount(typeChart: TypeChart): number {
+/** Count the Generation III types in a type chart, excluding the trailing `provenance` key. */
+export function typeCount(typeChart: TypeChart): number {
   return Object.keys(typeChart).filter((key) => key !== 'provenance').length;
 }
 
