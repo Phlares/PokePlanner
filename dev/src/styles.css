@@ -25,6 +25,8 @@
   --ink: var(--gray-900);
   --ink-soft: var(--gray-600);
   --ink-faint: var(--gray-500);
+  /* A subtle raised/again surface for disabled controls and the selected row. */
+  --raised: var(--gray-100);
   --rule-color: var(--gray-300);
   --rule: 1px solid var(--rule-color);
   --rule-strong: 1px solid var(--gray-500);
@@ -53,6 +55,22 @@
   line-height: 1.45;
   font-synthesis: none;
   -webkit-text-size-adjust: 100%;
+}
+
+/*
+ * Dark is the default theme (the toggle sets data-theme="dark" when unset). Only the SEMANTIC
+ * roles are remapped onto the same hue-free grayscale ramp — dark paper/panel, light ink, mid
+ * rules — so every component rule inverts without being touched. --rule-strong keeps the mid
+ * gray-500, which reads on both grounds.
+ */
+:root[data-theme='dark'] {
+  --paper: var(--gray-900);
+  --panel: var(--gray-800);
+  --ink: var(--gray-50);
+  --ink-soft: var(--gray-300);
+  --ink-faint: var(--gray-400);
+  --raised: var(--gray-700);
+  --rule-color: var(--gray-600);
 }
 
 * { box-sizing: border-box; }
@@ -108,8 +126,8 @@ button[aria-pressed='true'] {
 button:disabled {
   cursor: not-allowed;
   color: var(--ink-faint);
-  background: var(--gray-100);
-  border-color: var(--gray-300);
+  background: var(--raised);
+  border-color: var(--rule-color);
 }
 
 /* --- Game setup --- */
@@ -204,6 +222,15 @@ button:disabled {
 .workbench-inspector { grid-area: inspector; }
 .workbench-manifest { grid-area: manifest; border-top: var(--rule-strong); }
 
+/* Cap the three columns to the viewport and scroll them internally, so the full-width team
+   manifest below stays reachable instead of sitting beneath unbounded columns. */
+.workbench-rail,
+.workbench-table,
+.workbench-inspector {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
 .workbench-rail,
 .workbench-table,
 .workbench-inspector,
@@ -258,11 +285,13 @@ button:disabled {
   font-size: var(--text-sm);
 }
 
-.search-summary {
+/* When a query is active the rail is hidden, so the match count leads the left column. */
+.search-results-heading {
   margin: var(--space-3) 0 var(--space-2);
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  color: var(--ink);
 }
 
 .search-results {
@@ -503,7 +532,7 @@ button:disabled {
 
 .encounter-select:hover { text-decoration: underline; }
 
-.encounter-table tr[data-selected] { background: var(--gray-100); }
+.encounter-table tr[data-selected] { background: var(--raised); }
 
 .encounter-table tr[data-selected] .encounter-select {
   font-weight: 600;
@@ -838,9 +867,30 @@ button:disabled {
 }
 
 /* --- App shell: header, session banner, and run data tools --- */
-.app-header { margin-bottom: var(--space-5); }
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
 
 .app-header h1 { margin: 0; font-size: var(--text-xl); }
+
+/* Square grayscale Light/Dark control; the label names the theme the click switches TO. */
+.theme-toggle {
+  flex: none;
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--ink);
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
 
 .app-banner {
   margin: 0 0 var(--space-4);

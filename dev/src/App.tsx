@@ -11,6 +11,7 @@ import {
 import { openIndexedDbRepository } from './persistence/indexeddb-repository';
 import { GameSetup } from './features/setup/GameSetup';
 import { Workbench } from './features/workbench/Workbench';
+import { applyTheme, readStoredTheme, type Theme } from './theme';
 
 /** Build the injected id-resolution surface from a loaded pack; embeds no canonical data. */
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
@@ -77,6 +78,12 @@ export function App({
   const [exportText, setExportText] = useState<string | null>(null);
   const [importText, setImportText] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
+  const [theme, setTheme] = useState<Theme>(readStoredTheme);
+
+  // Keep the document and localStorage in step with the chosen theme; dark is the default.
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
 
   useEffect(() => {
     let alive = true;
@@ -173,8 +180,19 @@ export function App({
   return (
     <main className="app-shell">
       <header className="app-header">
-        <p className="eyebrow">Generation III vertical slice</p>
-        <h1>PokéPlanner</h1>
+        <div className="app-header-titles">
+          <p className="eyebrow">Generation III vertical slice</p>
+          <h1>PokéPlanner</h1>
+        </div>
+        <button
+          type="button"
+          className="theme-toggle"
+          aria-pressed={theme === 'dark'}
+          aria-label="Dark theme"
+          onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
+        >
+          Dark
+        </button>
       </header>
 
       {boot.status === 'loading' && <p role="status">Loading FireRed data…</p>}

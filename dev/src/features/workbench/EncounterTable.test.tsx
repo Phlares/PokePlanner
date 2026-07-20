@@ -21,14 +21,16 @@ function renderTable(overrides: Partial<Parameters<typeof EncounterTable>[0]> = 
   return { onSelectPokemon };
 }
 
-/** The primary Route 22 Mankey slot: walk method, level 3, slot chance 20%. */
-function primaryMankeyRow(): HTMLElement {
+/**
+ * The single deduped Route 22 walk row for Mankey: the five recorded walk slots
+ * (chances 20/10/10/4/1, levels 3/4/2/5/5) aggregate into one row.
+ */
+function mankeyRow(): HTMLElement {
   const rows = screen
     .getAllByRole('row')
     .filter((row) => within(row).queryByRole('button', { name: 'Mankey' }));
-  const row = rows.find((candidate) => within(candidate).queryByText('20%'));
-  if (!row) throw new Error('Expected a Route 22 Mankey row with a 20% slot chance');
-  return row;
+  if (rows.length !== 1) throw new Error(`Expected exactly one Mankey row, found ${rows.length}`);
+  return rows[0];
 }
 
 afterEach(cleanup);
@@ -41,38 +43,55 @@ describe('EncounterTable', () => {
     expect(screen.getByRole('columnheader', { name: /pok[eé]mon/i })).toBeVisible();
     expect(screen.getByRole('columnheader', { name: 'Method' })).toBeVisible();
     expect(screen.getByRole('columnheader', { name: /levels/i })).toBeVisible();
-    expect(screen.getByRole('columnheader', { name: /slot chance/i })).toBeVisible();
+    expect(screen.getByRole('columnheader', { name: /^chance$/i })).toBeVisible();
     expect(screen.getByRole('columnheader', { name: /method rate/i })).toBeVisible();
     expect(screen.getByRole('columnheader', { name: /conditions/i })).toBeVisible();
     expect(screen.getByRole('columnheader', { name: /ev yield/i })).toBeVisible();
   });
 
-  it('lists Mankey on Route 22 with its exact level, slot chance, method rate, and EV yield', () => {
+  it('aggregates Mankey on Route 22 into one row: level range, total chance, method rate, EV yield', () => {
     renderTable();
-    const row = within(primaryMankeyRow());
+    const row = within(mankeyRow());
     expect(row.getByRole('button', { name: 'Mankey' })).toBeVisible();
     expect(row.getByText('walk')).toBeVisible();
-    expect(row.getByText('3')).toBeVisible(); // level
-    expect(row.getByText('20%')).toBeVisible(); // slot chance
+    expect(row.getByText('2–5')).toBeVisible(); // min–max level across the slots
+    expect(row.getByText('45%')).toBeVisible(); // SUM of slot chances 20+10+10+4+1
     expect(row.getByText('21%')).toBeVisible(); // SEPARATE method rate for walk
-    expect(row.getByText('45%')).toBeVisible(); // SEPARATE max chance
     expect(row.getByText(/Atk\s*1/)).toBeVisible(); // EV yield
   });
 
-  it('keeps slot chance, method rate, and max chance as three separate column quantities', () => {
+  it('replaces the slot/max chance columns with one total Chance column, keeping method rate separate', () => {
     renderTable();
-    expect(screen.getByRole('columnheader', { name: /slot chance/i })).toBeVisible();
+    expect(screen.getByRole('columnheader', { name: /^chance$/i })).toBeVisible();
     expect(screen.getByRole('columnheader', { name: /method rate/i })).toBeVisible();
-    expect(screen.getByRole('columnheader', { name: /max chance/i })).toBeVisible();
-    const row = within(primaryMankeyRow());
-    // All three quantities coexist in one row as distinct factual cells.
-    expect(row.getByText('20%')).not.toBe(row.getByText('21%'));
-    expect(row.getByText('21%')).not.toBe(row.getByText('45%'));
+    expect(screen.queryByRole('columnheader', { name: /slot chance/i })).toBeNull();
+    expect(screen.queryByRole('columnheader', { name: /max chance/i })).toBeNull();
+    const row = within(mankeyRow());
+    // Total chance and method rate are distinct factual quantities in the one row.
+    expect(row.getByText('45%')).not.toBe(row.getByText('21%'));
+  });
+
+  it('shows no duplicate species rows within a method', () => {
+    renderTable();
+    const bodyRows = screen
+      .getAllByRole('row')
+      .filter((row) => within(row).queryByRole('button'));
+    const seen = new Map<string, Set<string>>();
+    for (const row of bodyRows) {
+      const method = within(row).getByText(
+        /walk|surf|old-rod|good-rod|super-rod|rock-smash|gift|only-one|pokeflute|event/,
+      ).textContent!;
+      const species = within(row).getByRole('button').textContent!;
+      const key = seen.get(method) ?? new Set<string>();
+      expect(key.has(species)).toBe(false); // species appears at most once per method
+      key.add(species);
+      seen.set(method, key);
+    }
   });
 
   it('selects a Pokémon row through a keyboard-operable button', () => {
     const { onSelectPokemon } = renderTable();
-    const button = within(primaryMankeyRow()).getByRole('button', { name: 'Mankey' });
+    const button = within(mankeyRow()).getByRole('button', { name: 'Mankey' });
     expect(button.tagName).toBe('BUTTON'); // native button => Enter/Space activate
     fireEvent.click(button);
     expect(onSelectPokemon).toHaveBeenCalledWith(56);
@@ -80,7 +99,7 @@ describe('EncounterTable', () => {
 
   it('marks the selected species pressed', () => {
     renderTable({ selectedPokemonId: 56 });
-    const button = within(primaryMankeyRow()).getByRole('button', { name: 'Mankey' });
+    const button = within(mankeyRow()).getByRole('button', { name: 'Mankey' });
     expect(button).toHaveAttribute('aria-pressed', 'true');
   });
 

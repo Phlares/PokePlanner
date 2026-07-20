@@ -4,7 +4,11 @@ import { App } from './App';
 import type { FireRedDigest } from './data/game-pack';
 import { openIndexedDbRepository } from './persistence/indexeddb-repository';
 import type { RepositoryOptions } from './persistence/repository';
+import { applyInitialTheme } from './theme';
 import './styles.css';
+
+// Set the stored (default dark) theme before React paints, so there is no flash of the wrong theme.
+applyInitialTheme();
 
 const root = document.getElementById('root');
 

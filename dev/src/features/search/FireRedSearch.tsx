@@ -26,6 +26,8 @@ export interface FireRedSearchProps {
   onSelectPokemon: (pokemonId: number) => void;
   /** Node-id → matching-species count for the active query, or `undefined` when no filter is set. */
   onRouteMatchCounts?: (counts: Record<string, number> | undefined) => void;
+  /** Fired when a query becomes active/inactive so the caller can focus the results (e.g. hide the rail). */
+  onActiveChange?: (active: boolean) => void;
   selectedPokemonId?: number | null;
   /** Debounce window for the free-text name field; selects apply immediately. */
   debounceMs?: number;
@@ -65,6 +67,7 @@ export function FireRedSearch({
   pack,
   onSelectPokemon,
   onRouteMatchCounts,
+  onActiveChange,
   selectedPokemonId = null,
   debounceMs = 200,
 }: FireRedSearchProps) {
@@ -97,6 +100,12 @@ export function FireRedSearch({
 
   const resultsQuery = buildQuery(debouncedName, type, ability, move);
   const active = hasFilter(resultsQuery);
+
+  // Tell the caller when a query is (in)active so it can focus the results, e.g. hide the rail.
+  useEffect(() => {
+    onActiveChange?.(active);
+  }, [active, onActiveChange]);
+
   const results = useMemo(
     () => (active ? searchFireRed(resultsQuery, pack) : []),
     [active, resultsQuery.name, resultsQuery.type, resultsQuery.ability, resultsQuery.move, pack],
@@ -152,10 +161,10 @@ export function FireRedSearch({
         <p className="search-hint">No FireRed species match this query.</p>
       ) : (
         <>
-          <p className="search-summary" role="status">
+          <h3 className="search-results-heading" aria-live="polite">
             {results.length} {results.length === 1 ? 'match' : 'matches'}
             {results.length > RESULT_LIMIT ? ` (showing first ${RESULT_LIMIT})` : ''}
-          </p>
+          </h3>
           <ol className="search-results">
             {shown.map((result) => (
               <li key={result.pokemonId} className="search-result">

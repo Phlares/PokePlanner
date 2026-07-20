@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Workbench } from './Workbench';
 import { loadFireRedPackFixture } from '../../test/firered-pack';
@@ -90,11 +90,24 @@ describe('Workbench', () => {
     expect(next.currentMilestoneId).toBeNull();
   });
 
-  it('surfaces per-route search match counts on the rail', () => {
+  it('hides the progression rail and shows only the matches when a search query is active', async () => {
     renderWorkbench();
+    // The rail is present before any query.
+    expect(screen.getByRole('button', { name: 'Route 22' })).toBeVisible();
     fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value: 'Mankey' } });
-    const route22 = screen.getByRole('button', { name: 'Route 22' }).closest('li');
-    expect(within(route22 as HTMLElement).getByText(/1 match\b/i)).toBeVisible();
+    // Once the query resolves, the result is shown and the progression rail is gone.
+    expect(await screen.findByRole('button', { name: /select Mankey/i })).toBeVisible();
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull());
+  });
+
+  it('restores the progression rail when the search query is cleared', async () => {
+    renderWorkbench();
+    const box = screen.getByRole('searchbox', { name: /search/i });
+    fireEvent.change(box, { target: { value: 'Mankey' } });
+    await screen.findByRole('button', { name: /select Mankey/i });
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull());
+    fireEvent.change(box, { target: { value: '' } });
+    expect(await screen.findByRole('button', { name: 'Route 22' })).toBeVisible();
   });
 
   it('never surfaces opponent or exposure analysis in the workbench shell', () => {

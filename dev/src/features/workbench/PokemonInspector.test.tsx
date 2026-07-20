@@ -71,9 +71,16 @@ describe('PokemonInspector', () => {
     expect(within(evolutions).getByText(/Level 28/)).toBeVisible();
   });
 
-  it('lists acquisition sources where the species can be obtained', () => {
+  it('folds acquisition sources into a collapsed disclosure that expands to reveal them', () => {
     renderInspector();
+    const summary = screen.getByText(/Acquisition sources \(\d+\)/i);
+    const details = summary.closest('details');
+    expect(details).not.toBeNull();
+    expect(details).not.toHaveAttribute('open'); // collapsed by default
     const sources = screen.getByRole('list', { name: /acquisition sources/i });
+    expect(within(sources).getByText('Route 22')).not.toBeVisible(); // hidden while folded
+    fireEvent.click(summary);
+    expect(details).toHaveAttribute('open');
     expect(within(sources).getByText('Route 22')).toBeVisible();
   });
 

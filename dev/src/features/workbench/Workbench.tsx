@@ -46,7 +46,7 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
   const [, setSelectedEventId] = useState<string | null>(null);
   const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null);
   const [memberDraft, setMemberDraft] = useState<MemberDraft | null>(null);
-  const [matchCountsByNode, setMatchCountsByNode] = useState<Record<string, number> | undefined>(undefined);
+  const [searchActive, setSearchActive] = useState(false);
 
   const availabilityContext = useMemo(
     () => ({
@@ -88,20 +88,22 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
         <FireRedSearch
           pack={pack}
           onSelectPokemon={selectSearchResult}
-          onRouteMatchCounts={setMatchCountsByNode}
+          onActiveChange={setSearchActive}
           selectedPokemonId={selectedPokemonId}
         />
-        <ProgressionRail
-          nodes={pack.progression.nodes}
-          selectedNodeId={selectedNodeId}
-          currentMilestoneId={playthrough.currentMilestoneId}
-          previewMilestoneId={playthrough.previewMilestoneId}
-          matchCountsByNode={matchCountsByNode}
-          onSelectNode={selectRoute}
-          onSelectEvent={setSelectedEventId}
-          onSetCurrentMilestone={(milestoneId) => emit({ currentMilestoneId: milestoneId })}
-          onSetPreviewMilestone={(milestoneId) => emit({ previewMilestoneId: milestoneId })}
-        />
+        {/* An active query focuses the left column on its matches; the rail returns when it is cleared. */}
+        {!searchActive && (
+          <ProgressionRail
+            nodes={pack.progression.nodes}
+            selectedNodeId={selectedNodeId}
+            currentMilestoneId={playthrough.currentMilestoneId}
+            previewMilestoneId={playthrough.previewMilestoneId}
+            onSelectNode={selectRoute}
+            onSelectEvent={setSelectedEventId}
+            onSetCurrentMilestone={(milestoneId) => emit({ currentMilestoneId: milestoneId })}
+            onSetPreviewMilestone={(milestoneId) => emit({ previewMilestoneId: milestoneId })}
+          />
+        )}
       </section>
 
       <section className="workbench-table" aria-label="Route detail">

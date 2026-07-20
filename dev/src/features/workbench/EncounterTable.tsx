@@ -27,8 +27,8 @@ interface EncounterRow {
   pokemonName: string;
   method: string;
   methodRate: number | null;
-  slotChance: number;
-  maxChance: number;
+  /** Total encounter chance for the species in this method: the SUM of its slot chances. */
+  totalChance: number;
   minLevel: number;
   maxLevel: number;
   conditions: readonly string[];
@@ -47,11 +47,12 @@ function evYieldText(evYield: Record<string, number>): string {
 }
 
 /**
- * The wild-encounter ledger for one route area: every method/slot as a factual row. The three
- * probability quantities — the area's per-method encounter rate, the slot's weight within that
- * method, and the slot's cumulative max chance — are shown as SEPARATE columns and never
- * combined. No encounter simulation, expected-time, or catch-odds math is performed: only the
- * recorded facts are displayed.
+ * The wild-encounter ledger for one route area, deduped to ONE row per (method, species). The
+ * pack keeps a species' slots separate; the display aggregates them factually — levels become the
+ * min–max range across the slots, and Chance is the SUM of the slot chances (the species' total
+ * encounter chance within that method). The area's per-method encounter rate stays its own
+ * separate column and is never folded into the species chance. No encounter simulation,
+ * expected-time, or catch-odds math is performed: only the recorded facts are displayed.
  */
 export function EncounterTable({ area, pack, selectedPokemonId, onSelectPokemon }: EncounterTableProps) {
   const rows = useMemo<EncounterRow[]>(() => {
@@ -60,21 +61,38 @@ export function EncounterTable({ area, pack, selectedPokemonId, onSelectPokemon 
     const built: EncounterRow[] = [];
     area.methods.forEach((method, methodIndex) => {
       const methodRate = area.methodRates[method.method] ?? null;
-      method.slots.forEach((slot, slotIndex) => {
-        built.push({
-          key: `${methodIndex}-${slotIndex}`,
-          pokemonId: slot.pokemonId,
-          pokemonName: nameById.get(slot.pokemonId) ?? `#${slot.pokemonId}`,
-          method: method.method,
-          methodRate,
-          slotChance: slot.chance,
-          maxChance: slot.maxChance,
-          minLevel: slot.minLevel,
-          maxLevel: slot.maxLevel,
-          conditions: slot.conditions,
-          evYield: evYieldText((evById.get(slot.pokemonId) ?? {}) as Record<string, number>),
-        });
+      // Aggregate the method's slots into one entry per species, preserving first-seen order.
+      const byPokemon = new Map<number, EncounterRow>();
+      method.slots.forEach((slot) => {
+        const existing = byPokemon.get(slot.pokemonId);
+        if (existing === undefined) {
+          byPokemon.set(slot.pokemonId, {
+            key: `${methodIndex}-${slot.pokemonId}`,
+            pokemonId: slot.pokemonId,
+            pokemonName: nameById.get(slot.pokemonId) ?? `#${slot.pokemonId}`,
+            method: method.method,
+            methodRate,
+            totalChance: slot.chance,
+            minLevel: slot.minLevel,
+            maxLevel: slot.maxLevel,
+            conditions: [...slot.conditions],
+            evYield: evYieldText((evById.get(slot.pokemonId) ?? {}) as Record<string, number>),
+          });
+          return;
+        }
+        existing.totalChance += slot.chance;
+        existing.minLevel = Math.min(existing.minLevel, slot.minLevel);
+        existing.maxLevel = Math.max(existing.maxLevel, slot.maxLevel);
+        const merged = existing.conditions as string[];
+        for (const condition of slot.conditions) {
+          if (!merged.includes(condition)) merged.push(condition);
+        }
       });
+      // Deterministic order within a method: descending total chance, then ascending species id.
+      const methodRows = [...byPokemon.values()].sort(
+        (a, b) => b.totalChance - a.totalChance || a.pokemonId - b.pokemonId,
+      );
+      built.push(...methodRows);
     });
     return built;
   }, [area, pack]);
@@ -88,9 +106,8 @@ export function EncounterTable({ area, pack, selectedPokemonId, onSelectPokemon 
             <th scope="col">Pokémon</th>
             <th scope="col">Method</th>
             <th scope="col">Levels</th>
-            <th scope="col">Slot chance</th>
+            <th scope="col">Chance</th>
             <th scope="col">Method rate</th>
-            <th scope="col">Max chance</th>
             <th scope="col">Conditions</th>
             <th scope="col">EV yield</th>
           </tr>
@@ -112,9 +129,8 @@ export function EncounterTable({ area, pack, selectedPokemonId, onSelectPokemon 
                 </th>
                 <td className="encounter-cell-method">{row.method}</td>
                 <td className="encounter-num">{levelText(row.minLevel, row.maxLevel)}</td>
-                <td className="encounter-num">{row.slotChance}%</td>
+                <td className="encounter-num">{row.totalChance}%</td>
                 <td className="encounter-num">{row.methodRate === null ? '—' : `${row.methodRate}%`}</td>
-                <td className="encounter-num">{row.maxChance}%</td>
                 <td className="encounter-cell-conditions">
                   {row.conditions.length > 0 ? row.conditions.join(', ') : '—'}
                 </td>

@@ -235,20 +235,24 @@ export function PokemonInspector({ pokemonId, pack, context, onDraftMember }: Po
         )}
       </section>
 
-      <section className="inspector-section" aria-labelledby="inspector-sources-heading">
-        <h5 id="inspector-sources-heading" className="inspector-section-heading">Acquisition sources</h5>
-        {details.sources.length > 0 ? (
-          <ul className="source-list" aria-label="Acquisition sources">
-            {details.sources.map((source, index) => (
-              <li key={`${source.kind}-${source.where}-${index}`} className="source-item">
-                <span className="source-kind">{source.kind}</span>
-                <span className="source-where">{source.where}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="inspector-empty">No in-game acquisition recorded.</p>
-        )}
+      <section className="inspector-section">
+        <details className="inspector-fold">
+          <summary className="inspector-section-heading inspector-fold-summary">
+            Acquisition sources ({details.sources.length})
+          </summary>
+          {details.sources.length > 0 ? (
+            <ul className="source-list" aria-label="Acquisition sources">
+              {details.sources.map((source, index) => (
+                <li key={`${source.kind}-${source.where}-${index}`} className="source-item">
+                  <span className="source-kind">{source.kind}</span>
+                  <span className="source-where">{source.where}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="inspector-empty">No in-game acquisition recorded.</p>
+          )}
+        </details>
       </section>
 
       <section className="inspector-section" aria-labelledby="inspector-plan-heading">
