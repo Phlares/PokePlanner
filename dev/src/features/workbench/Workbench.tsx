@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
-import { searchFireRed } from '../../domain/search';
-import type { Slot } from '../../domain/team';
+import type { TeamState } from '../../domain/team';
+import { FireRedSearch } from '../search/FireRedSearch';
+import { TeamManifest } from '../team/TeamManifest';
 import { EncounterTable } from './EncounterTable';
 import { PokemonInspector, type MemberDraft } from './PokemonInspector';
 import { ProgressionRail } from './ProgressionRail';
@@ -44,8 +45,8 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [, setSelectedEventId] = useState<string | null>(null);
   const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null);
-  const [, setMemberDraft] = useState<MemberDraft | null>(null);
-  const [searchText, setSearchText] = useState('');
+  const [memberDraft, setMemberDraft] = useState<MemberDraft | null>(null);
+  const [matchCountsByNode, setMatchCountsByNode] = useState<Record<string, number> | undefined>(undefined);
 
   const availabilityContext = useMemo(
     () => ({
@@ -54,16 +55,6 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
     }),
     [playthrough.currentMilestoneId, playthrough.previewMilestoneId],
   );
-
-  const matchCountsByNode = useMemo(() => {
-    const query = searchText.trim();
-    if (query === '') return undefined;
-    const counts: Record<string, number> = {};
-    for (const result of searchFireRed({ name: query }, pack)) {
-      for (const nodeId of result.routes) counts[nodeId] = (counts[nodeId] ?? 0) + 1;
-    }
-    return counts;
-  }, [searchText, pack]);
 
   const selectedNode = selectedNodeId === null
     ? null
@@ -83,19 +74,23 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
     onPlaythroughChange(next);
   };
 
+  const selectSearchResult = (pokemonId: number): void => {
+    setSelectedPokemonId(pokemonId);
+  };
+
+  const changeTeam = (team: TeamState): void => {
+    emit({ team });
+  };
+
   return (
     <div className="workbench">
       <section className="workbench-rail" aria-label="Progression">
-        <div className="workbench-search">
-          <label htmlFor="workbench-search-input">Search FireRed</label>
-          <input
-            id="workbench-search-input"
-            type="search"
-            className="workbench-search-input"
-            value={searchText}
-            onChange={(event) => setSearchText(event.target.value)}
-          />
-        </div>
+        <FireRedSearch
+          pack={pack}
+          onSelectPokemon={selectSearchResult}
+          onRouteMatchCounts={setMatchCountsByNode}
+          selectedPokemonId={selectedPokemonId}
+        />
         <ProgressionRail
           nodes={pack.progression.nodes}
           selectedNodeId={selectedNodeId}
@@ -146,30 +141,13 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
 
       <section className="workbench-manifest" aria-label="Team manifest">
         <h3 className="workbench-region-heading">Team manifest</h3>
-        <div className="manifest-sections">
-          <section aria-label="Primary team">
-            <h4>Primary</h4>
-            <ManifestSlots slots={playthrough.team.primary} />
-          </section>
-          <section aria-label="Reserve team">
-            <h4>Reserve</h4>
-            <ManifestSlots slots={playthrough.team.reserve} />
-          </section>
-        </div>
+        <TeamManifest
+          team={playthrough.team}
+          pack={pack}
+          draft={memberDraft}
+          onTeamChange={changeTeam}
+        />
       </section>
     </div>
-  );
-}
-
-function ManifestSlots({ slots }: { slots: readonly Slot[] }) {
-  return (
-    <ol className="manifest-slots">
-      {slots.map((slot, index) => (
-        <li key={index} className="manifest-slot" data-filled={slot !== null || undefined}>
-          <code className="manifest-slot-index">{index + 1}</code>
-          <span className="manifest-slot-body">{slot === null ? 'Empty' : `Species #${slot.speciesId}`}</span>
-        </li>
-      ))}
-    </ol>
   );
 }

@@ -216,27 +216,118 @@ button:disabled {
 
 .workbench-placeholder { color: var(--ink-soft); }
 
-.workbench-search {
+/* --- FireRed search: scoped filters + intersected results in the rail --- */
+.search {
+  display: block;
   margin-bottom: var(--space-4);
   padding-bottom: var(--space-3);
   border-bottom: var(--rule);
 }
 
-.workbench-search label {
-  display: block;
-  margin-bottom: var(--space-2);
+.search-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.search-field > label {
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-soft);
 }
 
-.workbench-search-input {
+.search-name-input,
+.search-field select {
   width: 100%;
   border: var(--rule-strong);
   border-radius: 0;
   background: var(--panel);
   padding: var(--space-2) var(--space-3);
+}
+
+.search-hint {
+  margin: var(--space-3) 0 0;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.search-summary {
+  margin: var(--space-3) 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: var(--rule);
+}
+
+.search-result {
+  border-bottom: var(--rule);
+  padding: var(--space-2) 0;
+}
+
+.search-result-select {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.search-result-select:hover .search-result-name { text-decoration: underline; }
+
+.search-result-select[aria-pressed='true'] {
+  background: none;
+  color: inherit;
+}
+
+.search-result-select[aria-pressed='true'] .search-result-name {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.search-result-dex { color: var(--ink-faint); font-size: var(--text-xs); }
+
+.search-result-meta,
+.search-result-move {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.search-result-obtain {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.search-result-obtain:not([data-status='standard']) { color: var(--ink); }
+
+.search-result-methods { font-family: var(--font-mono); }
+
+.search-result-validity {
+  font-family: var(--font-mono);
+  border: var(--rule);
+  padding: 0 var(--space-1);
 }
 
 /* --- Progression rail: the chronological spine --- */
@@ -651,18 +742,78 @@ button:disabled {
 
 .manifest-slot {
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
   gap: var(--space-2);
   border: var(--rule);
   padding: var(--space-2) var(--space-3);
   color: var(--ink-soft);
 }
 
-.manifest-slot[data-filled] { color: var(--ink); }
+.manifest-slot[data-filled] { color: var(--ink); border-color: var(--gray-500); }
+
+.manifest-slot-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
 
 .manifest-slot-index {
   color: var(--ink-faint);
   font-size: var(--text-xs);
+}
+
+.manifest-slot-name { flex: 1; font-weight: 600; }
+
+.manifest-slot-level {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.manifest-slot-ability {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.member-moves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+}
+
+.member-move {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  border: var(--rule);
+  padding: 0 var(--space-1);
+  font-size: var(--text-xs);
+}
+
+.member-move[data-status^='future'] { border-style: dashed; }
+
+.member-move-empty { border: 0; color: var(--ink-faint); font-style: italic; }
+
+.member-move-label {
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+}
+
+.manifest-slot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.manifest-action {
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+  cursor: pointer;
 }
 
 /* --- Narrow widths: stack rail -> table -> inspector -> manifest, keep tables scrollable --- */
@@ -684,4 +835,68 @@ button:disabled {
   .workbench-inspector { border-bottom: var(--rule); }
 
   .manifest-sections { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- App shell: header, session banner, and run data tools --- */
+.app-header { margin-bottom: var(--space-5); }
+
+.app-header h1 { margin: 0; font-size: var(--text-xl); }
+
+.app-banner {
+  margin: 0 0 var(--space-4);
+  border: var(--rule-strong);
+  border-left: 4px solid var(--ink);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.app-error {
+  margin: 0 0 var(--space-4);
+  border: var(--rule-strong);
+  border-left: 4px solid var(--ink);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.app-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--rule);
+}
+
+.app-tool { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
+
+.app-tool-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.app-tool-button {
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--ink);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+}
+
+.app-export,
+.app-import {
+  width: 100%;
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  resize: vertical;
+}
+
+@media (max-width: 60rem) {
+  .app-tools { grid-template-columns: minmax(0, 1fr); }
 }
