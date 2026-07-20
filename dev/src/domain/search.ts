@@ -63,26 +63,47 @@ function closeOverEvolutions(seeds: Iterable<number>, adjacency: Map<number, num
 }
 
 /**
- * Classify every species into exactly one obtainability tier. Standard availability is
- * seeded from wild routes plus standard non-wild acquisitions and closed over legal
- * evolutions; postgame/version/event tiers are seeded from curated acquisitions and closed
- * likewise; anything left is transfer-only. Precedence: standard > postgame >
- * version-exclusive > event-only > transfer-only.
+ * Classify every species into exactly one obtainability tier. This MUST mirror the
+ * build-time `classifyFireRedAvailability` (scripts/data/firered/indexes.ts), which is the
+ * authority the shipped pack is built from — the app cannot import that build-script module
+ * across the tsconfig project boundary, so the logic is reproduced here and the two are
+ * pinned together by tests. Standard availability is seeded from NON-postgame wild
+ * encounters (excluding the event-only distribution areas, whose encounter areas carry a
+ * null nodeId) plus the standard non-wild acquisitions, then closed over legal evolutions;
+ * postgame is seeded from postgame wild plus postgame acquisitions; version/event tiers come
+ * from curated acquisitions. Precedence: standard > postgame > event-only >
+ * version-exclusive > transfer-only.
  */
 function buildObtainability(pack: FireRedPack): Map<number, Obtainability> {
-  const standardSeed = new Set<number>();
-  const postgameSeed = new Set<number>();
-  const versionSeed = new Set<number>();
-  const eventSeed = new Set<number>();
+  const branchByNodeId = new Map(pack.progression.nodes.map((node) => [node.id, node.branch ?? 'main']));
 
-  for (const key of Object.keys(pack.indexes.routesByPokemon)) standardSeed.add(Number(key));
+  const standardWild = new Set<number>();
+  const anyWild = new Set<number>();
+  for (const area of pack.encounters) {
+    // A null nodeId marks an event-only distribution area (Birth Island, Navel Rock, roaming
+    // Kanto, …): never standard wild. Otherwise the resolved node's branch decides the tier.
+    if (area.nodeId === null) continue;
+    const branch = branchByNodeId.get(area.nodeId) ?? 'main';
+    for (const method of area.methods) {
+      for (const slot of method.slots) {
+        anyWild.add(slot.pokemonId);
+        if (branch !== 'postgame') standardWild.add(slot.pokemonId);
+      }
+    }
+  }
+  const postgameWild = new Set([...anyWild].filter((id) => !standardWild.has(id)));
+
+  const standardAcq = new Set<number>();
+  const postgameAcq = new Set<number>();
+  const eventAcq = new Set<number>();
+  const versionAcq = new Set<number>();
   for (const record of pack.acquisitions) {
     if (!('pokemonId' in record.subject)) continue;
     const id = record.subject.pokemonId;
-    if (record.status === 'standard') standardSeed.add(id);
-    else if (record.status === 'postgame') postgameSeed.add(id);
-    else if (record.status === 'version-exclusive') versionSeed.add(id);
-    else if (record.status === 'event-only') eventSeed.add(id);
+    if (record.status === 'standard') standardAcq.add(id);
+    else if (record.status === 'postgame') postgameAcq.add(id);
+    else if (record.status === 'event-only') eventAcq.add(id);
+    else if (record.status === 'version-exclusive') versionAcq.add(id);
   }
 
   const adjacency = new Map<number, number[]>();
@@ -93,12 +114,13 @@ function buildObtainability(pack: FireRedPack): Map<number, Obtainability> {
     adjacency.set(edge.fromPokemonId, targets);
   }
 
-  const standardSet = closeOverEvolutions(standardSeed, adjacency);
-  const postgameSet = new Set([...closeOverEvolutions(postgameSeed, adjacency)].filter((id) => !standardSet.has(id)));
-  const versionSet = new Set([...closeOverEvolutions(versionSeed, adjacency)]
+  const standardSet = closeOverEvolutions([...standardWild, ...standardAcq], adjacency);
+  const postgameSet = new Set([...closeOverEvolutions([...postgameWild, ...postgameAcq], adjacency)]
+    .filter((id) => !standardSet.has(id)));
+  const versionSet = new Set([...closeOverEvolutions([...versionAcq], adjacency)]
     .filter((id) => !standardSet.has(id) && !postgameSet.has(id)));
-  const eventSet = new Set([...eventSeed]
-    .filter((id) => !standardSet.has(id) && !postgameSet.has(id) && !versionSet.has(id)));
+  const eventSet = new Set([...eventAcq]
+    .filter((id) => !standardSet.has(id) && !postgameSet.has(id)));
 
   const obtainability = new Map<number, Obtainability>();
   for (const record of pack.pokemon) {
@@ -106,8 +128,8 @@ function buildObtainability(pack: FireRedPack): Map<number, Obtainability> {
     let status: ObtainabilityStatus;
     if (standardSet.has(id)) status = 'standard';
     else if (postgameSet.has(id)) status = 'postgame';
-    else if (versionSet.has(id)) status = 'version-exclusive';
     else if (eventSet.has(id)) status = 'event-only';
+    else if (versionSet.has(id)) status = 'version-exclusive';
     else status = 'transfer-only';
     obtainability.set(id, { status, flagged: status !== 'standard' });
   }

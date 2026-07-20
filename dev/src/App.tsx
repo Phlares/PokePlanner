@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { loadFireRedPack, type FireRedDigest, type FireRedPack } from './data/game-pack';
 import { MILESTONE_ORDER } from './domain/availability';
 import { type Playthrough, type PlaythroughPackIndex } from './domain/playthrough';

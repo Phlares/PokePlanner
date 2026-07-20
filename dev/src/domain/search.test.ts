@@ -94,6 +94,19 @@ describe('searchFireRed — intersection, route counts and flags', () => {
     expect(byId(results, MANKEY)?.obtainability.flagged).toBe(false);
   });
 
+  it('classifies postgame-only wild species as postgame, not obtainable-now standard', () => {
+    // Mewtwo (Cerulean Cave, gated behind the Sevii Network Machine) and the Sevii
+    // postgame wilds Heracross/Larvitar are declared postgame by the build-time
+    // classifier. Runtime obtainability must agree: they appear in routes-by-pokemon
+    // but are NOT standard, so a "what can I get now" search must flag them.
+    for (const id of [150, 214, 246]) {
+      const result = byId(searchFireRed({ name: '' }, pack), id);
+      expect(result, `species ${id} missing`).toBeDefined();
+      expect(result?.obtainability.status, `species ${id} status`).toBe('postgame');
+      expect(result?.obtainability.flagged, `species ${id} flagged`).toBe(true);
+    }
+  });
+
   it('returns results deterministically ordered by id and unique', () => {
     const results = searchFireRed({ type: 'fighting' }, pack);
     const list = ids(results);
