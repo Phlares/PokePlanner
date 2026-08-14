@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { PersistentMember, TimelineState } from '../../domain/timeline/model';
 import type { TimelineFinding } from '../../domain/timeline/validation';
@@ -150,7 +150,7 @@ describe('TimelineMemberEditor', () => {
     expect(screen.getByText(/Can learn Cut after the Cascade Badge/)).toBeVisible();
   });
 
-  it('traps focus in the dialog and restores the edit trigger on close', () => {
+  it('traps focus in the dialog and restores the edit trigger on close', async () => {
     const trigger = document.createElement('button');
     trigger.textContent = 'Edit Mankey #2';
     document.body.append(trigger);
@@ -166,7 +166,7 @@ describe('TimelineMemberEditor', () => {
     expect(close).toHaveFocus();
     fireEvent.click(close);
     expect(onClose).toHaveBeenCalledTimes(1);
-    expect(trigger).toHaveFocus();
+    await waitFor(() => expect(trigger).toHaveFocus());
     trigger.remove();
   });
 
@@ -189,7 +189,7 @@ describe('TimelineMemberEditor', () => {
     const confirmation = screen.getByRole('alertdialog', { name: 'Release Mankey #2?' });
     const cancel = within(confirmation).getByRole('button', { name: 'Cancel release' });
     const confirm = within(confirmation).getByRole('button', { name: 'Confirm release' });
-    expect(screen.getByRole('region', { name: 'Member configuration' }).closest('.timeline-editor-body')).toHaveAttribute('inert');
+    expect(screen.getByRole('region', { name: 'Member configuration', hidden: true }).closest('.timeline-editor-body')).toHaveAttribute('inert');
     expect(cancel).toHaveFocus();
 
     fireEvent.keyDown(confirmation, { key: 'Tab', shiftKey: true });

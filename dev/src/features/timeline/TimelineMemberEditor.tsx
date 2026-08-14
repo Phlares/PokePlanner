@@ -9,6 +9,7 @@ import {
   type PropagationScope,
 } from '../../domain/timeline/propagation';
 import type { TimelineFinding } from '../../domain/timeline/validation';
+import { useModalBoundary } from './modal-boundary';
 
 export interface EditorOption<Value extends string | number> {
   id: Value;
@@ -166,6 +167,7 @@ export function TimelineMemberEditor({
   const releaseRef = useRef<HTMLButtonElement>(null);
   const cancelReleaseRef = useRef<HTMLButtonElement>(null);
   const confirmReleaseRef = useRef<HTMLButtonElement>(null);
+  const releaseDialogRef = useRef<HTMLDivElement>(null);
   const restoreReleaseFocus = useRef(false);
   const fieldRefs = useRef<Partial<Record<TimelineMemberEditorField, HTMLElement | null>>>({});
   const [pending, setPending] = useState<PendingChange | null>(null);
@@ -176,6 +178,8 @@ export function TimelineMemberEditor({
     () => new Map(speciesCompatibility.map((entry) => [entry.speciesId, entry])),
     [speciesCompatibility],
   );
+  useModalBoundary(dialogRef, true);
+  useModalBoundary(releaseDialogRef, releaseOpen);
 
   const choosePending = (change: PendingChange): void => {
     setPending(change);
@@ -212,8 +216,9 @@ export function TimelineMemberEditor({
   }, [member.id, milestoneOrder, nodeId, pending, pendingError, scope, timeline]);
 
   const closeEditor = (): void => {
-    returnFocusTo?.focus();
+    const focusTarget = returnFocusTo;
     onClose();
+    queueMicrotask(() => focusTarget?.focus());
   };
 
   useEffect(() => {
@@ -323,7 +328,7 @@ export function TimelineMemberEditor({
       aria-label={`Edit ${memberName} at ${nodeName}`}
       onKeyDown={onDialogKeyDown}
     >
-      <header className="timeline-editor-head" inert={releaseOpen || undefined}>
+      <header className="timeline-editor-head">
         <div>
           <p className="eyebrow">{nodeName} snapshot</p>
           <h2>Edit {memberName}</h2>
@@ -331,7 +336,7 @@ export function TimelineMemberEditor({
         <button ref={closeRef} type="button" className="timeline-editor-close" onClick={closeEditor}>Close editor</button>
       </header>
 
-      <div className="timeline-editor-body" inert={releaseOpen || undefined}>
+      <div className="timeline-editor-body">
         <section className="timeline-editor-fields" aria-label="Member configuration">
           <label>
             <span>Level</span>
@@ -489,7 +494,7 @@ export function TimelineMemberEditor({
 
       {canRelease && <footer className="timeline-editor-foot">
         {releaseOpen ? (
-          <div role="alertdialog" aria-modal="true" aria-label={`Release ${memberName}?`} className="timeline-lifecycle-confirmation">
+          <div ref={releaseDialogRef} role="alertdialog" aria-modal="true" aria-label={`Release ${memberName}?`} className="timeline-lifecycle-confirmation">
             <p>Release keeps this member in the historical archive and records the transition permanently.</p>
             <button ref={cancelReleaseRef} type="button" onClick={cancelRelease}>Cancel release</button>
             <button ref={confirmReleaseRef} type="button" onClick={() => { onRequestRelease?.(nodeId, member.id); closeEditor(); }}>Confirm release</button>

@@ -116,7 +116,7 @@ function restoredStarterPlaythrough(): Playthrough {
 
 function renderWorkbench(overrides: Partial<Parameters<typeof Workbench>[0]> = {}) {
   const onPlaythroughChange = vi.fn();
-  render(
+  const view = render(
     <Workbench
       pack={pack}
       playthrough={emptyPlaythrough()}
@@ -125,7 +125,29 @@ function renderWorkbench(overrides: Partial<Parameters<typeof Workbench>[0]> = {
       {...overrides}
     />,
   );
-  return { onPlaythroughChange };
+  return { onPlaythroughChange, ...view };
+}
+
+function siblingBranchesOutside(boundary: HTMLElement): HTMLElement[] {
+  const branches = new Set<HTMLElement>();
+  let branch: HTMLElement = boundary;
+  while (branch.parentElement && branch !== document.body) {
+    const parent = branch.parentElement;
+    Array.from(parent.children).forEach((candidate) => {
+      if (candidate !== branch && candidate instanceof HTMLElement) branches.add(candidate);
+    });
+    branch = parent;
+  }
+  return [...branches];
+}
+
+function expectFullModalBoundary(boundary: HTMLElement): void {
+  const branches = siblingBranchesOutside(boundary);
+  expect(branches.length).toBeGreaterThan(4);
+  branches.forEach((branch) => {
+    expect(branch).toHaveAttribute('inert');
+    expect(branch).toHaveAttribute('aria-hidden', 'true');
+  });
 }
 
 afterEach(cleanup);
@@ -168,6 +190,36 @@ describe('Workbench', () => {
     expect(onPlaythroughChange.mock.calls[0][0].timeline.members.starter.lifecycle.at(-1)?.type).toBe('restored');
   });
 
+  it('makes restore confirmation modal across the full shell and releases the boundary on cancel and confirm', async () => {
+    function ControlledWorkbench() {
+      const [playthrough, setPlaythrough] = useState(() => starterPlaythrough('released'));
+      return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
+    }
+
+    const sentinel = document.createElement('button');
+    sentinel.setAttribute('aria-hidden', 'false');
+    document.body.append(sentinel);
+    render(<ControlledWorkbench />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Restore Bulbasaur' }));
+    let confirmation = screen.getByRole('alertdialog', { name: 'Restore Bulbasaur?' });
+    expectFullModalBoundary(confirmation);
+    expect(sentinel).toHaveAttribute('inert');
+    fireEvent.keyDown(confirmation, { key: 'Escape' });
+    expect(sentinel).not.toHaveAttribute('inert');
+    expect(sentinel).toHaveAttribute('aria-hidden', 'false');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Restore Bulbasaur' }));
+    confirmation = screen.getByRole('alertdialog', { name: 'Restore Bulbasaur?' });
+    expectFullModalBoundary(confirmation);
+    fireEvent.click(within(confirmation).getByRole('button', { name: 'Confirm restore' }));
+
+    await screen.findByRole('region', { name: /Reserve .* 1 Pok/i });
+    expect(sentinel).not.toHaveAttribute('inert');
+    expect(sentinel).toHaveAttribute('aria-hidden', 'false');
+    sentinel.remove();
+  });
+
   it('moves focus to the restored reserve member after the controlled rerender', async () => {
     function ControlledWorkbench() {
       const [playthrough, setPlaythrough] = useState(() => starterPlaythrough('released'));
@@ -184,7 +236,7 @@ describe('Workbench', () => {
     expect(screen.queryByRole('button', { name: 'Restore Bulbasaur' })).toBeNull();
   });
 
-  it('opens the milestone member editor from its visible keyboard action', () => {
+  it('opens the milestone member editor from its visible keyboard action', async () => {
     renderWorkbench({ playthrough: starterPlaythrough() });
     const trigger = screen.getByRole('button', { name: 'Edit Bulbasaur' });
     trigger.focus();
@@ -192,7 +244,52 @@ describe('Workbench', () => {
     const dialog = screen.getByRole('dialog', { name: 'Edit Bulbasaur at Brock' });
     expect(within(dialog).getByLabelText('Level')).toHaveValue(5);
     fireEvent.click(within(dialog).getByRole('button', { name: 'Close editor' }));
-    expect(trigger).toHaveFocus();
+    await waitFor(() => expect(trigger).toHaveFocus());
+  });
+
+  it('nests release confirmation inside the modal editor and restores all boundaries on confirm and unmount', async () => {
+    const sentinel = document.createElement('button');
+    sentinel.setAttribute('aria-hidden', 'false');
+    document.body.append(sentinel);
+    const { unmount } = renderWorkbench({ playthrough: starterPlaythrough() });
+
+    const editTrigger = screen.getByRole('button', { name: 'Edit Bulbasaur' });
+    editTrigger.focus();
+    fireEvent.click(editTrigger);
+    let focusAttemptedWhileLocked = false;
+    const originalFocus = editTrigger.focus.bind(editTrigger);
+    const focusSpy = vi.spyOn(editTrigger, 'focus').mockImplementation(() => {
+      focusAttemptedWhileLocked = editTrigger.closest('[inert]') !== null;
+      originalFocus();
+    });
+    const progression = document.querySelector<HTMLElement>('.workbench-rail')!;
+    expect(progression).toHaveAttribute('inert');
+    fireEvent.click(screen.getByRole('button', { name: 'Release Bulbasaur' }));
+    let confirmation = screen.getByRole('alertdialog', { name: 'Release Bulbasaur?' });
+    expectFullModalBoundary(confirmation);
+    fireEvent.keyDown(confirmation, { key: 'Escape' });
+
+    expect(screen.getByRole('dialog', { name: 'Edit Bulbasaur at Brock' })).toBeVisible();
+    expect(screen.getByRole('region', { name: 'Member configuration' })).not.toHaveAttribute('inert');
+    expect(progression).toHaveAttribute('inert');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Release Bulbasaur' }));
+    confirmation = screen.getByRole('alertdialog', { name: 'Release Bulbasaur?' });
+    fireEvent.click(within(confirmation).getByRole('button', { name: 'Confirm release' }));
+    expect(screen.queryByRole('dialog', { name: 'Edit Bulbasaur at Brock' })).toBeNull();
+    expect(progression).not.toHaveAttribute('inert');
+    expect(sentinel).not.toHaveAttribute('inert');
+    expect(sentinel).toHaveAttribute('aria-hidden', 'false');
+    await waitFor(() => expect(focusSpy).toHaveBeenCalled());
+    expect(focusAttemptedWhileLocked).toBe(false);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Edit Bulbasaur' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Release Bulbasaur' }));
+    expectFullModalBoundary(screen.getByRole('alertdialog', { name: 'Release Bulbasaur?' }));
+    unmount();
+    expect(sentinel).not.toHaveAttribute('inert');
+    expect(sentinel).toHaveAttribute('aria-hidden', 'false');
+    sentinel.remove();
   });
 
   it('atomically reconciles Caterpie ability and moves when evolving to Metapod', () => {

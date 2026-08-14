@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { MemberSnapshot, PersistentMember } from '../../domain/timeline/model';
+import { useModalBoundary } from './modal-boundary';
 
 export interface MemberPoolProps {
   kind: 'reserve' | 'released';
@@ -54,6 +55,7 @@ export function MemberPool({
   const restoreTriggers = useRef(new Map<string, HTMLButtonElement>());
   const restoreCancel = useRef<HTMLButtonElement>(null);
   const restoreConfirm = useRef<HTMLButtonElement>(null);
+  const restoreDialog = useRef<HTMLDivElement>(null);
   const restoreFocusAfterCancel = useRef<string | null>(null);
   useEffect(() => {
     if (restoreMemberId !== null) {
@@ -98,9 +100,10 @@ export function MemberPool({
   const restoringName = restoringMember && restoringSnapshot
     ? memberDisplayName(restoringMember, restoringSnapshot, speciesName, counts)
     : null;
+  useModalBoundary(restoreDialog, restoreMemberId !== null && restoringName !== null);
   return (
     <section className="timeline-pool" aria-label={`${title} · ${memberIds.length} Pokémon`}>
-      <header className="timeline-pool-head" inert={restoreMemberId !== null || undefined}>
+      <header className="timeline-pool-head">
         <h3>
           <button ref={poolToggle} type="button" className="timeline-pool-toggle" aria-label={`Toggle ${title} pool`} aria-expanded={open} onClick={() => setOpen((current) => !current)}>
             {title}
@@ -108,7 +111,7 @@ export function MemberPool({
         </h3>
         <p>{kind === 'reserve' ? 'Unbounded pool' : 'Historical archive'}</p>
       </header>
-      {open && <ul className="timeline-pool-list" inert={restoreMemberId !== null || undefined}>
+      {open && <ul className="timeline-pool-list">
         {memberIds.map((memberId) => {
           const member = members[memberId];
           const snapshot = snapshots[memberId];
@@ -149,6 +152,7 @@ export function MemberPool({
       {open && memberIds.length === 0 && <p className="timeline-pool-empty">No {title.toLowerCase()} members.</p>}
       {restoreMemberId !== null && restoringName !== null && (
         <div
+          ref={restoreDialog}
           className="timeline-lifecycle-confirmation"
           role="alertdialog"
           aria-modal="true"
