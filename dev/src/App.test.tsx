@@ -512,8 +512,7 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Prepare Download JSON' }));
     expect(await screen.findByRole('link', { name: 'Download JSON' })).toHaveAttribute('download', 'firered-run.json');
     const prepared = JSON.parse((screen.getByLabelText('Playthrough export JSON') as HTMLTextAreaElement).value);
-    expect(prepared).toMatchObject({ schemaVersion: 2, game: 'firered', id: original.id, name: 'FireRed Run' });
-    expect(prepared.notes).toHaveLength(4 * 1024 * 1024 + 1);
+    expect(prepared).toEqual(oversized);
     expect(screen.queryByLabelText('Plan code export')).toBeNull();
     expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
     expect(await active.get()!.list()).toEqual([oversized]);
