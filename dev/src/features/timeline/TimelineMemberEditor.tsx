@@ -215,10 +215,10 @@ export function TimelineMemberEditor({
     return { targetNodeIds, skippedNodeIds: [], protectedNodeIds: [], conflictNodeIds: [] };
   }, [member.id, milestoneOrder, nodeId, pending, pendingError, scope, timeline]);
 
-  const closeEditor = (): void => {
+  const closeEditor = (restoreFocus = true): void => {
     const focusTarget = returnFocusTo;
     onClose();
-    queueMicrotask(() => focusTarget?.focus());
+    if (restoreFocus) queueMicrotask(() => focusTarget?.focus());
   };
 
   useEffect(() => {
@@ -333,7 +333,7 @@ export function TimelineMemberEditor({
           <p className="eyebrow">{nodeName} snapshot</p>
           <h2>Edit {memberName}</h2>
         </div>
-        <button ref={closeRef} type="button" className="timeline-editor-close" onClick={closeEditor}>Close editor</button>
+        <button ref={closeRef} type="button" className="timeline-editor-close" onClick={() => closeEditor()}>Close editor</button>
       </header>
 
       <div className="timeline-editor-body">
@@ -497,7 +497,7 @@ export function TimelineMemberEditor({
           <div ref={releaseDialogRef} role="alertdialog" aria-modal="true" aria-label={`Release ${memberName}?`} className="timeline-lifecycle-confirmation">
             <p>Release keeps this member in the historical archive and records the transition permanently.</p>
             <button ref={cancelReleaseRef} type="button" onClick={cancelRelease}>Cancel release</button>
-            <button ref={confirmReleaseRef} type="button" onClick={() => { onRequestRelease?.(nodeId, member.id); closeEditor(); }}>Confirm release</button>
+            <button ref={confirmReleaseRef} type="button" onClick={() => { onRequestRelease?.(nodeId, member.id); closeEditor(false); }}>Confirm release</button>
           </div>
         ) : (
           <button ref={releaseRef} type="button" className="timeline-editor-release" onClick={() => setReleaseOpen(true)}>

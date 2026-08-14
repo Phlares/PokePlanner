@@ -149,6 +149,7 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
   const [, setMemberDraft] = useState<MemberDraft | null>(null);
   const [searchActive, setSearchActive] = useState(false);
   const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(null);
+  const [releaseFocusMemberId, setReleaseFocusMemberId] = useState<string | null>(null);
 
   const availabilityContext = useMemo(
     () => ({
@@ -324,6 +325,8 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
             if (!display) return;
             emit({ timeline: restoreMember(timelineWithExplicitNode(playthrough.timeline, display), nodeId, memberId, index) });
           }}
+          releaseFocusMemberId={releaseFocusMemberId}
+          onReleaseFocusHandled={() => setReleaseFocusMemberId(null)}
         />
       </section>
 
@@ -363,6 +366,7 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
           onClose={() => setEditorSelection(null)}
           onRequestRelease={(nodeId, memberId) => {
             emit({ timeline: releaseMember(editorTimeline, nodeId, memberId, null, index) });
+            setReleaseFocusMemberId(memberId);
             setEditorSelection(null);
           }}
         />

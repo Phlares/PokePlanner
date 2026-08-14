@@ -256,12 +256,6 @@ describe('Workbench', () => {
     const editTrigger = screen.getByRole('button', { name: 'Edit Bulbasaur' });
     editTrigger.focus();
     fireEvent.click(editTrigger);
-    let focusAttemptedWhileLocked = false;
-    const originalFocus = editTrigger.focus.bind(editTrigger);
-    const focusSpy = vi.spyOn(editTrigger, 'focus').mockImplementation(() => {
-      focusAttemptedWhileLocked = editTrigger.closest('[inert]') !== null;
-      originalFocus();
-    });
     const progression = document.querySelector<HTMLElement>('.workbench-rail')!;
     expect(progression).toHaveAttribute('inert');
     fireEvent.click(screen.getByRole('button', { name: 'Release Bulbasaur' }));
@@ -280,8 +274,6 @@ describe('Workbench', () => {
     expect(progression).not.toHaveAttribute('inert');
     expect(sentinel).not.toHaveAttribute('inert');
     expect(sentinel).toHaveAttribute('aria-hidden', 'false');
-    await waitFor(() => expect(focusSpy).toHaveBeenCalled());
-    expect(focusAttemptedWhileLocked).toBe(false);
 
     fireEvent.click(screen.getByRole('button', { name: 'Edit Bulbasaur' }));
     fireEvent.click(screen.getByRole('button', { name: 'Release Bulbasaur' }));
@@ -290,6 +282,26 @@ describe('Workbench', () => {
     expect(sentinel).not.toHaveAttribute('inert');
     expect(sentinel).toHaveAttribute('aria-hidden', 'false');
     sentinel.remove();
+  });
+
+  it('moves focus to the released member Restore control after the controlled rerender', async () => {
+    function ControlledWorkbench() {
+      const [playthrough, setPlaythrough] = useState(() => starterPlaythrough());
+      return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
+    }
+
+    render(<ControlledWorkbench />);
+    const originalEdit = screen.getByRole('button', { name: 'Edit Bulbasaur' });
+    originalEdit.focus();
+    fireEvent.click(originalEdit);
+    fireEvent.click(screen.getByRole('button', { name: 'Release Bulbasaur' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm release' }));
+
+    const released = await screen.findByRole('region', { name: /Released .* 1 Pok/i });
+    const restore = within(released).getByRole('button', { name: 'Restore Bulbasaur' });
+    await waitFor(() => expect(restore).toHaveFocus());
+    expect(document.activeElement).toBe(restore);
+    expect(originalEdit).not.toBeInTheDocument();
   });
 
   it('atomically reconciles Caterpie ability and moves when evolving to Metapod', () => {

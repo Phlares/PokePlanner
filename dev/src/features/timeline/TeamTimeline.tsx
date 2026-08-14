@@ -29,6 +29,8 @@ export interface TeamTimelineProps {
   initialNodeId?: string;
   onEditMember?: (nodeId: string, memberId: string) => void;
   onRequestRestore?: (nodeId: string, memberId: string) => void;
+  releaseFocusMemberId?: string | null;
+  onReleaseFocusHandled?: () => void;
   propagationPreview?: PropagationPreview | null;
 }
 
@@ -67,6 +69,8 @@ export function TeamTimeline({
   initialNodeId,
   onEditMember,
   onRequestRestore,
+  releaseFocusMemberId = null,
+  onReleaseFocusHandled,
   propagationPreview = null,
 }: TeamTimelineProps) {
   const initialMajor = majorNodes.find((node) => node.id === initialNodeId) ?? majorNodes[0] ?? detailedNodes[0];
@@ -266,6 +270,9 @@ export function TeamTimeline({
           snapshots={selected.resolved.snapshots}
           speciesName={speciesName}
           onEditMember={onEditMember ? editMember : undefined}
+          focusMemberId={releaseFocusMemberId}
+          focusAction="restore"
+          onFocusHandled={onReleaseFocusHandled}
           onRequestRestore={onRequestRestore ? (memberId) => {
             setRestoreFocusMemberId(memberId);
             onRequestRestore(selected.id, memberId);

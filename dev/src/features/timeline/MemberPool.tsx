@@ -11,6 +11,7 @@ export interface MemberPoolProps {
   onEditMember?: (memberId: string) => void;
   onRequestRestore?: (memberId: string) => void;
   focusMemberId?: string | null;
+  focusAction?: 'edit' | 'restore';
   onFocusHandled?: () => void;
 }
 
@@ -43,6 +44,7 @@ export function MemberPool({
   onEditMember,
   onRequestRestore,
   focusMemberId = null,
+  focusAction = 'edit',
   onFocusHandled,
 }: MemberPoolProps) {
   const title = kind === 'reserve' ? 'Reserve' : 'Released';
@@ -67,9 +69,12 @@ export function MemberPool({
   }, [restoreMemberId]);
   useEffect(() => {
     if (focusMemberId === null || !memberIds.includes(focusMemberId)) return;
-    (editTriggers.current.get(focusMemberId) ?? poolToggle.current)?.focus();
+    const preferred = focusAction === 'restore'
+      ? restoreTriggers.current.get(focusMemberId)
+      : editTriggers.current.get(focusMemberId);
+    (preferred ?? editTriggers.current.get(focusMemberId) ?? poolToggle.current)?.focus();
     onFocusHandled?.();
-  }, [focusMemberId, memberIds, onFocusHandled]);
+  }, [focusAction, focusMemberId, memberIds, onFocusHandled]);
   const finishRestore = (memberId: string): void => {
     onRequestRestore?.(memberId);
     setRestoredMemberIds((current) => new Set([...current, memberId]));
