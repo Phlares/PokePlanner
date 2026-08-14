@@ -56,6 +56,13 @@ export interface AppProps {
 type BootState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
+  | {
+      status: 'repository-error';
+      message: string;
+      pack: PlaythroughPackIndex;
+      repo: PlaythroughRepository;
+      temporary: boolean;
+    }
   | { status: 'ready'; pack: PlaythroughPackIndex; repo: PlaythroughRepository; temporary: boolean };
 
 function mostRecent(records: Playthrough[]): Playthrough | null {
@@ -83,7 +90,10 @@ export function App({
   const [lastDurable, setLastDurable] = useState<Playthrough | null>(null);
   const [activeDraft, setActiveDraft] = useState<Playthrough | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [repositoryRetrying, setRepositoryRetrying] = useState(false);
   const saveAttempt = useRef(0);
+  const saveQueue = useRef<Promise<void>>(Promise.resolve());
+  const repositoryGeneration = useRef(0);
   const [pack, setPack] = useState<FireRedPack | null>(null);
   const [exportText, setExportText] = useState<string | null>(null);
   const [importText, setImportText] = useState('');
@@ -100,9 +110,12 @@ export function App({
     const controller = new AbortController();
     setBoot({ status: 'loading' });
     saveAttempt.current += 1;
+    repositoryGeneration.current += 1;
+    saveQueue.current = Promise.resolve();
     setLastDurable(null);
     setActiveDraft(null);
     setSaveError(null);
+    setRepositoryRetrying(false);
     setPack(null);
 
     (async () => {
@@ -135,8 +148,18 @@ export function App({
       let restored: Playthrough | null = null;
       try {
         restored = mostRecent(await repo.list());
-      } catch {
-        restored = null;
+      } catch (error) {
+        if (alive) {
+          setPack(loaded);
+          setBoot({
+            status: 'repository-error',
+            message: error instanceof Error ? error.message : 'The saved-run repository could not be read.',
+            pack: index,
+            repo,
+            temporary,
+          });
+        }
+        return;
       }
       if (!alive) return;
 
@@ -156,14 +179,21 @@ export function App({
     async (record: Playthrough): Promise<void> => {
       if (boot.status !== 'ready') return;
       const attempt = ++saveAttempt.current;
+      const generation = repositoryGeneration.current;
       // The draft becomes the rendered source of truth immediately; persistence success only
       // advances the durable checkpoint and must never be required to keep an edit on screen.
       setActiveDraft(record);
       // The repository validates against the schema + pack index before it writes, so an invalid or
       // canonical-tainted record can never reach storage; the returned record is the validated one.
+      // Serialize writes so an older request cannot finish after and overwrite a newer draft.
+      const operation = saveQueue.current.then(() => boot.repo.put(record));
+      saveQueue.current = operation.then(
+        () => undefined,
+        () => undefined,
+      );
       try {
-        const stored = await boot.repo.put(record);
-        setLastDurable(stored);
+        const stored = await operation;
+        if (repositoryGeneration.current === generation) setLastDurable(stored);
         if (saveAttempt.current === attempt) {
           setActiveDraft(stored);
           setSaveError(null);
@@ -205,6 +235,28 @@ export function App({
     void persist(imported);
   };
 
+  const retryRepositoryLoad = async (): Promise<void> => {
+    if (boot.status !== 'repository-error' || repositoryRetrying) return;
+    setRepositoryRetrying(true);
+    try {
+      const restored = mostRecent(await boot.repo.list());
+      setLastDurable(restored);
+      setActiveDraft(restored);
+      setBoot({ status: 'ready', pack: boot.pack, repo: boot.repo, temporary: boot.temporary });
+    } catch (error) {
+      setBoot((current) =>
+        current.status === 'repository-error'
+          ? {
+              ...current,
+              message: error instanceof Error ? error.message : 'The saved-run repository could not be read.',
+            }
+          : current,
+      );
+    } finally {
+      setRepositoryRetrying(false);
+    }
+  };
+
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -229,6 +281,22 @@ export function App({
         <p role="alert" className="app-error">
           FireRed data could not be loaded: {boot.message} Reload to try again.
         </p>
+      )}
+
+      {boot.status === 'repository-error' && (
+        <div role="alert" className="app-error">
+          <p>
+            Saved runs could not be read or migrated: {boot.message}. Your browser data was left unchanged.
+          </p>
+          <button
+            type="button"
+            className="app-tool-button"
+            disabled={repositoryRetrying}
+            onClick={() => void retryRepositoryLoad()}
+          >
+            {repositoryRetrying ? 'Retrying saved runs…' : 'Retry loading saved runs'}
+          </button>
+        </div>
       )}
 
       {boot.status === 'ready' && (

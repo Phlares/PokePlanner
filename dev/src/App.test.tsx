@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from './App';
 import { MILESTONE_ORDER } from './domain/availability';
@@ -65,6 +65,14 @@ function baseProps(overrides: Partial<Parameters<typeof App>[0]> = {}) {
   };
 }
 
+function deferred(): { promise: Promise<void>; resolve: () => void } {
+  let resolve!: () => void;
+  const promise = new Promise<void>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
+
 async function createRun(): Promise<void> {
   fireEvent.click(await screen.findByRole('button', { name: /start firered/i }));
   await screen.findByRole('region', { name: /team manifest/i });
@@ -77,6 +85,35 @@ describe('App boot and persistence', () => {
     const { factory } = sharedRepoFactory();
     render(<App {...baseProps({ openRepository: factory })} />);
     expect(await screen.findByText(/set up a run/i)).toBeVisible();
+  });
+
+  it('blocks normal setup and retries the original repository when saved records cannot be listed', async () => {
+    const list = vi.fn()
+      .mockRejectedValueOnce(new Error('legacy migration failed'))
+      .mockResolvedValueOnce([]);
+    const put = vi.fn();
+    const remove = vi.fn();
+    const factory = vi.fn(async (): Promise<PlaythroughRepository> => ({
+      list,
+      get: vi.fn(),
+      put,
+      delete: remove,
+    }));
+
+    render(<App {...baseProps({ openRepository: factory })} />);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/saved runs.*could not be (read|loaded|migrated)/i);
+    expect(screen.getByRole('alert')).toHaveTextContent(/left unchanged/i);
+    expect(screen.queryByText(/set up a run/i)).toBeNull();
+    expect(screen.queryByRole('region', { name: /team manifest/i })).toBeNull();
+    expect(put).not.toHaveBeenCalled();
+    expect(remove).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole('button', { name: /retry loading saved runs/i }));
+
+    expect(await screen.findByText(/set up a run/i)).toBeVisible();
+    expect(factory).toHaveBeenCalledTimes(1);
+    expect(list).toHaveBeenCalledTimes(2);
   });
 
   it('creates the selected starter member and targets Brock', async () => {
@@ -119,6 +156,49 @@ describe('App boot and persistence', () => {
       const records = await get()!.list();
       expect(records[0].currentMilestoneId).toBe('brock-gym');
     });
+  });
+
+  it('keeps the latest rapid edit durable when save completions arrive in reverse order', async () => {
+    let repo: MemoryPlaythroughRepository | undefined;
+    let putCount = 0;
+    const brockSave = deferred();
+    const mistySave = deferred();
+    const factory = async (options: RepositoryOptions): Promise<PlaythroughRepository> => {
+      repo ??= new MemoryPlaythroughRepository(options);
+      return {
+        list: () => repo!.list(),
+        get: (id) => repo!.get(id),
+        put: async (record) => {
+          putCount += 1;
+          if (putCount > 1) {
+            const completion = record.currentMilestoneId === 'brock-gym' ? brockSave : mistySave;
+            await completion.promise;
+          }
+          return repo!.put(record);
+        },
+        delete: (id) => repo!.delete(id),
+      };
+    };
+    render(<App {...baseProps({ openRepository: factory })} />);
+    await createRun();
+    await waitFor(() => expect(putCount).toBe(1));
+
+    fireEvent.click(screen.getByRole('button', { name: /set current milestone.*brock/i }));
+    fireEvent.click(screen.getByRole('button', { name: /set current milestone.*misty/i }));
+
+    await act(async () => {
+      mistySave.resolve();
+      await Promise.resolve();
+      brockSave.resolve();
+    });
+
+    await waitFor(async () => {
+      expect((await repo!.list())[0].currentMilestoneId).toBe('misty-gym');
+    });
+    expect(screen.getByRole('button', { name: /set current milestone.*misty/i })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   });
 
   it('keeps unsaved edits rendered and offers Retry and Export when a write fails', async () => {
