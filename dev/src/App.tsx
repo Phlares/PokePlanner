@@ -109,6 +109,7 @@ export function App({
   const [importText, setImportText] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
   const [planCodeExport, setPlanCodeExport] = useState<string | null>(null);
+  const [planCodeExportError, setPlanCodeExportError] = useState<string | null>(null);
   const [planCodeImport, setPlanCodeImport] = useState('');
   const [planCodePreview, setPlanCodePreview] = useState<PlanCodeImportPreview | null>(null);
   const [planCodeError, setPlanCodeError] = useState<string | null>(null);
@@ -274,6 +275,17 @@ export function App({
     void persist(imported);
   };
 
+  const handlePlanCodeExport = (): void => {
+    if (activeDraft === null) return;
+    try {
+      setPlanCodeExport(encodePlanCode(activeDraft));
+      setPlanCodeExportError(null);
+    } catch (error) {
+      setPlanCodeExport(null);
+      setPlanCodeExportError(error instanceof Error ? error.message : 'Plan code could not be exported.');
+    }
+  };
+
   const retryRepositoryLoad = async (): Promise<void> => {
     if (boot.status !== 'repository-error' || repositoryRetrying) return;
     setRepositoryRetrying(true);
@@ -393,10 +405,13 @@ export function App({
                 <button
                   type="button"
                   className="app-tool-button"
-                  onClick={() => setPlanCodeExport(encodePlanCode(activeDraft))}
+                  onClick={handlePlanCodeExport}
                 >
                   Export plan code
                 </button>
+                {planCodeExportError !== null && (
+                  <p role="alert" className="app-error">Plan code export failed: {planCodeExportError}</p>
+                )}
                 {planCodeExport !== null && (
                   <textarea
                     className="app-export"
@@ -471,7 +486,7 @@ export function App({
           )}
 
           {pack !== null && activeDraft !== null && (
-            <Workbench pack={pack} playthrough={activeDraft} onPlaythroughChange={handleChange} now={now} />
+            <Workbench pack={pack} playthrough={activeDraft} onPlaythroughChange={handleChange} now={now} createId={createId} />
           )}
         </>
       )}

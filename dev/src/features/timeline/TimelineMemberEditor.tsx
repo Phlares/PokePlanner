@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { editSnapshotField, type SnapshotEditableField } from '../../domain/timeline/commands';
+import { editSnapshotField, replaceSlotEdit, type SnapshotEditableField } from '../../domain/timeline/commands';
 import type { CapabilityState } from '../../domain/timeline/capabilities';
 import type { MemberOrigin, MemberSnapshot, PersistentMember, TimelineState } from '../../domain/timeline/model';
 import {
@@ -29,7 +29,7 @@ export interface EditorSpeciesCompatibility {
   legalMoveIds: readonly number[];
 }
 
-export type TimelineMemberEditorField = SnapshotEditableField | 'natureId' | 'notes' | 'origin';
+export type TimelineMemberEditorField = SnapshotEditableField | 'natureId' | 'notes' | 'origin' | 'placement';
 
 export interface TimelineMemberEditorApply {
   field: TimelineMemberEditorField;
@@ -56,6 +56,7 @@ export interface TimelineMemberEditorProps {
   onApply: (application: TimelineMemberEditorApply) => void;
   onClose: () => void;
   onRequestRelease?: (nodeId: string, memberId: string) => void;
+  onRequestMoveToReserve?: (nodeId: string, memberId: string) => void;
   returnFocusTo?: HTMLElement | null;
 }
 
@@ -67,7 +68,8 @@ type PendingChange =
   | PendingSnapshotChange
   | { kind: 'member'; field: 'natureId'; value: string | null }
   | { kind: 'member'; field: 'notes'; value: string }
-  | { kind: 'member'; field: 'origin'; value: MemberOrigin };
+  | { kind: 'member'; field: 'origin'; value: MemberOrigin }
+  | { kind: 'replacement'; slot: 0 | 1 | 2 | 3 | 4 | 5 };
 
 const ORIGIN_OPTIONS: readonly EditorOption<MemberOrigin['type']>[] = [
   { id: 'inferred', name: 'Inferred' },
@@ -160,6 +162,7 @@ export function TimelineMemberEditor({
   onApply,
   onClose,
   onRequestRelease,
+  onRequestMoveToReserve,
   returnFocusTo = null,
 }: TimelineMemberEditorProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -174,6 +177,11 @@ export function TimelineMemberEditor({
   const [scope, setScope] = useState<PropagationScope | null>(null);
   const [releaseOpen, setReleaseOpen] = useState(false);
   const canRelease = snapshot.placement !== 'released' && onRequestRelease !== undefined;
+  const canMoveToReserve = snapshot.placement === 'party' && onRequestMoveToReserve !== undefined;
+  const currentFrame = timeline.overrides[nodeId] ?? timeline.keyframes[nodeId];
+  const replaceableSlots = snapshot.placement === 'reserve'
+    ? (currentFrame?.party ?? []).flatMap((occupant, slot) => occupant === null ? [] : [slot as 0 | 1 | 2 | 3 | 4 | 5])
+    : [];
   const compatibilityBySpecies = useMemo(
     () => new Map(speciesCompatibility.map((entry) => [entry.speciesId, entry])),
     [speciesCompatibility],
@@ -210,6 +218,9 @@ export function TimelineMemberEditor({
         scope,
         milestoneOrder,
       );
+    }
+    if (pending.kind === 'replacement') {
+      return previewPropagation(timeline, replaceSlotEdit(nodeId, pending.slot, member.id), scope, milestoneOrder);
     }
     const targetNodeIds = memberTargetIds(timeline, member.id, milestoneOrder);
     return { targetNodeIds, skippedNodeIds: [], protectedNodeIds: [], conflictNodeIds: [] };
@@ -286,6 +297,14 @@ export function TimelineMemberEditor({
       if (pending.field === 'speciesId') {
         next = reconcileSpeciesTargets(next, member.id, preview.targetNodeIds, compatibilityBySpecies.get(pending.value)!);
       }
+    } else if (pending.kind === 'replacement') {
+      next = applyPropagation(
+        timeline,
+        replaceSlotEdit(nodeId, pending.slot, member.id),
+        scope,
+        milestoneOrder,
+        preview as PropagationPreview,
+      );
     } else {
       const updatedMember = pending.field === 'natureId'
         ? { ...member, natureId: pending.value }
@@ -294,7 +313,7 @@ export function TimelineMemberEditor({
           : { ...member, origin: pending.value };
       next = { ...timeline, members: { ...timeline.members, [member.id]: updatedMember } };
     }
-    onApply({ field: pending.field, scope, timeline: next, preview });
+    onApply({ field: pending.kind === 'replacement' ? 'placement' : pending.field, scope, timeline: next, preview });
     setPending(null);
     setScope(null);
   };
@@ -449,6 +468,22 @@ export function TimelineMemberEditor({
           ))}
         </fieldset>
 
+        {replaceableSlots.length > 0 && (
+          <fieldset className="timeline-editor-origin">
+            <legend>Party placement</legend>
+            {replaceableSlots.map((slot) => (
+              <button
+                key={slot}
+                type="button"
+                aria-pressed={pending?.kind === 'replacement' && pending.slot === slot}
+                onClick={() => choosePending({ kind: 'replacement', slot })}
+              >
+                Replace party slot {slot + 1} with {memberName}
+              </button>
+            ))}
+          </fieldset>
+        )}
+
         {pending && (
           <fieldset className="timeline-editor-scope">
             <legend>Apply scope</legend>
@@ -492,7 +527,14 @@ export function TimelineMemberEditor({
         )}
       </div>
 
-      {canRelease && <footer className="timeline-editor-foot">
+      {(canRelease || canMoveToReserve) && <footer className="timeline-editor-foot">
+        {canMoveToReserve && !releaseOpen && (
+          <button type="button" onClick={() => { onRequestMoveToReserve?.(nodeId, member.id); closeEditor(false); }}>
+            Move {memberName} to reserve
+          </button>
+        )}
+        {canRelease && (
+          <>
         {releaseOpen ? (
           <div ref={releaseDialogRef} role="alertdialog" aria-modal="true" aria-label={`Release ${memberName}?`} className="timeline-lifecycle-confirmation">
             <p>Release keeps this member in the historical archive and records the transition permanently.</p>
@@ -503,6 +545,8 @@ export function TimelineMemberEditor({
           <button ref={releaseRef} type="button" className="timeline-editor-release" onClick={() => setReleaseOpen(true)}>
             Release {memberName}
           </button>
+        )}
+          </>
         )}
       </footer>}
     </div>

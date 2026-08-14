@@ -12,7 +12,6 @@ import {
   type RepositoryOptions,
 } from './persistence/repository';
 import {
-  createTimelineAcceptanceFixture,
   loadFireRedPackFixture,
 } from './test/firered-pack';
 
@@ -323,46 +322,97 @@ describe('App boot and persistence', () => {
   });
 
   it('completes the milestone timeline acceptance journey and reconstructs its plan code', async () => {
-    const acceptance = createTimelineAcceptanceFixture(pack);
-    const [mankeyOneId, mankeyTwoId] = acceptance.mankeyMemberIds;
-    expect(mankeyOneId).not.toBe(mankeyTwoId);
-    expect(acceptance.playthrough.timeline.members[mankeyOneId].speciesSequence).toBe(1);
-    expect(acceptance.playthrough.timeline.members[mankeyTwoId].speciesSequence).toBe(2);
-    expect(acceptance.replacementPreview).toMatchObject({
-      targetNodeIds: ['brock-gym'],
-      protectedNodeIds: ['mt-moon'],
-    });
-    expect(acceptance.playthrough.timeline.keyframes['brock-gym'].party[0]).toBe(mankeyOneId);
-    expect(acceptance.playthrough.timeline.overrides['mt-moon'].party[0]).toBe(acceptance.starterMemberId);
-    expect(acceptance.playthrough.timeline.keyframes['misty-gym'].party[0]).toBe(acceptance.starterMemberId);
-
-    const seeded = seededRepoFactory(acceptance.playthrough);
-    const first = render(<App {...baseProps({ openRepository: seeded.factory })} />);
+    const active = sharedRepoFactory();
+    const first = render(<App {...baseProps({ openRepository: active.factory })} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Charmander' }));
+    fireEvent.change(screen.getByLabelText('Run name'), { target: { value: 'Timeline acceptance' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Start FireRed' }));
     await screen.findByRole('region', { name: /team timeline/i });
+
+    // App creates and persists the requested target; the rendered timeline then creates Brock.
     expect(screen.getByRole('button', { name: /preview milestone.*brock/i })).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(screen.getByRole('button', { name: 'Copy previous' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Create Brock keyframe' }));
+
+    // Capture two separate identities through the App inspector, at the same acquisition sequence.
+    fireEvent.change(screen.getByRole('searchbox', { name: /search firered/i }), { target: { value: 'Mankey' } });
+    fireEvent.click(await screen.findByRole('button', { name: 'Select Mankey' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Mankey to Brock party' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Mankey to Brock party' }));
+    const created = await waitFor(async () => {
+      const saved = (await active.get()!.list())[0];
+      const ids = Object.values(saved.timeline.members)
+        .filter((member) => member.originalSpeciesId === 56)
+        .sort((left, right) => left.speciesSequence - right.speciesSequence)
+        .map((member) => member.id);
+      expect(ids).toHaveLength(2);
+      return { saved, ids };
+    });
+    const [mankeyOneId, mankeyTwoId] = created.ids;
+    const starterMemberId = created.saved.timeline.keyframes.starter.party[0]!;
+    expect(mankeyOneId).not.toBe(mankeyTwoId);
+    expect(created.saved.timeline.members[mankeyOneId].speciesSequence).toBe(1);
+    expect(created.saved.timeline.members[mankeyTwoId].speciesSequence).toBe(2);
     expect(screen.getByText('Mankey #1')).toBeVisible();
     expect(screen.getByText('Mankey #2')).toBeVisible();
+
+    // Box the second level-5 Mankey at Brock through its editor.
+    fireEvent.click(screen.getByRole('button', { name: 'Edit Mankey #2' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Move Mankey #2 to reserve' }));
+
+    // Promote Mt Moon through App editing so it becomes the later protected explicit override.
+    fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
+    fireEvent.click(screen.getByRole('button', { name: /Mt\. Moon.*Auto-filled/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Edit Mankey #1' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Close editor' }));
+
+    // Copy Brock to Misty. Only active members auto-level; boxed Mankey #2 stays level 5.
+    fireEvent.click(screen.getByRole('button', { name: 'Major Events' }));
+    fireEvent.click(screen.getByRole('button', { name: /Misty.*Auto-filled/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Copy previous' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Auto-level active party' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Create Misty keyframe' }));
+    const mistyReserve = screen.getByRole('region', { name: /Reserve.*1 Pok/i });
+    expect(mistyReserve).toHaveTextContent('Mankey #2');
+    expect(mistyReserve).toHaveTextContent('Lv 5');
+    await waitFor(async () => {
+      const timeline = (await active.get()!.list())[0].timeline;
+      expect(timeline.keyframes['misty-gym'].snapshots[starterMemberId].level).toBe(21);
+      expect(timeline.keyframes['misty-gym'].snapshots[mankeyOneId].level).toBe(21);
+      expect(timeline.keyframes['misty-gym'].snapshots[mankeyTwoId].level).toBe(5);
+    });
+
+    // A forward replacement affects Brock but stops at the explicit Mt Moon override.
+    fireEvent.click(screen.getByRole('button', { name: /Brock.*Explicit/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Edit Mankey #2' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Replace party slot 1 with Mankey #2' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'Here and future populated milestones' }));
+    expect(screen.getByRole('status')).toHaveTextContent('1 protected');
+    fireEvent.click(screen.getByRole('button', { name: 'Apply change' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Close editor' }));
+    await waitFor(async () => {
+      const timeline = (await active.get()!.list())[0].timeline;
+      expect(timeline.keyframes['brock-gym'].party[0]).toBe(mankeyTwoId);
+      expect(timeline.overrides['mt-moon'].party[0]).toBe(starterMemberId);
+      expect(timeline.keyframes['misty-gym'].party[0]).toBe(starterMemberId);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
     fireEvent.click(screen.getByRole('button', { name: /^Route 1 .*Auto-filled/i }));
     expect(screen.queryByText(/^Mankey #/)).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: /^Route 22 .*Auto-filled/i }));
+    fireEvent.click(screen.getByRole('button', { name: /^Route 22 .*Explicit/i }));
     expect(screen.getByText('Mankey #1')).toBeVisible();
     expect(screen.getByText('Mankey #2')).toBeVisible();
 
     fireEvent.click(screen.getByRole('button', { name: 'Major Events' }));
     fireEvent.click(screen.getByRole('button', { name: /Misty.*Explicit/i }));
-    const mistyReserve = screen.getByRole('region', { name: /Reserve.*1 Pok/i });
-    expect(mistyReserve).toHaveTextContent('Mankey #2');
-    expect(mistyReserve).toHaveTextContent('Lv 5');
-
     fireEvent.click(screen.getByRole('button', { name: 'Edit Mankey #2' }));
     fireEvent.click(screen.getByRole('button', { name: 'Release Mankey #2' }));
     fireEvent.click(screen.getByRole('button', { name: 'Confirm release' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Restore Mankey #2' }));
     fireEvent.click(screen.getByRole('button', { name: 'Confirm restore' }));
     await waitFor(async () => {
-      const member = (await seeded.get()!.list())[0].timeline.members[mankeyTwoId];
+      const member = (await active.get()!.list())[0].timeline.members[mankeyTwoId];
       expect(member.lifecycle.slice(-2).map((event) => event.type)).toEqual(['released', 'restored']);
     });
     fireEvent.click(screen.getByRole('button', { name: 'Edit Mankey #2' }));
@@ -380,17 +430,17 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('radio', { name: 'This milestone only' }));
     fireEvent.click(screen.getByRole('button', { name: 'Apply change' }));
     await waitFor(async () => {
-      expect((await seeded.get()!.list())[0].timeline.members[mankeyTwoId].origin.type).toBe('hatched');
+      expect((await active.get()!.list())[0].timeline.members[mankeyTwoId].origin.type).toBe('hatched');
     });
     await waitFor(() => expect(within(restoredEditor).getByText('Hatched Pokémon')).toBeVisible());
     fireEvent.click(screen.getByRole('button', { name: 'Close editor' }));
 
-    const overrideIdsBeforePromotion = Object.keys((await seeded.get()!.list())[0].timeline.overrides).sort();
+    const overrideIdsBeforePromotion = Object.keys((await active.get()!.list())[0].timeline.overrides).sort();
     fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
     fireEvent.click(screen.getByRole('button', { name: /^Route 2 .*Auto-filled/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Edit Mankey #1' }));
     await waitFor(async () => {
-      const overrideIds = Object.keys((await seeded.get()!.list())[0].timeline.overrides).sort();
+      const overrideIds = Object.keys((await active.get()!.list())[0].timeline.overrides).sort();
       expect(overrideIds).toEqual([...overrideIdsBeforePromotion, 'kanto-route-2'].sort());
     });
     fireEvent.click(screen.getByRole('button', { name: 'Close editor' }));
@@ -402,7 +452,22 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Export plan code' }));
     const planCode = (await screen.findByLabelText('Plan code export')) as HTMLTextAreaElement;
     expect(planCode.value).toMatch(/^PP1\./);
-    const exportedState = (await seeded.get()!.list())[0];
+    const exportedState = (await active.get()!.list())[0];
+
+    // Preview, cancel, and invalid input are non-mutating even with a live run and repository.
+    fireEvent.change(screen.getByLabelText('Import plan code'), { target: { value: 'PP1.not-valid' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Preview plan code' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/plan code import failed/i);
+    expect(await active.get()!.list()).toEqual([exportedState]);
+    expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
+    fireEvent.change(screen.getByLabelText('Import plan code'), { target: { value: planCode.value } });
+    fireEvent.click(screen.getByRole('button', { name: 'Preview plan code' }));
+    expect(await screen.findByRole('dialog', { name: 'Plan code import preview' })).toBeVisible();
+    expect(await active.get()!.list()).toEqual([exportedState]);
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel plan code import' }));
+    expect(screen.queryByRole('dialog', { name: 'Plan code import preview' })).toBeNull();
+    expect(await active.get()!.list()).toEqual([exportedState]);
+
     first.unmount();
 
     const clean = sharedRepoFactory();
@@ -417,5 +482,25 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Confirm plan code import' }));
     await waitFor(async () => expect((await clean.get()!.list())[0]).toEqual(exportedState));
     expect(await screen.findByRole('region', { name: /team timeline/i })).toBeVisible();
+  }, 30_000);
+
+  it('reports a schema-valid oversized plan-code export without crashing or mutating the run', async () => {
+    const active = sharedRepoFactory();
+    const props = baseProps({ openRepository: active.factory });
+    const first = render(<App {...props} />);
+    await createRun();
+    const original = (await active.get()!.list())[0];
+    const oversized = { ...original, notes: 'x'.repeat(4 * 1024 * 1024 + 1) };
+    await active.get()!.put(oversized);
+    first.unmount();
+
+    render(<App {...props} />);
+    await screen.findByRole('region', { name: /team timeline/i });
+    fireEvent.click(screen.getByRole('button', { name: 'Export plan code' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/export.*too large|expanded size/i);
+    expect(screen.queryByLabelText('Plan code export')).toBeNull();
+    expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
+    expect(await active.get()!.list()).toEqual([oversized]);
   }, 20_000);
 });

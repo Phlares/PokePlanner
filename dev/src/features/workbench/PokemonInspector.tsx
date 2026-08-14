@@ -24,6 +24,9 @@ export interface PokemonInspectorProps {
   context: AvailabilityContext;
   /** Emitted when a planned-level, ability, or move edit changes the proposed member. */
   onDraftMember?: (draft: MemberDraft) => void;
+  /** Commits the currently displayed draft through the owning workbench. */
+  onAddMember?: (draft: MemberDraft) => void;
+  addMemberLabel?: string;
 }
 
 const STAT_ROWS: ReadonlyArray<readonly [keyof PokemonRecord['baseStats'], string]> = [
@@ -97,7 +100,7 @@ function provenanceText(entry: Provenance): string {
  * upward; nothing here simulates battles, opponents, exposure, or catch odds. Missing sprites are
  * simply omitted — the panel is data-forward and never blocks on artwork.
  */
-export function PokemonInspector({ pokemonId, pack, context, onDraftMember }: PokemonInspectorProps) {
+export function PokemonInspector({ pokemonId, pack, context, onDraftMember, onAddMember, addMemberLabel }: PokemonInspectorProps) {
   const species = useMemo(
     () => pack.pokemon.find((record) => record.id === pokemonId) ?? null,
     [pack, pokemonId],
@@ -147,6 +150,13 @@ export function PokemonInspector({ pokemonId, pack, context, onDraftMember }: Po
       ...patch,
     });
   };
+
+  const currentDraft = (): MemberDraft => ({
+    speciesId: species.id,
+    level: plannedLevel,
+    abilityId,
+    moves: plannedMoves,
+  });
 
   const onLevelChange = (value: string): void => {
     const level = Number.parseInt(value, 10);
@@ -279,6 +289,11 @@ export function PokemonInspector({ pokemonId, pack, context, onDraftMember }: Po
             </label>
           )}
         </div>
+        {onAddMember && addMemberLabel && (
+          <button type="button" className="app-tool-button" onClick={() => onAddMember(currentDraft())}>
+            {addMemberLabel}
+          </button>
+        )}
       </section>
 
       <section className="inspector-section" aria-labelledby="inspector-moves-heading">

@@ -5,7 +5,7 @@ import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '.
 import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
 import type { ProgressionContext } from '../../domain/rules/game-rules';
 import { evaluateCapability } from '../../domain/timeline/capabilities';
-import { releaseMember, restoreMember } from '../../domain/timeline/commands';
+import { acquireMember, moveToReserve, placeInParty, releaseMember, restoreMember } from '../../domain/timeline/commands';
 import type { TimelineKeyframe, TimelineState } from '../../domain/timeline/model';
 import {
   resolveTimelineNode,
@@ -131,6 +131,8 @@ export interface WorkbenchProps {
   onPlaythroughChange: (next: Playthrough) => void;
   /** Injected clock; defaults to `Date.now` so the emitted `updatedAt` stays caller-controlled. */
   now?: () => number;
+  /** Injected identity source shared with setup so every acquired member is durable and distinct. */
+  createId?: () => string;
 }
 
 /**
@@ -138,10 +140,16 @@ export interface WorkbenchProps {
  * region, a contextual inspector region, and the full-width milestone team timeline. Selected route,
  * event, and search text are ephemeral view state owned here; only milestone changes are
  * validated and emitted upward for App to persist. Selecting a wild Pokémon in the encounter
- * table opens the inspector in place; inspector drafts remain local until the later timeline editor
- * connects candidate inspection to member edits.
+ * table opens the inspector in place; the inspector can commit a candidate into the active preview
+ * checkpoint while field edits continue through the scoped timeline editor.
  */
-export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.now }: WorkbenchProps) {
+export function Workbench({
+  pack,
+  playthrough,
+  onPlaythroughChange,
+  now = Date.now,
+  createId = () => crypto.randomUUID(),
+}: WorkbenchProps) {
   const index = useMemo(() => packIndexOf(pack), [pack]);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [, setSelectedEventId] = useState<string | null>(null);
@@ -299,6 +307,33 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
     onPlaythroughChange(next);
   };
 
+  const addDraftToPreviewParty = (draft: MemberDraft): void => {
+    const targetNodeId = playthrough.previewMilestoneId ?? playthrough.currentMilestoneId;
+    if (targetNodeId === null) return;
+    const target = playthrough.timeline.keyframes[targetNodeId] ?? playthrough.timeline.overrides[targetNodeId];
+    const slot = target?.party.findIndex((memberId) => memberId === null) ?? -1;
+    if (!target || slot < 0 || slot > 5) return;
+    const routeOrder = new Map(pack.progression.nodes.map((node) => [node.id, node.goldenPathOrder]));
+    const acquisitionNodeId = [...(pack.indexes.routesByPokemon[String(draft.speciesId)] ?? [])]
+      .sort((left, right) => (routeOrder.get(left) ?? Number.MAX_SAFE_INTEGER) - (routeOrder.get(right) ?? Number.MAX_SAFE_INTEGER))[0]
+      ?? targetNodeId;
+    const memberId = createId();
+    const acquired = acquireMember(playthrough.timeline, {
+      memberId,
+      speciesId: draft.speciesId,
+      nodeId: acquisitionNodeId,
+      abilityId: draft.abilityId,
+      level: draft.level,
+      moves: draft.moves,
+      heldItemId: null,
+      origin: { type: 'inferred', acquisitionId: null, note: null },
+      nickname: null,
+      natureId: null,
+      notes: '',
+    }, index);
+    emit({ timeline: placeInParty(acquired, targetNodeId, memberId, slot as 0 | 1 | 2 | 3 | 4 | 5, index) });
+  };
+
   const selectSearchResult = (pokemonId: number): void => {
     setSelectedPokemonId(pokemonId);
   };
@@ -369,6 +404,10 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
             setReleaseFocusMemberId(memberId);
             setEditorSelection(null);
           }}
+          onRequestMoveToReserve={(nodeId, memberId) => {
+            emit({ timeline: moveToReserve(editorTimeline, nodeId, memberId, index) });
+            setEditorSelection(null);
+          }}
         />
       )}
 
@@ -425,6 +464,12 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
             pack={pack}
             context={availabilityContext}
             onDraftMember={setMemberDraft}
+            onAddMember={addDraftToPreviewParty}
+            addMemberLabel={(() => {
+              const species = pack.pokemon.find((record) => record.id === selectedPokemonId);
+              const target = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === playthrough.previewMilestoneId);
+              return species && target ? `Add ${species.name} to ${target.name} party` : undefined;
+            })()}
           />
         )}
       </section>
