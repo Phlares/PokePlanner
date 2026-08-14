@@ -7,7 +7,7 @@ export interface MemberPoolProps {
   snapshots: Readonly<Record<string, MemberSnapshot>>;
   speciesName: (speciesId: number) => string;
   onEditMember?: (memberId: string) => void;
-  onRestoreMember?: (memberId: string) => void;
+  onRequestRestore?: (memberId: string) => void;
 }
 
 function speciesCounts(members: Readonly<Record<string, PersistentMember>>): ReadonlyMap<number, number> {
@@ -30,7 +30,7 @@ export function memberDisplayName(
 }
 
 /** An unbounded ownership pool. Reserve and released members are rendered by separate instances. */
-export function MemberPool({ kind, memberIds, members, snapshots, speciesName, onEditMember, onRestoreMember }: MemberPoolProps) {
+export function MemberPool({ kind, memberIds, members, snapshots, speciesName, onEditMember, onRequestRestore }: MemberPoolProps) {
   const title = kind === 'reserve' ? 'Reserve' : 'Released';
   const counts = speciesCounts(members);
   return (
@@ -54,8 +54,8 @@ export function MemberPool({ kind, memberIds, members, snapshots, speciesName, o
                   Edit
                 </button>
               )}
-              {kind === 'released' && onRestoreMember && (
-                <button type="button" className="timeline-text-action" aria-label={`Restore ${name}`} onClick={() => onRestoreMember(memberId)}>
+              {kind === 'released' && onRequestRestore && (
+                <button type="button" className="timeline-text-action" aria-label={`Restore ${name}`} onClick={() => onRequestRestore(memberId)}>
                   Restore
                 </button>
               )}

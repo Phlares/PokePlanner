@@ -39,6 +39,39 @@ function emptyPlaythrough(): Playthrough {
   );
 }
 
+function starterPlaythrough(placement: 'party' | 'released' = 'party'): Playthrough {
+  const starter = pack.pokemon.find((record) => record.id === 1)!;
+  const base = emptyPlaythrough();
+  return parsePlaythrough({
+    ...base,
+    currentMilestoneId: 'starter',
+    previewMilestoneId: 'brock-gym',
+    timeline: {
+      members: {
+        starter: {
+          id: 'starter', originalSpeciesId: 1, speciesSequence: 1, nickname: null, natureId: null,
+          origin: { type: 'inferred', acquisitionId: null, note: null }, acquiredAtNodeId: 'starter', notes: '', lifecycle: [],
+        },
+      },
+      keyframes: {
+        starter: {
+          nodeId: 'starter', kind: 'major',
+          party: placement === 'party' ? ['starter', null, null, null, null, null] : [null, null, null, null, null, null],
+          reserve: [], released: placement === 'released' ? ['starter'] : [],
+          snapshots: {
+            starter: {
+              speciesId: 1, level: 5, abilityId: starter.abilities[0].id, moves: [], heldItemId: null,
+              placement, partySlot: placement === 'party' ? 0 : null, review: { moves: false, heldItem: false },
+            },
+          },
+        },
+      },
+      overrides: {},
+      preferences: { levelMode: 'manual', autoEvolveLevel: false },
+    },
+  }, packIndex());
+}
+
 function renderWorkbench(overrides: Partial<Parameters<typeof Workbench>[0]> = {}) {
   const onPlaythroughChange = vi.fn();
   render(
@@ -74,38 +107,20 @@ describe('Workbench', () => {
 
   it('resolves a starter-acquired member into detailed route states', () => {
     const starter = pack.pokemon.find((record) => record.id === 1)!;
-    const base = emptyPlaythrough();
-    const playthrough = parsePlaythrough({
-      ...base,
-      currentMilestoneId: 'starter',
-      previewMilestoneId: 'brock-gym',
-      timeline: {
-        members: {
-          starter: {
-            id: 'starter', originalSpeciesId: 1, speciesSequence: 1, nickname: null, natureId: null,
-            origin: { type: 'inferred', acquisitionId: null, note: null }, acquiredAtNodeId: 'starter', notes: '', lifecycle: [],
-          },
-        },
-        keyframes: {
-          starter: {
-            nodeId: 'starter', kind: 'major', party: ['starter', null, null, null, null, null], reserve: [], released: [],
-            snapshots: {
-              starter: {
-                speciesId: 1, level: 5, abilityId: starter.abilities[0].id, moves: [], heldItemId: null,
-                placement: 'party', partySlot: 0, review: { moves: false, heldItem: false },
-              },
-            },
-          },
-        },
-        overrides: {},
-        preferences: { levelMode: 'manual', autoEvolveLevel: false },
-      },
-    }, packIndex());
-
-    renderWorkbench({ playthrough });
+    renderWorkbench({ playthrough: starterPlaythrough() });
     expect(screen.getByRole('region', { name: /party · 1 of 6 pokémon/i })).toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
     expect(screen.getByText(starter.name)).toBeVisible();
+    expect(screen.queryByRole('button', { name: /^Edit /i })).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Restore /i })).toBeNull();
+  });
+
+  it('does not expose immediate restore actions for released members', () => {
+    const { onPlaythroughChange } = renderWorkbench({ playthrough: starterPlaythrough('released') });
+
+    expect(screen.getByRole('region', { name: /released .* 1 pok/i })).toBeVisible();
+    expect(screen.queryByRole('button', { name: /^Restore /i })).toBeNull();
+    expect(onPlaythroughChange).not.toHaveBeenCalled();
   });
 
   it('selects a route into the table region without touching saved state', () => {

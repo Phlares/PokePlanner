@@ -180,7 +180,7 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
           timeline={playthrough.timeline}
           majorNodes={majorNodes}
           detailedNodes={detailedNodes}
-          findings={[]}
+          findingsByNode={{}}
           pack={index}
           speciesName={(speciesId) => speciesNames.get(speciesId) ?? `Species #${speciesId}`}
           onChange={(timeline) => emit({ timeline })}

@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { TimelineResolverPackView } from '../../domain/timeline/resolver';
 import type { TimelineState } from '../../domain/timeline/model';
+import type { TimelineFinding } from '../../domain/timeline/validation';
 import { TeamTimeline, type TimelineDisplayNode } from './TeamTimeline';
 
 const party = (memberId: string | null) => [memberId, null, null, null, null, null] as const;
@@ -105,7 +106,7 @@ function renderTimeline(overrides: Partial<Parameters<typeof TeamTimeline>[0]> =
       majorNodes={[brockResolved, mistyResolved]}
       detailedNodes={[routeResolved]}
       initialNodeId="misty-gym"
-      findings={[]}
+      findingsByNode={{}}
       pack={pack}
       speciesName={(id) => id === 1 ? 'Bulbasaur' : id === 2 ? 'Ivysaur' : `Species ${id}`}
       onChange={onChange}
@@ -122,6 +123,7 @@ describe('TeamTimeline', () => {
   it('copies the previous milestone with level and level-evolution options', () => {
     const { onChange } = renderTimeline();
     fireEvent.click(screen.getByRole('button', { name: 'Copy previous' }));
+    expect(screen.getByRole('group', { name: 'Copy Brock to Misty' })).toBeVisible();
     fireEvent.click(screen.getByRole('checkbox', { name: 'Auto-level active party' }));
     fireEvent.click(screen.getByRole('checkbox', { name: 'Auto-evolve level evolutions' }));
     fireEvent.click(screen.getByRole('button', { name: 'Create Misty keyframe' }));
@@ -138,8 +140,11 @@ describe('TeamTimeline', () => {
     expect(within(screen.getByRole('region', { name: /Party · 1 of 6 Pokémon/i })).getAllByRole('listitem')).toHaveLength(6);
   });
 
-  it('resolves Detailed Planning routes and promotes an edited auto-filled node to an override', () => {
-    const { onChange, onEditMember } = renderTimeline();
+  it('promotes an auto-filled node and immediately opens its editor from the same action', () => {
+    const actions: string[] = [];
+    const onChange = vi.fn((_next: TimelineState) => actions.push('promote'));
+    const onEditMember = vi.fn((_nodeId: string, _memberId: string) => actions.push('edit'));
+    renderTimeline({ onChange, onEditMember });
     fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
     fireEvent.click(screen.getByRole('button', { name: /Route 22.*Auto-filled/i }));
     expect(screen.getByText('Auto-filled', { selector: '.timeline-state-label' })).toBeVisible();
@@ -148,9 +153,18 @@ describe('TeamTimeline', () => {
     const next = onChange.mock.calls.at(-1)?.[0] as TimelineState;
     expect(next.overrides['kanto-route-22']).toMatchObject({ nodeId: 'kanto-route-22', kind: 'override' });
     expect(onEditMember).toHaveBeenCalledWith('kanto-route-22', 'starter');
+    expect(actions).toEqual(['promote', 'edit']);
   });
 
-  it('restores a released identity to the unbounded reserve through the lifecycle command', () => {
+  it('does not render or promote edit actions without an editor callback', () => {
+    const { onChange } = renderTimeline({ onEditMember: undefined });
+    fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
+
+    expect(screen.queryByRole('button', { name: 'Edit Bulbasaur' })).toBeNull();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('requests a released-member restore without mutating timeline state', () => {
     const released = timeline();
     const snapshot = released.keyframes['brock-gym'].snapshots.starter;
     released.keyframes['brock-gym'] = {
@@ -168,17 +182,42 @@ describe('TeamTimeline', () => {
         snapshots: released.keyframes['brock-gym'].snapshots,
       },
     };
+    const onRequestRestore = vi.fn();
     const { onChange } = renderTimeline({
       timeline: released,
       majorNodes: [releasedBrock],
       detailedNodes: [],
       initialNodeId: 'brock-gym',
+      onRequestRestore,
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'Restore Bulbasaur' }));
-    const next = onChange.mock.calls[0][0] as TimelineState;
-    expect(next.keyframes['brock-gym'].reserve).toContain('starter');
-    expect(next.members.starter.lifecycle.at(-1)?.type).toBe('restored');
+    expect(onRequestRestore).toHaveBeenCalledWith('brock-gym', 'starter');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('updates ruler counts and the selected-node finding summary together', () => {
+    const finding = (code: string): TimelineFinding => ({
+      code,
+      severity: 'review',
+      memberId: 'starter',
+      field: 'member',
+      summary: code,
+      explanation: code,
+      evidenceIds: [],
+      resolutions: [],
+    });
+    renderTimeline({
+      findingsByNode: {
+        'brock-gym': [finding('brock')],
+        'misty-gym': [finding('misty-1'), finding('misty-2')],
+      },
+    });
+
+    expect(screen.getByText('2 findings')).toBeVisible();
+    expect(screen.getByRole('button', { name: /Misty.*2 findings/i })).toHaveAttribute('aria-current', 'step');
+    fireEvent.click(screen.getByRole('button', { name: /Brock.*1 findings/i }));
+    expect(screen.getByText('1 finding')).toBeVisible();
   });
 
   it('summarizes an injected propagation preview without applying it', () => {

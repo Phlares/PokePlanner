@@ -25,6 +25,7 @@ describe('MilestoneRuler', () => {
       />,
     );
 
+    expect(screen.getByRole('group', { name: 'Timeline detail' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Major Events' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: /Brock.*level 14.*Explicit/i })).toHaveAttribute('aria-current', 'step');
   });

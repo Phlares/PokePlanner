@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { LevelMode } from '../../domain/rules/game-rules';
-import { copyKeyframe, restoreMember } from '../../domain/timeline/commands';
+import { copyKeyframe } from '../../domain/timeline/commands';
 import type { TimelineKeyframe, TimelineState } from '../../domain/timeline/model';
 import type { PropagationPreview } from '../../domain/timeline/propagation';
 import type { ResolvedTimelineNode, TimelineResolverPackView } from '../../domain/timeline/resolver';
@@ -22,12 +22,13 @@ export interface TeamTimelineProps {
   timeline: TimelineState;
   majorNodes: readonly TimelineDisplayNode[];
   detailedNodes: readonly TimelineDisplayNode[];
-  findings: readonly TimelineFinding[];
+  findingsByNode: Readonly<Record<string, readonly TimelineFinding[]>>;
   pack: TimelineResolverPackView;
   speciesName: (speciesId: number) => string;
   onChange: (next: TimelineState) => void;
   initialNodeId?: string;
   onEditMember?: (nodeId: string, memberId: string) => void;
+  onRequestRestore?: (nodeId: string, memberId: string) => void;
   propagationPreview?: PropagationPreview | null;
 }
 
@@ -59,12 +60,13 @@ export function TeamTimeline({
   timeline,
   majorNodes,
   detailedNodes,
-  findings,
+  findingsByNode,
   pack,
   speciesName,
   onChange,
   initialNodeId,
   onEditMember,
+  onRequestRestore,
   propagationPreview = null,
 }: TeamTimelineProps) {
   const initialMajor = majorNodes.find((node) => node.id === initialNodeId) ?? majorNodes[0] ?? detailedNodes[0];
@@ -117,31 +119,31 @@ export function TeamTimeline({
   };
 
   const editMember = (memberId: string): void => {
+    if (!onEditMember) return;
     if (selected.resolved.source === 'auto-filled') {
       onChange({
         ...timeline,
         overrides: { ...timeline.overrides, [selected.id]: overrideFrom(selected.resolved) },
       });
     }
-    onEditMember?.(selected.id, memberId);
-  };
-
-  const restore = (memberId: string): void => {
-    const editable = selected.resolved.source === 'auto-filled'
-      ? { ...timeline, overrides: { ...timeline.overrides, [selected.id]: overrideFrom(selected.resolved) } }
-      : timeline;
-    onChange(restoreMember(editable, selected.id, memberId, pack));
+    onEditMember(selected.id, memberId);
   };
 
   const counts = memberSpeciesCounts(timeline);
   const sourceLabel = timelineSourceLabel(selected.resolved.source);
+  const selectedFindings = findingsByNode[selected.id] ?? [];
+  const findingSummary = `${selectedFindings.length} ${selectedFindings.length === 1 ? 'finding' : 'findings'}`;
   const filledPartyCount = selected.resolved.party.filter((memberId) => memberId !== null).length;
 
   return (
     <div className="team-timeline" data-source={selected.resolved.source}>
       <MilestoneRuler
         mode={mode}
-        nodes={visibleNodes.map((node) => ({ ...node, source: node.resolved.source }))}
+        nodes={visibleNodes.map((node) => ({
+          ...node,
+          source: node.resolved.source,
+          findingCount: findingsByNode[node.id]?.length ?? 0,
+        }))}
         selectedNodeId={selected.id}
         onModeChange={selectMode}
         onSelectNode={selectNode}
@@ -155,7 +157,7 @@ export function TeamTimeline({
         <div className="timeline-node-meta">
           <span className="timeline-state-label" data-source={selected.resolved.source}>{sourceLabel}</span>
           <span>Target Lv {selected.targetLevel}</span>
-          <span>{findings.length} findings</span>
+          <span>{findingSummary}</span>
         </div>
       </header>
 
@@ -165,7 +167,7 @@ export function TeamTimeline({
             Copy previous
           </button>
           {copyOpen && (
-            <div className="timeline-copy-options" aria-label={`Copy ${priorPopulated.name} to ${selected.name}`}>
+            <div className="timeline-copy-options" role="group" aria-label={`Copy ${priorPopulated.name} to ${selected.name}`}>
               <label>
                 <input type="checkbox" checked={autoLevel} onChange={(event) => setAutoLevel(event.currentTarget.checked)} />
                 Auto-level active party
@@ -219,9 +221,11 @@ export function TeamTimeline({
                   <>
                     <span className="timeline-member-name">{name}</span>
                     <span className="timeline-member-level">Lv {snapshot.level}</span>
-                    <button type="button" className="timeline-text-action" aria-label={`Edit ${name}`} onClick={() => editMember(memberId!)}>
-                      Edit
-                    </button>
+                    {onEditMember && (
+                      <button type="button" className="timeline-text-action" aria-label={`Edit ${name}`} onClick={() => editMember(memberId!)}>
+                        Edit
+                      </button>
+                    )}
                   </>
                 )}
               </li>
@@ -237,7 +241,7 @@ export function TeamTimeline({
           members={timeline.members}
           snapshots={selected.resolved.snapshots}
           speciesName={speciesName}
-          onEditMember={editMember}
+          onEditMember={onEditMember ? editMember : undefined}
         />
         <MemberPool
           kind="released"
@@ -245,8 +249,8 @@ export function TeamTimeline({
           members={timeline.members}
           snapshots={selected.resolved.snapshots}
           speciesName={speciesName}
-          onEditMember={editMember}
-          onRestoreMember={restore}
+          onEditMember={onEditMember ? editMember : undefined}
+          onRequestRestore={onRequestRestore ? (memberId) => onRequestRestore(selected.id, memberId) : undefined}
         />
       </div>
     </div>

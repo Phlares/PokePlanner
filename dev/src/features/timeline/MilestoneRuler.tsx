@@ -28,7 +28,7 @@ export function timelineSourceLabel(source: ResolvedTimelineNode['source']): str
 export function MilestoneRuler({ mode, nodes, selectedNodeId, onModeChange, onSelectNode }: MilestoneRulerProps) {
   return (
     <nav className="timeline-ruler" aria-label="Milestone ruler">
-      <div className="timeline-view-toggle" aria-label="Timeline detail">
+      <div className="timeline-view-toggle" role="group" aria-label="Timeline detail">
         <button
           type="button"
           aria-pressed={mode === 'major'}
