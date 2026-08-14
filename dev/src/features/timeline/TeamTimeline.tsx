@@ -31,6 +31,8 @@ export interface TeamTimelineProps {
   onRequestRestore?: (nodeId: string, memberId: string) => void;
   releaseFocusMemberId?: string | null;
   onReleaseFocusHandled?: () => void;
+  reserveFocusMemberId?: string | null;
+  onReserveFocusHandled?: () => void;
   propagationPreview?: PropagationPreview | null;
 }
 
@@ -71,6 +73,8 @@ export function TeamTimeline({
   onRequestRestore,
   releaseFocusMemberId = null,
   onReleaseFocusHandled,
+  reserveFocusMemberId = null,
+  onReserveFocusHandled,
   propagationPreview = null,
 }: TeamTimelineProps) {
   const initialMajor = majorNodes.find((node) => node.id === initialNodeId) ?? majorNodes[0] ?? detailedNodes[0];
@@ -260,8 +264,11 @@ export function TeamTimeline({
           snapshots={selected.resolved.snapshots}
           speciesName={speciesName}
           onEditMember={onEditMember ? editMember : undefined}
-          focusMemberId={restoreFocusMemberId}
-          onFocusHandled={() => setRestoreFocusMemberId(null)}
+          focusMemberId={restoreFocusMemberId ?? reserveFocusMemberId}
+          onFocusHandled={() => {
+            if (restoreFocusMemberId !== null) setRestoreFocusMemberId(null);
+            else onReserveFocusHandled?.();
+          }}
         />
         <MemberPool
           kind="released"

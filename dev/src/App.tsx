@@ -282,7 +282,8 @@ export function App({
       setPlanCodeExportError(null);
     } catch (error) {
       setPlanCodeExport(null);
-      setPlanCodeExportError(error instanceof Error ? error.message : 'Plan code could not be exported.');
+      const reason = error instanceof Error ? error.message : 'Plan code could not be exported.';
+      setPlanCodeExportError(`${reason} Shorten notes, or prepare Download JSON to save the complete run.`);
     }
   };
 
@@ -410,7 +411,10 @@ export function App({
                   Export plan code
                 </button>
                 {planCodeExportError !== null && (
-                  <p role="alert" className="app-error">Plan code export failed: {planCodeExportError}</p>
+                  <>
+                    <p role="alert" className="app-error">Plan code export failed: {planCodeExportError}</p>
+                    <button type="button" className="app-tool-button" onClick={handleExport}>Prepare Download JSON</button>
+                  </>
                 )}
                 {planCodeExport !== null && (
                   <textarea

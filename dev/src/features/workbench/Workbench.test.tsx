@@ -304,6 +304,27 @@ describe('Workbench', () => {
     expect(originalEdit).not.toBeInTheDocument();
   });
 
+  it('moves focus to the boxed member Reserve Edit control after the controlled rerender', async () => {
+    function ControlledWorkbench() {
+      const [playthrough, setPlaythrough] = useState(() => starterPlaythrough());
+      return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
+    }
+
+    render(<ControlledWorkbench />);
+    const originalEdit = screen.getByRole('button', { name: 'Edit Bulbasaur' });
+    originalEdit.focus();
+    fireEvent.click(originalEdit);
+    expect(document.querySelector<HTMLElement>('.workbench-rail')).toHaveAttribute('inert');
+    fireEvent.click(screen.getByRole('button', { name: 'Move Bulbasaur to reserve' }));
+
+    const reserve = await screen.findByRole('region', { name: /Reserve .* 1 Pok/i });
+    const reserveEdit = within(reserve).getByRole('button', { name: 'Edit Bulbasaur' });
+    await waitFor(() => expect(reserveEdit).toHaveFocus());
+    expect(document.activeElement).toBe(reserveEdit);
+    expect(document.querySelector<HTMLElement>('.workbench-rail')).not.toHaveAttribute('inert');
+    expect(originalEdit).not.toBeInTheDocument();
+  });
+
   it('atomically reconciles Caterpie ability and moves when evolving to Metapod', () => {
     const { onPlaythroughChange } = renderWorkbench({ playthrough: speciesPlaythrough(10, [33, 81]) });
     fireEvent.click(screen.getByRole('button', { name: 'Edit Caterpie' }));

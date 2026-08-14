@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from './App';
 import { MILESTONE_ORDER } from './domain/availability';
 import type { Playthrough } from './domain/playthrough';
+import { encodePlanCode } from './persistence/plan-code';
 import {
   MemoryPlaythroughRepository,
   type PlaythroughRepository,
@@ -460,10 +461,16 @@ describe('App boot and persistence', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(/plan code import failed/i);
     expect(await active.get()!.list()).toEqual([exportedState]);
     expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
-    fireEvent.change(screen.getByLabelText('Import plan code'), { target: { value: planCode.value } });
+    const differentPlanCode = encodePlanCode({
+      ...exportedState,
+      id: 'different-valid-preview',
+      name: 'Different valid preview',
+    });
+    fireEvent.change(screen.getByLabelText('Import plan code'), { target: { value: differentPlanCode } });
     fireEvent.click(screen.getByRole('button', { name: 'Preview plan code' }));
-    expect(await screen.findByRole('dialog', { name: 'Plan code import preview' })).toBeVisible();
+    expect(await screen.findByRole('dialog', { name: 'Plan code import preview' })).toHaveTextContent('Different valid preview');
     expect(await active.get()!.list()).toEqual([exportedState]);
+    expect(JSON.parse((screen.getByLabelText('Playthrough export JSON') as HTMLTextAreaElement).value).name).toBe('Timeline acceptance');
     fireEvent.click(screen.getByRole('button', { name: 'Cancel plan code import' }));
     expect(screen.queryByRole('dialog', { name: 'Plan code import preview' })).toBeNull();
     expect(await active.get()!.list()).toEqual([exportedState]);
@@ -498,7 +505,11 @@ describe('App boot and persistence', () => {
     await screen.findByRole('region', { name: /team timeline/i });
     fireEvent.click(screen.getByRole('button', { name: 'Export plan code' }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(/export.*too large|expanded size/i);
+    const exportError = await screen.findByRole('alert');
+    expect(exportError).toHaveTextContent(/export.*too large|expanded size/i);
+    expect(exportError).toHaveTextContent(/shorten notes/i);
+    expect(exportError).toHaveTextContent(/download json/i);
+    expect(screen.getByRole('button', { name: 'Prepare Download JSON' })).toBeEnabled();
     expect(screen.queryByLabelText('Plan code export')).toBeNull();
     expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
     expect(await active.get()!.list()).toEqual([oversized]);

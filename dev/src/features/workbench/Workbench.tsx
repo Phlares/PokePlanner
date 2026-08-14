@@ -158,6 +158,7 @@ export function Workbench({
   const [searchActive, setSearchActive] = useState(false);
   const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(null);
   const [releaseFocusMemberId, setReleaseFocusMemberId] = useState<string | null>(null);
+  const [reserveFocusMemberId, setReserveFocusMemberId] = useState<string | null>(null);
 
   const availabilityContext = useMemo(
     () => ({
@@ -362,6 +363,8 @@ export function Workbench({
           }}
           releaseFocusMemberId={releaseFocusMemberId}
           onReleaseFocusHandled={() => setReleaseFocusMemberId(null)}
+          reserveFocusMemberId={reserveFocusMemberId}
+          onReserveFocusHandled={() => setReserveFocusMemberId(null)}
         />
       </section>
 
@@ -405,6 +408,7 @@ export function Workbench({
             setEditorSelection(null);
           }}
           onRequestMoveToReserve={(nodeId, memberId) => {
+            setReserveFocusMemberId(memberId);
             emit({ timeline: moveToReserve(editorTimeline, nodeId, memberId, index) });
             setEditorSelection(null);
           }}
