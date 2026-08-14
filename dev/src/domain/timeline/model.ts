@@ -51,6 +51,21 @@ export interface MemberSnapshot {
   review: { moves: boolean; heldItem: boolean };
 }
 
+/** The complete user-authored data needed to add one persistent member at a timeline node. */
+export interface MemberAcquisition {
+  memberId: string;
+  speciesId: number;
+  nodeId: string;
+  abilityId: number;
+  level: number;
+  moves: PlannedMove[];
+  heldItemId: number | null;
+  origin: MemberOrigin;
+  nickname: string | null;
+  natureId: string | null;
+  notes: string;
+}
+
 export interface TimelineKeyframe {
   nodeId: string;
   kind: 'major' | 'override';
