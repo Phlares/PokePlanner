@@ -14,6 +14,49 @@ import {
 type KeyframeCollection = 'keyframes' | 'overrides';
 export type MemberSnapshotPatch = Partial<Omit<MemberSnapshot, 'placement' | 'partySlot'>>;
 
+export type SnapshotEditableField = 'speciesId' | 'level' | 'abilityId' | 'moves' | 'heldItemId';
+
+export interface ReplaceSlotTimelineEdit {
+  kind: 'replace-slot';
+  nodeId: string;
+  slot: SlotIndex;
+  memberId: string;
+}
+
+export type SnapshotFieldTimelineEdit = {
+  [Field in SnapshotEditableField]: {
+    kind: 'snapshot-field';
+    nodeId: string | null;
+    memberId: string;
+    field: Field;
+    value: MemberSnapshot[Field];
+  };
+}[SnapshotEditableField];
+
+/** A propagation-safe edit names exactly one party slot or snapshot field. */
+export type TimelineEdit = ReplaceSlotTimelineEdit | SnapshotFieldTimelineEdit;
+
+/** Describe a slot replacement without mutating state so callers can preview its scope first. */
+export function replaceSlotEdit(nodeId: string, slot: SlotIndex, memberId: string): ReplaceSlotTimelineEdit {
+  assertPartySlot(slot);
+  return { kind: 'replace-slot', nodeId, slot, memberId };
+}
+
+/** Describe a single snapshot-field edit without changing placement or unrelated fields. */
+export function editSnapshotField<Field extends SnapshotEditableField>(
+  memberId: string,
+  field: Field,
+  value: MemberSnapshot[Field],
+  nodeId: string | null = null,
+): SnapshotFieldTimelineEdit {
+  return { kind: 'snapshot-field', nodeId, memberId, field, value } as SnapshotFieldTimelineEdit;
+}
+
+/** Convenience descriptor for the common ability-edit propagation flow. */
+export function editAbility(memberId: string, abilityId: number, nodeId: string | null = null): SnapshotFieldTimelineEdit {
+  return editSnapshotField(memberId, 'abilityId', abilityId, nodeId);
+}
+
 interface KeyframeLocation {
   collection: KeyframeCollection;
   keyframe: TimelineKeyframe;
