@@ -1,38 +1,24 @@
 import { z } from 'zod';
-import { validateTeamState, type MemberPackView, type TeamState } from './team';
+import { createEmptyTimeline, parseTimelineState, type TimelineState } from './timeline/model';
+import { createEmptyTeam, validateTeamState, type MemberPackView, type PlannedMove, type TeamMember, type TeamState } from './team';
 
-/**
- * The current on-disk schema version for a serialized playthrough. Bump this and add a
- * migration step whenever the persisted shape changes.
- */
-export const CURRENT_SCHEMA_VERSION = 1 as const;
+/** The current on-disk schema version for a serialized playthrough. */
+export const CURRENT_SCHEMA_VERSION = 2 as const;
+const LEGACY_SCHEMA_VERSION = 1 as const;
 
-/**
- * The injected id-resolution surface for a playthrough. It extends the team's member-legality
- * view with milestone and acquisition existence checks, so every id a playthrough references
- * can be validated against the pack without embedding any canonical data.
- */
+/** The injected id-resolution surface for a playthrough. */
 export interface PlaythroughPackIndex extends MemberPackView {
   hasMilestone(milestoneId: string): boolean;
   hasAcquisition(acquisitionId: string): boolean;
 }
 
-/**
- * Reserved Plan-3 live-run checkoff maps. Present for forward-compatibility but carry no
- * behavior in this plan; created empty and left empty.
- */
 export interface CheckoffMaps {
   routesCompleted: Record<string, boolean>;
   encountered: Record<string, boolean>;
   captured: Record<string, boolean>;
 }
 
-/**
- * A versioned, self-contained playthrough record. It stores only user choices and id/refs —
- * never canonical pack data. Game is fixed FireRed and type fixed Standard. The current and
- * preview milestone are deliberately distinct fields so a look-ahead never disturbs saved
- * progress.
- */
+/** A schema-v2 playthrough persists only user choices, ids and explicit timeline state. */
 export interface Playthrough {
   schemaVersion: typeof CURRENT_SCHEMA_VERSION;
   packVersion: string;
@@ -46,10 +32,17 @@ export interface Playthrough {
   branchChoices: Record<string, string>;
   currentMilestoneId: string | null;
   previewMilestoneId: string | null;
-  team: TeamState;
+  timeline: TimelineState;
+  /** Temporary non-enumerable projection for the pre-timeline TeamManifest. Never persisted. */
+  readonly team: TeamState;
   notes: string;
   acquisitionOverrides: string[];
   checkoffs: CheckoffMaps;
+}
+
+interface LegacyPlaythroughV1 extends Omit<Playthrough, 'schemaVersion' | 'timeline'> {
+  schemaVersion: typeof LEGACY_SCHEMA_VERSION;
+  team: TeamState;
 }
 
 const plannedMoveSchema = z.object({
@@ -58,7 +51,6 @@ const plannedMoveSchema = z.object({
   level: z.number().int().positive().nullable(),
   milestoneId: z.string().min(1).nullable(),
 }).strict();
-
 const teamMemberSchema = z.object({
   id: z.string().min(1),
   speciesId: z.number().int().positive(),
@@ -68,19 +60,16 @@ const teamMemberSchema = z.object({
   nickname: z.string().nullable().optional(),
   notes: z.string().nullable().optional(),
 }).strict();
-
 const slotSchema = teamMemberSchema.nullable();
 const sixSlotsSchema = z.tuple([slotSchema, slotSchema, slotSchema, slotSchema, slotSchema, slotSchema]);
 const teamStateSchema = z.object({ primary: sixSlotsSchema, reserve: sixSlotsSchema }).strict();
-
 const checkoffMapsSchema = z.object({
   routesCompleted: z.record(z.string(), z.boolean()),
   encountered: z.record(z.string(), z.boolean()),
   captured: z.record(z.string(), z.boolean()),
 }).strict();
 
-const playthroughSchema = z.object({
-  schemaVersion: z.literal(CURRENT_SCHEMA_VERSION),
+const commonPlaythroughSchema = {
   packVersion: z.string().min(1),
   id: z.string().min(1),
   name: z.string().min(1),
@@ -92,26 +81,27 @@ const playthroughSchema = z.object({
   branchChoices: z.record(z.string(), z.string()),
   currentMilestoneId: z.string().min(1).nullable(),
   previewMilestoneId: z.string().min(1).nullable(),
-  team: teamStateSchema,
   notes: z.string(),
   acquisitionOverrides: z.array(z.string().min(1)),
   checkoffs: checkoffMapsSchema,
+};
+const playthroughSchema = z.object({
+  schemaVersion: z.literal(CURRENT_SCHEMA_VERSION),
+  ...commonPlaythroughSchema,
+  timeline: z.unknown(),
+}).strict();
+const legacyPlaythroughV1Schema = z.object({
+  schemaVersion: z.literal(LEGACY_SCHEMA_VERSION),
+  ...commonPlaythroughSchema,
+  team: teamStateSchema,
 }).strict();
 
 function emptyCheckoffs(): CheckoffMaps {
   return { routesCompleted: {}, encountered: {}, captured: {} };
 }
 
-/**
- * Resolve every id a playthrough references against the injected pack index: the starter
- * species, the current/preview milestones (when present), each acquisition override, and every
- * team member (species, ability, and version-valid moves via {@link validateTeamState}).
- * Throws on the first unknown id.
- */
-function validateReferences(playthrough: Playthrough, pack: PlaythroughPackIndex): void {
-  if (!pack.hasSpecies(playthrough.starterSpeciesId)) {
-    throw new Error(`Unknown starter species id ${playthrough.starterSpeciesId}`);
-  }
+function validateCommonReferences(playthrough: Pick<Playthrough, 'starterSpeciesId' | 'currentMilestoneId' | 'previewMilestoneId' | 'acquisitionOverrides'>, pack: PlaythroughPackIndex): void {
+  if (!pack.hasSpecies(playthrough.starterSpeciesId)) throw new Error(`Unknown starter species id ${playthrough.starterSpeciesId}`);
   if (playthrough.currentMilestoneId !== null && !pack.hasMilestone(playthrough.currentMilestoneId)) {
     throw new Error(`Unknown current milestone id "${playthrough.currentMilestoneId}"`);
   }
@@ -119,14 +109,45 @@ function validateReferences(playthrough: Playthrough, pack: PlaythroughPackIndex
     throw new Error(`Unknown preview milestone id "${playthrough.previewMilestoneId}"`);
   }
   for (const acquisitionId of playthrough.acquisitionOverrides) {
-    if (!pack.hasAcquisition(acquisitionId)) {
-      throw new Error(`Unknown acquisition override id "${acquisitionId}"`);
-    }
+    if (!pack.hasAcquisition(acquisitionId)) throw new Error(`Unknown acquisition override id "${acquisitionId}"`);
   }
-  validateTeamState(playthrough.team, pack);
 }
 
-/** Inputs for a brand-new Standard FireRed playthrough. Timestamps are caller-supplied. */
+function validateReferences(playthrough: Omit<Playthrough, 'team'>, pack: PlaythroughPackIndex): void {
+  validateCommonReferences(playthrough, pack);
+  parseTimelineState(playthrough.timeline, pack);
+}
+
+function legacyTeamView(timeline: TimelineState): TeamState {
+  const keyframe = Object.values(timeline.keyframes)[0];
+  if (!keyframe) return createEmptyTeam();
+  const memberAt = (memberId: string | null): TeamMember | null => {
+    if (memberId === null) return null;
+    const member = timeline.members[memberId];
+    const snapshot = keyframe.snapshots[memberId];
+    if (!member || !snapshot) return null;
+    return {
+      id: member.id,
+      speciesId: snapshot.speciesId,
+      level: snapshot.level,
+      abilityId: snapshot.abilityId,
+      moves: snapshot.moves,
+      nickname: member.nickname,
+      notes: member.notes,
+    };
+  };
+  const primary = keyframe.party.map(memberAt) as unknown as TeamState['primary'];
+  const reserve = Array.from({ length: 6 }, (_value, index) => memberAt(keyframe.reserve[index] ?? null)) as unknown as TeamState['reserve'];
+  return { primary, reserve };
+}
+
+function withLegacyTeamView(playthrough: Omit<Playthrough, 'team'>): Playthrough {
+  Object.defineProperty(playthrough, 'team', {
+    value: legacyTeamView(playthrough.timeline), enumerable: false, writable: false, configurable: false,
+  });
+  return playthrough as Playthrough;
+}
+
 export interface CreateStandardPlaythroughInput {
   id: string;
   name: string;
@@ -137,19 +158,14 @@ export interface CreateStandardPlaythroughInput {
   currentMilestoneId?: string | null;
   previewMilestoneId?: string | null;
   branchChoices?: Record<string, string>;
-  team?: TeamState;
+  timeline?: TimelineState;
   notes?: string;
   acquisitionOverrides?: readonly string[];
 }
 
-/**
- * Build a new, validated Standard FireRed playthrough. Game and type are fixed. Timestamps are
- * taken from the caller (never `Date.now()`), so callers control determinism. Checkoff maps are
- * created empty for Plan-3 forward-compat. Every referenced id is validated; throws on any
- * unknown id or illegal team member.
- */
+/** Build a new validated schema-v2 FireRed run; no legacy team shape is persisted. */
 export function createStandardPlaythrough(input: CreateStandardPlaythroughInput, pack: PlaythroughPackIndex): Playthrough {
-  const playthrough: Playthrough = {
+  const playthrough: Omit<Playthrough, 'team'> = {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     packVersion: input.packVersion,
     id: input.id,
@@ -162,24 +178,99 @@ export function createStandardPlaythrough(input: CreateStandardPlaythroughInput,
     branchChoices: { ...(input.branchChoices ?? {}) },
     currentMilestoneId: input.currentMilestoneId ?? null,
     previewMilestoneId: input.previewMilestoneId ?? null,
-    team: input.team ?? { primary: [null, null, null, null, null, null], reserve: [null, null, null, null, null, null] },
+    timeline: input.timeline ?? createEmptyTimeline(),
     notes: input.notes ?? '',
     acquisitionOverrides: [...(input.acquisitionOverrides ?? [])],
     checkoffs: emptyCheckoffs(),
   };
   validateReferences(playthrough, pack);
-  return playthrough;
+  return withLegacyTeamView(playthrough);
 }
 
-/**
- * Parse and fully validate an unknown value as a current-schema playthrough. Structural
- * validation is strict — unknown keys (embedded canonical/pack data) are rejected — and every
- * referenced id must resolve against the injected pack index. Throws on any violation.
- */
+/** Parse and fully validate a strict, current-schema playthrough. */
 export function parsePlaythrough(input: unknown, pack: PlaythroughPackIndex): Playthrough {
-  const parsed = playthroughSchema.parse(input) as unknown as Playthrough;
+  const parsed = playthroughSchema.parse(input) as unknown as Omit<Playthrough, 'team'>;
   validateReferences(parsed, pack);
-  return parsed;
+  return withLegacyTeamView(parsed);
+}
+
+function parseLegacyV1(input: unknown, pack: PlaythroughPackIndex): LegacyPlaythroughV1 {
+  const legacy = legacyPlaythroughV1Schema.parse(input) as unknown as LegacyPlaythroughV1;
+  validateCommonReferences(legacy, pack);
+  validateTeamState(legacy.team, pack);
+  return legacy;
+}
+
+function migrationNodeId(playthrough: LegacyPlaythroughV1): string {
+  return playthrough.currentMilestoneId ?? playthrough.previewMilestoneId ?? 'starter';
+}
+
+function copyMoves(moves: readonly PlannedMove[]): PlannedMove[] {
+  return moves.map((move) => ({ ...move }));
+}
+
+/** Convert an already-validated v1 team to persistent members and one major keyframe. */
+export function migratePlaythroughV1(input: unknown, pack: PlaythroughPackIndex): Playthrough {
+  // Validation happens before the replacement candidate is built, preserving corrupt v1 data.
+  const legacy = parseLegacyV1(input, pack);
+  const nodeId = migrationNodeId(legacy);
+  const members: TimelineState['members'] = {};
+  const snapshots: Record<string, TimelineState['keyframes'][string]['snapshots'][string]> = {};
+  const party: [string | null, string | null, string | null, string | null, string | null, string | null] = [null, null, null, null, null, null];
+  const reserve: string[] = [];
+  const speciesSequences = new Map<number, number>();
+
+  const migrateMember = (legacyMember: TeamMember, placement: 'party' | 'reserve', partySlot: 0 | 1 | 2 | 3 | 4 | 5 | null) => {
+    const speciesSequence = (speciesSequences.get(legacyMember.speciesId) ?? 0) + 1;
+    speciesSequences.set(legacyMember.speciesId, speciesSequence);
+    members[legacyMember.id] = {
+      id: legacyMember.id,
+      originalSpeciesId: legacyMember.speciesId,
+      speciesSequence,
+      nickname: legacyMember.nickname ?? null,
+      natureId: null,
+      origin: { type: 'inferred', acquisitionId: null, note: null },
+      acquiredAtNodeId: nodeId,
+      notes: legacyMember.notes ?? '',
+      lifecycle: [],
+    };
+    snapshots[legacyMember.id] = {
+      speciesId: legacyMember.speciesId,
+      level: legacyMember.level,
+      abilityId: legacyMember.abilityId,
+      moves: copyMoves(legacyMember.moves),
+      heldItemId: null,
+      placement,
+      partySlot,
+      review: { moves: false, heldItem: false },
+    };
+  };
+
+  legacy.team.primary.forEach((legacyMember, slot) => {
+    if (legacyMember === null) return;
+    const partySlot = slot as 0 | 1 | 2 | 3 | 4 | 5;
+    migrateMember(legacyMember, 'party', partySlot);
+    party[partySlot] = legacyMember.id;
+  });
+  legacy.team.reserve.forEach((legacyMember) => {
+    if (legacyMember === null) return;
+    migrateMember(legacyMember, 'reserve', null);
+    reserve.push(legacyMember.id);
+  });
+
+  const { team: _legacyTeam, ...playthroughFields } = legacy;
+  return parsePlaythrough({
+    ...playthroughFields,
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    timeline: {
+      members,
+      keyframes: {
+        [nodeId]: { nodeId, kind: 'major', party, reserve, released: [], snapshots },
+      },
+      overrides: {},
+      preferences: { levelMode: 'manual', autoEvolveLevel: false },
+    },
+  }, pack);
 }
 
 /** The outcome of a migration. On failure the exact prior value is returned, never lost. */
@@ -187,25 +278,12 @@ export type MigratePlaythroughResult =
   | { ok: true; playthrough: Playthrough; migrated: boolean }
   | { ok: false; error: string; previous: unknown };
 
-/**
- * Transform a possibly-legacy value into a candidate current-schema object WITHOUT mutating the
- * input. Deterministic: every default is fixed, no clock is read. Throws on a non-object or a
- * newer-than-current schema version (which cannot be migrated backward).
- */
-function toCurrentSchemaCandidate(input: unknown): Record<string, unknown> {
-  if (input === null || typeof input !== 'object' || Array.isArray(input)) {
-    throw new Error('Playthrough to migrate must be an object');
-  }
+function toLegacyV1Candidate(input: unknown): Record<string, unknown> {
+  if (input === null || typeof input !== 'object' || Array.isArray(input)) throw new Error('Playthrough to migrate must be an object');
   const source = input as Record<string, unknown>;
-  const version = typeof source.schemaVersion === 'number' ? source.schemaVersion : 0;
-  if (version > CURRENT_SCHEMA_VERSION) {
-    throw new Error(`Cannot migrate playthrough from newer schema version ${version}`);
-  }
-  if (version === CURRENT_SCHEMA_VERSION) return { ...source };
-  // v0 → v1: fill the fields introduced in v1 without disturbing existing user data.
   return {
     ...source,
-    schemaVersion: CURRENT_SCHEMA_VERSION,
+    schemaVersion: LEGACY_SCHEMA_VERSION,
     game: source.game ?? 'firered',
     type: source.type ?? 'standard',
     branchChoices: source.branchChoices ?? {},
@@ -218,19 +296,22 @@ function toCurrentSchemaCandidate(input: unknown): Record<string, unknown> {
 }
 
 /**
- * Migrate a persisted value to the current schema. Deterministic and non-destructive: it builds
- * a candidate, validates it against the schema AND the injected pack index, and only then
- * returns it. If anything fails the exact prior value is returned untouched (`ok: false`,
- * `previous: input`), so a failed migration never corrupts or loses the input.
+ * Deterministically migrate v0/v1 values. v0 first becomes and validates as v1, then v1 is
+ * converted to v2; neither path replaces a durable record before every validation succeeds.
  */
 export function migratePlaythrough(input: unknown, pack: PlaythroughPackIndex): MigratePlaythroughResult {
-  const wasCurrent = input !== null
-    && typeof input === 'object'
-    && (input as Record<string, unknown>).schemaVersion === CURRENT_SCHEMA_VERSION;
   try {
-    const candidate = toCurrentSchemaCandidate(input);
-    const playthrough = parsePlaythrough(candidate, pack);
-    return { ok: true, playthrough, migrated: !wasCurrent };
+    if (input === null || typeof input !== 'object' || Array.isArray(input)) throw new Error('Playthrough to migrate must be an object');
+    const source = input as Record<string, unknown>;
+    const version = typeof source.schemaVersion === 'number' ? source.schemaVersion : 0;
+    if (version > CURRENT_SCHEMA_VERSION) throw new Error(`Cannot migrate playthrough from newer schema version ${version}`);
+    if (version === CURRENT_SCHEMA_VERSION) return { ok: true, playthrough: parsePlaythrough(input, pack), migrated: false };
+    if (version === LEGACY_SCHEMA_VERSION) return { ok: true, playthrough: migratePlaythroughV1(input, pack), migrated: true };
+    if (version === 0) {
+      const v1Candidate = toLegacyV1Candidate(input);
+      return { ok: true, playthrough: migratePlaythroughV1(v1Candidate, pack), migrated: true };
+    }
+    throw new Error(`Cannot migrate playthrough from unsupported schema version ${version}`);
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : String(error), previous: input };
   }

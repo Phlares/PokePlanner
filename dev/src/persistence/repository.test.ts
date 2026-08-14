@@ -131,7 +131,7 @@ describe('MemoryPlaythroughRepository — migration + error surfacing on read', 
   it('migrates an older-schema record to current on read', async () => {
     const repo = new MemoryPlaythroughRepository(options(), [['p-old', legacyV0]]);
     const loaded = await repo.get('p-old');
-    expect(loaded?.schemaVersion).toBe(1);
+    expect(loaded?.schemaVersion).toBe(2);
     expect(loaded?.checkoffs).toEqual({ routesCompleted: {}, encountered: {}, captured: {} });
   });
 

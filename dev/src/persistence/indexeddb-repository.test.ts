@@ -118,7 +118,7 @@ describe('openIndexedDbRepository — native adapter behind the repository inter
     db.close();
     const repo = await openIndexedDbRepository(factory, opts);
     const loaded = await repo.get('p-old');
-    expect(loaded?.schemaVersion).toBe(1);
+    expect(loaded?.schemaVersion).toBe(2);
     expect(loaded?.checkoffs).toEqual({ routesCompleted: {}, encountered: {}, captured: {} });
   });
 

@@ -4,7 +4,7 @@ import {
   type Playthrough,
   type PlaythroughPackIndex,
 } from '../domain/playthrough';
-import { assignMember, createEmptyTeam, type TeamMember } from '../domain/team';
+import { createEmptyTeam, type TeamMember } from '../domain/team';
 import { MemoryPlaythroughRepository } from './repository';
 import { preparePlaythroughImport, serializePlaythroughExport } from './export-import';
 
@@ -26,7 +26,7 @@ const mankey: TeamMember = {
 };
 
 function makePlaythrough(overrides: Partial<Parameters<typeof createStandardPlaythrough>[0]> = {}): Playthrough {
-  const p = createStandardPlaythrough(
+  return createStandardPlaythrough(
     {
       id: 'p1',
       name: 'Run One',
@@ -38,18 +38,37 @@ function makePlaythrough(overrides: Partial<Parameters<typeof createStandardPlay
       previewMilestoneId: 'misty-gym',
       branchChoices: { 'oak-parcel': 'accepted' },
       acquisitionOverrides: ['tm26-earthquake'],
+      timeline: {
+        members: {
+          m1: {
+            id: 'm1', originalSpeciesId: 56, speciesSequence: 1, nickname: null, natureId: null,
+            origin: { type: 'inferred', acquisitionId: null, note: null }, acquiredAtNodeId: 'brock-gym', notes: '', lifecycle: [],
+          },
+        },
+        keyframes: {
+          'brock-gym': {
+            nodeId: 'brock-gym', kind: 'major', party: ['m1', null, null, null, null, null], reserve: [], released: [],
+            snapshots: {
+              m1: {
+                speciesId: mankey.speciesId, level: mankey.level, abilityId: mankey.abilityId, moves: mankey.moves.map((move) => ({ ...move })),
+                heldItemId: null, placement: 'party', partySlot: 0, review: { moves: false, heldItem: false },
+              },
+            },
+          },
+        },
+        overrides: {}, preferences: { levelMode: 'manual', autoEvolveLevel: false },
+      },
       ...overrides,
     },
     pack,
   );
-  return { ...p, team: assignMember(createEmptyTeam(), { section: 'primary', index: 0 }, mankey, pack) };
 }
 
 describe('serializePlaythroughExport — stable, pretty, version-carrying JSON', () => {
   it('carries schemaVersion and packVersion', () => {
     const text = serializePlaythroughExport(makePlaythrough());
     const parsed = JSON.parse(text);
-    expect(parsed.schemaVersion).toBe(1);
+    expect(parsed.schemaVersion).toBe(2);
     expect(parsed.packVersion).toBe('firered-test');
   });
 
@@ -93,7 +112,7 @@ describe('preparePlaythroughImport — parse → migrate → validate, no write'
   it('rejects invalid team slots (too many moves)', () => {
     const text = serializePlaythroughExport(makePlaythrough());
     const tampered = JSON.parse(text);
-    tampered.team.primary[0].moves = [
+    tampered.timeline.keyframes['brock-gym'].snapshots.m1.moves = [
       { moveId: 10, status: 'available-now', level: null, milestoneId: null },
       { moveId: 43, status: 'available-now', level: null, milestoneId: null },
       { moveId: 89, status: 'available-now', level: null, milestoneId: null },
@@ -123,7 +142,7 @@ describe('preparePlaythroughImport — parse → migrate → validate, no write'
       team: createEmptyTeam(),
     };
     const imported = preparePlaythroughImport(JSON.stringify(legacyV0), pack);
-    expect(imported.schemaVersion).toBe(1);
+    expect(imported.schemaVersion).toBe(2);
     expect(imported.previewMilestoneId).toBeNull();
   });
 

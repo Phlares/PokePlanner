@@ -107,7 +107,7 @@ describe('App boot and persistence', () => {
     await createRun();
     fireEvent.click(screen.getByRole('button', { name: /^export/i }));
     const output = (await screen.findByLabelText(/playthrough export/i)) as HTMLTextAreaElement;
-    expect(output.value).toContain('"schemaVersion": 1');
+    expect(output.value).toContain('"schemaVersion": 2');
     expect(output.value).toContain('"game": "firered"');
     expect(() => JSON.parse(output.value)).not.toThrow();
   });

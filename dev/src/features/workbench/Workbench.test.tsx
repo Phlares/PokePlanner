@@ -111,7 +111,7 @@ describe('Workbench', () => {
   });
 
   it('never surfaces opponent or exposure analysis in the workbench shell', () => {
-    renderWorkbench({ playthrough: { ...emptyPlaythrough(), currentMilestoneId: 'brock-gym' } });
+    renderWorkbench({ playthrough: parsePlaythrough({ ...emptyPlaythrough(), currentMilestoneId: 'brock-gym' }, packIndex()) });
     expect(screen.queryByText(/exposure/i)).toBeNull();
     expect(screen.queryByText(/opponent/i)).toBeNull();
     expect(screen.queryByText(/super.?effective/i)).toBeNull();

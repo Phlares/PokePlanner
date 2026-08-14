@@ -6,7 +6,7 @@ import {
   parsePlaythrough,
   type PlaythroughPackIndex,
 } from './playthrough';
-import { assignMember, createEmptyTeam, type TeamMember } from './team';
+import { createEmptyTeam, type TeamMember } from './team';
 
 const LEGAL_ABILITIES: Record<number, number[]> = { 1: [65], 56: [72] };
 const VERSION_VALID_MOVES = new Set<number>([10, 43, 89]);
@@ -67,6 +67,12 @@ describe('createStandardPlaythrough — fixed FireRed + Standard, versioned, tim
     expect(p.checkoffs).toEqual({ routesCompleted: {}, encountered: {}, captured: {} });
   });
 
+  it('exposes a non-persisted legacy team view for the existing manifest until timeline UI replaces it', () => {
+    const p = createStandardPlaythrough(baseInput(), pack);
+    expect((p as unknown as { team: { primary: unknown[]; reserve: unknown[] } }).team.primary).toHaveLength(6);
+    expect(JSON.stringify(p)).not.toContain('"team"');
+  });
+
   it('keeps current and preview milestone as distinct fields that may differ', () => {
     const p = createStandardPlaythrough(baseInput(), pack);
     expect(p.currentMilestoneId).toBe('brock-gym');
@@ -90,7 +96,29 @@ describe('createStandardPlaythrough — fixed FireRed + Standard, versioned, tim
 describe('parsePlaythrough — validates game/type, refs, and rejects embedded canonical data', () => {
   function validDoc() {
     const p = createStandardPlaythrough(baseInput(), pack);
-    return JSON.parse(JSON.stringify({ ...p, team: assignMember(createEmptyTeam(), { section: 'primary', index: 0 }, mankey, pack) }));
+    return JSON.parse(JSON.stringify({
+      ...p,
+      timeline: {
+        members: {
+          m1: {
+            id: 'm1', originalSpeciesId: 56, speciesSequence: 1, nickname: null, natureId: null,
+            origin: { type: 'inferred', acquisitionId: null, note: null }, acquiredAtNodeId: 'brock-gym', notes: '', lifecycle: [],
+          },
+        },
+        keyframes: {
+          'brock-gym': {
+            nodeId: 'brock-gym', kind: 'major', party: ['m1', null, null, null, null, null], reserve: [], released: [],
+            snapshots: {
+              m1: {
+                speciesId: mankey.speciesId, level: mankey.level, abilityId: mankey.abilityId, moves: mankey.moves,
+                heldItemId: null, placement: 'party', partySlot: 0, review: { moves: false, heldItem: false },
+              },
+            },
+          },
+        },
+        overrides: {}, preferences: { levelMode: 'manual', autoEvolveLevel: false },
+      },
+    }));
   }
 
   it('accepts a valid serialized playthrough', () => {
@@ -111,19 +139,19 @@ describe('parsePlaythrough — validates game/type, refs, and rejects embedded c
 
   it('rejects embedded canonical data on a team member (unknown key)', () => {
     const doc = validDoc();
-    doc.team.primary[0] = { ...doc.team.primary[0], baseStats: { hp: 45 } };
+    doc.timeline.keyframes['brock-gym'].snapshots.m1 = { ...doc.timeline.keyframes['brock-gym'].snapshots.m1, baseStats: { hp: 45 } };
     expect(() => parsePlaythrough(doc, pack)).toThrow();
   });
 
   it('rejects an unknown referenced move on a team member', () => {
     const doc = validDoc();
-    doc.team.primary[0].moves = [{ moveId: 999, status: 'available-now', level: null, milestoneId: null }];
+    doc.timeline.keyframes['brock-gym'].snapshots.m1.moves = [{ moveId: 999, status: 'available-now', level: null, milestoneId: null }];
     expect(() => parsePlaythrough(doc, pack)).toThrow(/move/i);
   });
 
   it('rejects an illegal ability on a team member', () => {
     const doc = validDoc();
-    doc.team.primary[0].abilityId = 65; // not legal for Mankey (56)
+    doc.timeline.keyframes['brock-gym'].snapshots.m1.abilityId = 65; // not legal for Mankey (56)
     expect(() => parsePlaythrough(doc, pack)).toThrow(/ability/i);
   });
 
@@ -135,6 +163,31 @@ describe('parsePlaythrough — validates game/type, refs, and rejects embedded c
 });
 
 describe('migratePlaythrough — deterministic, preserves prior value until migrated result validates', () => {
+  it('migrates v1 primary and reserve members into one explicit keyframe', () => {
+    const legacy = {
+      schemaVersion: 1,
+      ...baseInput(),
+      game: 'firered' as const,
+      type: 'standard' as const,
+      currentMilestoneId: null,
+      team: {
+        primary: [{ ...mankey, id: 'legacy-primary-1' }, null, null, null, null, null],
+        reserve: [{ ...mankey, id: 'legacy-reserve-1' }, null, null, null, null, null],
+      },
+      notes: '',
+      branchChoices: {},
+      checkoffs: { routesCompleted: {}, encountered: {}, captured: {} },
+    };
+
+    const result = migratePlaythrough(legacy, pack);
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.playthrough.schemaVersion).toBe(2);
+    expect(result.playthrough.timeline.keyframes['misty-gym'].party[0]).toBe('legacy-primary-1');
+    expect(result.playthrough.timeline.keyframes['misty-gym'].reserve).toContain('legacy-reserve-1');
+  });
+
   function legacyV0() {
     // A schema-0 document lacking checkoffs / previewMilestoneId / acquisitionOverrides.
     return {
