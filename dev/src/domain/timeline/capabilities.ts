@@ -52,7 +52,9 @@ export function evaluateCapability(member: MemberSnapshot, context: CapabilityEv
   const { capability } = context;
   const evidenceIds = capabilityEvidence(context);
   const unlocked = capabilityUnlocked(context);
-  const knowsMove = member.moves.some((move) => move.moveId === capability.moveId);
+  const knowsMove = member.moves.some((move) => (
+    move.moveId === capability.moveId && move.status === 'available-now'
+  ));
   const canLearn = context.canLearnMove(member.speciesId, capability.moveId);
   const sourcesAvailableNow = context.sources?.some((source) => source.available === true) ?? false;
 

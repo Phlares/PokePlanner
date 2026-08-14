@@ -127,6 +127,19 @@ describe('evaluateCapability', () => {
     expect(none.state).toBe('none');
     expect(conditional.explanation).toMatch(/not currently available/i);
   });
+
+  it.each([
+    { status: 'future-level' as const, level: 30, milestoneId: null },
+    { status: 'future-milestone' as const, level: null, milestoneId: 'safari-zone' },
+  ])('treats a $status planned move as conditional until it is currently available', ({ status, level, milestoneId }) => {
+    const futureMove = member({
+      moves: [{ moveId: 57, status, level, milestoneId }],
+    });
+
+    expect(evaluateCapability(futureMove, surfContext({
+      sources: [{ id: 'hm03-safari-zone', available: false }],
+    }))).toMatchObject({ state: 'conditional' });
+  });
 });
 
 describe('evaluateResourceAssignments', () => {
