@@ -9,12 +9,16 @@ import {
   type PlaythroughPackIndex,
 } from '../../domain/playthrough';
 import { MILESTONE_ORDER } from '../../domain/availability';
+import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
 
 const pack = loadFireRedPackFixture();
 
 function packIndex(): PlaythroughPackIndex {
   const byId = new Map(pack.pokemon.map((record) => [record.id, record]));
-  const milestones = new Set<string>(MILESTONE_ORDER);
+  const milestones = new Set<string>([
+    ...MILESTONE_ORDER,
+    ...FIRE_RED_RULES.milestones.map((milestone) => milestone.id),
+  ]);
   const acquisitions = new Set(pack.acquisitions.map((record) => record.id));
   return {
     hasSpecies: (id) => byId.has(id),
@@ -52,18 +56,56 @@ function renderWorkbench(overrides: Partial<Parameters<typeof Workbench>[0]> = {
 afterEach(cleanup);
 
 describe('Workbench', () => {
-  it('renders the three regions and the team manifest', () => {
+  it('renders the three workbench regions and the timeline entry point', () => {
     renderWorkbench();
     expect(screen.getByRole('region', { name: /progression/i })).toBeVisible();
     expect(screen.getByRole('region', { name: /route detail/i })).toBeVisible();
     expect(screen.getByRole('region', { name: /inspector/i })).toBeVisible();
-    expect(screen.getByRole('region', { name: /team manifest/i })).toBeVisible();
+    expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
   });
 
-  it('shows six primary and six reserve slots in the manifest', () => {
+  it('shows six active party slots and unbounded reserve and released pools', () => {
     renderWorkbench();
-    const manifest = screen.getByRole('region', { name: /team manifest/i });
-    expect(within(manifest).getAllByRole('listitem')).toHaveLength(12);
+    const timeline = screen.getByRole('region', { name: /team timeline/i });
+    expect(within(timeline).getByRole('region', { name: /party · 0 of 6 pokémon/i })).toBeVisible();
+    expect(within(timeline).getByRole('region', { name: /reserve · 0 pokémon/i })).toBeVisible();
+    expect(within(timeline).getByRole('region', { name: /released · 0 pokémon/i })).toBeVisible();
+  });
+
+  it('resolves a starter-acquired member into detailed route states', () => {
+    const starter = pack.pokemon.find((record) => record.id === 1)!;
+    const base = emptyPlaythrough();
+    const playthrough = parsePlaythrough({
+      ...base,
+      currentMilestoneId: 'starter',
+      previewMilestoneId: 'brock-gym',
+      timeline: {
+        members: {
+          starter: {
+            id: 'starter', originalSpeciesId: 1, speciesSequence: 1, nickname: null, natureId: null,
+            origin: { type: 'inferred', acquisitionId: null, note: null }, acquiredAtNodeId: 'starter', notes: '', lifecycle: [],
+          },
+        },
+        keyframes: {
+          starter: {
+            nodeId: 'starter', kind: 'major', party: ['starter', null, null, null, null, null], reserve: [], released: [],
+            snapshots: {
+              starter: {
+                speciesId: 1, level: 5, abilityId: starter.abilities[0].id, moves: [], heldItemId: null,
+                placement: 'party', partySlot: 0, review: { moves: false, heldItem: false },
+              },
+            },
+          },
+        },
+        overrides: {},
+        preferences: { levelMode: 'manual', autoEvolveLevel: false },
+      },
+    }, packIndex());
+
+    renderWorkbench({ playthrough });
+    expect(screen.getByRole('region', { name: /party · 1 of 6 pokémon/i })).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
+    expect(screen.getByText(starter.name)).toBeVisible();
   });
 
   it('selects a route into the table region without touching saved state', () => {

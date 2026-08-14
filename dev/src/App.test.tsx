@@ -75,7 +75,7 @@ function deferred(): { promise: Promise<void>; resolve: () => void } {
 
 async function createRun(): Promise<void> {
   fireEvent.click(await screen.findByRole('button', { name: /start firered/i }));
-  await screen.findByRole('region', { name: /team manifest/i });
+  await screen.findByRole('region', { name: /team timeline/i });
 }
 
 afterEach(cleanup);
@@ -105,7 +105,7 @@ describe('App boot and persistence', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(/saved runs.*could not be (read|loaded|migrated)/i);
     expect(screen.getByRole('alert')).toHaveTextContent(/left unchanged/i);
     expect(screen.queryByText(/set up a run/i)).toBeNull();
-    expect(screen.queryByRole('region', { name: /team manifest/i })).toBeNull();
+    expect(screen.queryByRole('region', { name: /team timeline/i })).toBeNull();
     expect(put).not.toHaveBeenCalled();
     expect(remove).not.toHaveBeenCalled();
 
@@ -123,7 +123,7 @@ describe('App boot and persistence', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Charmander' }));
     fireEvent.click(screen.getByRole('button', { name: 'Start FireRed' }));
 
-    await screen.findByRole('region', { name: /team manifest/i });
+    await screen.findByRole('region', { name: /team timeline/i });
     await waitFor(async () => expect((await get()!.list()).length).toBe(1));
     const saved = (await get()!.list())[0];
     const starterMemberId = Object.keys(saved.timeline.members)[0];
@@ -143,7 +143,7 @@ describe('App boot and persistence', () => {
 
     render(<App {...props} />);
     // No setup this time — the saved run is restored straight into the workbench.
-    expect(await screen.findByRole('region', { name: /team manifest/i })).toBeVisible();
+    expect(await screen.findByRole('region', { name: /team timeline/i })).toBeVisible();
     expect(screen.queryByText(/set up a run/i)).toBeNull();
   });
 
@@ -260,7 +260,7 @@ describe('App boot and persistence', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/import/i);
     // The workbench and stored record are untouched — no overwrite on failure.
-    expect(screen.getByRole('region', { name: /team manifest/i })).toBeVisible();
+    expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
     const after = await get()!.list();
     expect(after).toEqual(before);
   });
@@ -271,7 +271,7 @@ describe('App boot and persistence', () => {
     render(<App {...baseProps({ fetcher, openRepository: factory })} />);
     expect(await screen.findByRole('alert')).toHaveTextContent(/could not|failed|unable/i);
     expect(screen.queryByText(/set up a run/i)).toBeNull();
-    expect(screen.queryByRole('region', { name: /team manifest/i })).toBeNull();
+    expect(screen.queryByRole('region', { name: /team timeline/i })).toBeNull();
   });
 
   it('falls back to a labeled temporary session with working export when IndexedDB fails', async () => {
