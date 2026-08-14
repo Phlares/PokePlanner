@@ -190,7 +190,7 @@ describe('validateResolvedNode', () => {
     expect(() => validateResolvedNode(node, context)).not.toThrow();
     expect(validateResolvedNode(node, context)).toContainEqual(expect.objectContaining({
       code: 'move.egg-origin', severity: 'yellow', memberId: 'm1', field: 'move',
-      evidenceIds: ['pokemon:1', 'move:99', 'learnset:egg'],
+      evidenceIds: ['learnset:egg', 'move:99', 'pokemon:1'],
     }));
     const finding = validateResolvedNode(node, context).find((candidate) => candidate.code === 'move.egg-origin');
     expect(finding?.summary.length).toBeGreaterThan(0);
@@ -328,8 +328,92 @@ describe('validateResolvedNode', () => {
     );
 
     expect(findings).toContainEqual(expect.objectContaining({
-      code: 'origin.acquisition-conflict', severity: 'red', evidenceIds: ['kanto-route-1', 'kanto-route-22-area', 'kanto-route-22'],
+      code: 'origin.acquisition-conflict', severity: 'red', evidenceIds: ['kanto-route-1', 'kanto-route-22', 'kanto-route-22-area'],
     }));
+  });
+
+  it('returns unverified when an ordinary acquisition exists but its timing is unknown', () => {
+    const unknownTiming = acquisition('ordinary-unknown-timing', 1, 'gift');
+    const context = validationContext({
+      pack: { ...validationContext().pack, encounters: [], acquisitions: [unknownTiming] },
+    });
+
+    expect(inferMemberOrigin(member(), 'kanto-route-22', context)).toMatchObject({
+      status: 'ordinary-timing-unverified',
+      origin: { type: 'inferred', acquisitionId: 'ordinary-unknown-timing' },
+      requestedOriginTypes: [],
+      evidenceIds: ['ordinary-unknown-timing'],
+    });
+    expect(validateResolvedNode(resolvedNode(), context)).toContainEqual(expect.objectContaining({
+      code: 'origin.timing-unverified', severity: 'unverified', evidenceIds: ['ordinary-unknown-timing'],
+    }));
+    expect(validateResolvedNode(resolvedNode(), context)).not.toContainEqual(expect.objectContaining({
+      code: 'origin.no-ordinary-path', severity: 'red',
+    }));
+  });
+
+  it.each([
+    {
+      name: 'duplicate placements',
+      node: { ...resolvedNode(), party: ['m1', 'm1', null, null, null, null] as ResolvedTimelineNode['party'] },
+      code: 'node.placement-duplicate',
+    },
+    {
+      name: 'unknown members',
+      node: {
+        ...resolvedNode(),
+        party: ['unknown', null, null, null, null, null] as ResolvedTimelineNode['party'],
+        snapshots: { unknown: snapshot() },
+      },
+      code: 'node.member-unknown',
+    },
+    {
+      name: 'missing snapshots',
+      node: { ...resolvedNode(), snapshots: {} },
+      code: 'node.snapshot-missing',
+    },
+    {
+      name: 'unplaced snapshots',
+      node: {
+        ...resolvedNode(),
+        party: [null, null, null, null, null, null] as ResolvedTimelineNode['party'],
+        snapshots: { m1: snapshot() },
+      },
+      code: 'node.snapshot-unplaced',
+    },
+  ])('reports $name as advisory findings instead of throwing', ({ node, code }) => {
+    const context = validationContext();
+
+    expect(() => validateResolvedNode(node, context)).not.toThrow();
+    expect(validateResolvedNode(node, context)).toContainEqual(expect.objectContaining({ code, severity: 'red' }));
+  });
+
+  it('sorts finding evidence and resolutions independently of catalog and audit order', () => {
+    const configured = member({
+      lifecycle: [
+        { type: 'restored', nodeId: 'kanto-route-22', from: 'released', to: 'reserve', reason: null },
+        { type: 'restored', nodeId: 'kanto-route-1', from: 'released', to: 'reserve', reason: null },
+      ],
+    });
+    const context = validationContext({
+      members: { m1: configured },
+      pack: {
+        ...validationContext().pack,
+        encounters: [],
+        acquisitions: [
+          acquisition('z-transfer', 1, 'transfer', 'transfer-only'),
+          acquisition('a-event', 1, 'event', 'event-only'),
+        ],
+      },
+    });
+    const findings = validateResolvedNode(resolvedNode(), context);
+    const origin = findings.find((candidate) => candidate.code === 'origin.no-ordinary-path');
+    const restored = findings.find((candidate) => candidate.code === 'member.restored');
+
+    expect(inferMemberOrigin(configured, 'kanto-route-22', context).requestedOriginTypes).toEqual(['event', 'transfer']);
+    expect(origin?.evidenceIds).toEqual(['a-event', 'z-transfer']);
+    expect(origin?.resolutions.map((resolution) => resolution.id)).toEqual(['origin.event', 'origin.transfer']);
+    expect(restored?.evidenceIds).toEqual(['kanto-route-1', 'kanto-route-22']);
   });
 });
 
@@ -379,7 +463,7 @@ describe('inferMemberOrigin', () => {
     });
 
     expect(inferMemberOrigin(member(), 'kanto-route-22', context)).toMatchObject({
-      status: 'ordinary', traded: true, evidenceIds: ['trade-species-1', 'kanto-route-1'],
+      status: 'ordinary', traded: true, evidenceIds: ['kanto-route-1', 'trade-species-1'],
     });
     expect(validateResolvedNode(resolvedNode({ level: 11 }), context)).toContainEqual(
       expect.objectContaining({ code: 'level.traded-obedience', severity: 'red' }),

@@ -56,7 +56,7 @@ export interface TimelineValidationContext {
   pack: TimelineValidationPack;
 }
 
-export type OriginInferenceStatus = 'ordinary' | 'override' | 'requires-override' | 'unverified';
+export type OriginInferenceStatus = 'ordinary' | 'ordinary-timing-unverified' | 'override' | 'requires-override' | 'unverified';
 export type RequestedOriginType = Exclude<MemberOrigin['type'], 'inferred' | 'other'>;
 
 export interface MemberOriginInference {
@@ -76,6 +76,16 @@ interface OriginCandidate {
   traded: boolean;
 }
 
+interface UnknownTimingOriginCandidate {
+  evidenceIds: readonly string[];
+  acquisitionId: string;
+  traded: boolean;
+}
+
+function sortedUnique(values: readonly string[]): string[] {
+  return [...new Set(values)].sort((left, right) => left.localeCompare(right));
+}
+
 function finding(
   code: string,
   severity: FindingSeverity,
@@ -86,7 +96,16 @@ function finding(
   evidenceIds: readonly string[],
   resolutions: readonly FindingResolution[] = [],
 ): TimelineFinding {
-  return { code, severity, memberId, field, summary, explanation, evidenceIds, resolutions };
+  return {
+    code,
+    severity,
+    memberId,
+    field,
+    summary,
+    explanation,
+    evidenceIds: sortedUnique(evidenceIds),
+    resolutions: [...resolutions].sort((left, right) => left.id.localeCompare(right.id)),
+  };
 }
 
 function editMemberResolution(): FindingResolution {
@@ -154,20 +173,28 @@ function acquisitionCandidates(
   nodeId: string,
   acquisitions: readonly AcquisitionRecord[],
   context: TimelineValidationContext,
-): OriginCandidate[] {
-  const candidates: OriginCandidate[] = [];
+): { available: OriginCandidate[]; timingUnknown: UnknownTimingOriginCandidate[] } {
+  const available: OriginCandidate[] = [];
+  const timingUnknown: UnknownTimingOriginCandidate[] = [];
   for (const record of acquisitions) {
     if (!isPokemonAcquisition(record) || record.subject.pokemonId !== speciesId || !ordinaryAcquisition(record)) continue;
     const timing = evaluateAcquisitionAtNode(record, nodeId, context.progression, context.rules);
-    if (timing.available !== true || timing.nodeId === null) continue;
-    candidates.push({
-      nodeId: timing.nodeId,
-      evidenceIds: timing.evidenceIds,
-      acquisitionId: record.id,
-      traded: record.subject.kind === 'trade',
-    });
+    if (timing.available === true && timing.nodeId !== null) {
+      available.push({
+        nodeId: timing.nodeId,
+        evidenceIds: timing.evidenceIds,
+        acquisitionId: record.id,
+        traded: record.subject.kind === 'trade',
+      });
+    } else if (timing.available === null) {
+      timingUnknown.push({
+        evidenceIds: timing.evidenceIds,
+        acquisitionId: record.id,
+        traded: record.subject.kind === 'trade',
+      });
+    }
   }
-  return candidates;
+  return { available, timingUnknown };
 }
 
 function requiredOriginTypes(
@@ -182,7 +209,7 @@ function requiredOriginTypes(
     if (record.subject.kind === 'gift-egg') requested.add('hatched');
   }
   if (requested.size === 0) requested.add('external-trade');
-  return [...requested];
+  return [...requested].sort((left, right) => left.localeCompare(right));
 }
 
 /** Infer the earliest ordinary path valid at a node, leaving exceptional provenance explicit. */
@@ -220,9 +247,10 @@ export function inferMemberOrigin(
   if (targetOrder === null) {
     throw new Error(`Corrupt canonical progression: resolved node "${nodeId}" is not present`);
   }
+  const acquisitionEvidence = acquisitionCandidates(member.originalSpeciesId, nodeId, acquisitions, context);
   const candidates = [
     ...encounterCandidates(member.originalSpeciesId, targetOrder, encounters, context.progression),
-    ...acquisitionCandidates(member.originalSpeciesId, nodeId, acquisitions, context),
+    ...acquisitionEvidence.available,
   ].sort((left, right) => (
     (nodeOrder(left.nodeId, context.progression) ?? Number.POSITIVE_INFINITY)
       - (nodeOrder(right.nodeId, context.progression) ?? Number.POSITIVE_INFINITY)
@@ -233,11 +261,25 @@ export function inferMemberOrigin(
     return {
       status: 'ordinary',
       origin: { type: 'inferred', acquisitionId: earliest.acquisitionId, note: null },
-      evidenceIds: earliest.evidenceIds,
+      evidenceIds: sortedUnique(earliest.evidenceIds),
       explanation: `The earliest ordinary acquisition path is available at ${earliest.nodeId}.`,
       requestedOriginTypes: [],
       traded: earliest.traded,
       ordinaryNodeId: earliest.nodeId,
+    };
+  }
+
+  const timingUnknown = [...acquisitionEvidence.timingUnknown]
+    .sort((left, right) => left.acquisitionId.localeCompare(right.acquisitionId))[0];
+  if (timingUnknown) {
+    return {
+      status: 'ordinary-timing-unverified',
+      origin: { type: 'inferred', acquisitionId: timingUnknown.acquisitionId, note: null },
+      evidenceIds: sortedUnique(timingUnknown.evidenceIds),
+      explanation: 'An ordinary acquisition exists, but the pack and rules cannot place it on the progression.',
+      requestedOriginTypes: [],
+      traded: timingUnknown.traded,
+      ordinaryNodeId: null,
     };
   }
 
@@ -272,24 +314,55 @@ function validateCanonicalLearnsetReferences(pack: TimelineValidationPack): void
   }
 }
 
-function validateResolvedIntegrity(node: ResolvedTimelineNode, context: TimelineValidationContext): string[] {
+interface ResolvedIntegrity {
+  memberIds: string[];
+  findings: TimelineFinding[];
+}
+
+function validateResolvedIntegrity(node: ResolvedTimelineNode, context: TimelineValidationContext): ResolvedIntegrity {
   if (nodeOrder(node.nodeId, context.progression) === null) {
     throw new Error(`Corrupt canonical progression: resolved node "${node.nodeId}" is not present`);
   }
   const placements = [...node.party.filter((id): id is string => id !== null), ...node.reserve, ...node.released];
-  if (new Set(placements).size !== placements.length) {
-    throw new Error(`Corrupt resolved node "${node.nodeId}": a member has multiple placements`);
-  }
-  for (const memberId of placements) {
-    if (!context.members[memberId]) throw new Error(`Corrupt resolved node "${node.nodeId}": unknown member "${memberId}"`);
-    if (!node.snapshots[memberId]) throw new Error(`Corrupt resolved node "${node.nodeId}": missing snapshot for "${memberId}"`);
-  }
-  for (const memberId of Object.keys(node.snapshots)) {
-    if (!placements.includes(memberId)) {
-      throw new Error(`Corrupt resolved node "${node.nodeId}": unplaced snapshot for "${memberId}"`);
+  const findings: TimelineFinding[] = [];
+  const counts = new Map<string, number>();
+  placements.forEach((memberId) => counts.set(memberId, (counts.get(memberId) ?? 0) + 1));
+  for (const [memberId, count] of counts) {
+    if (count > 1) {
+      findings.push(finding(
+        'node.placement-duplicate', 'red', memberId, 'member', 'Member has multiple placements',
+        `Member "${memberId}" appears ${count} times at the same resolved node.`,
+        [node.nodeId, memberId, `placements:${count}`],
+      ));
     }
   }
-  return placements;
+
+  const memberIds: string[] = [];
+  for (const memberId of counts.keys()) {
+    if (!context.members[memberId]) {
+      findings.push(finding(
+        'node.member-unknown', 'red', memberId, 'member', 'Resolved placement references an unknown member',
+        `Member "${memberId}" is placed at this node but is absent from timeline members.`, [node.nodeId, memberId],
+      ));
+    } else if (!node.snapshots[memberId]) {
+      findings.push(finding(
+        'node.snapshot-missing', 'red', memberId, 'member', 'Placed member has no snapshot',
+        `Member "${memberId}" is placed at this node without a resolved configuration snapshot.`, [node.nodeId, memberId],
+      ));
+    } else {
+      memberIds.push(memberId);
+    }
+  }
+  for (const memberId of Object.keys(node.snapshots)) {
+    if (!counts.has(memberId)) {
+      findings.push(finding(
+        'node.snapshot-unplaced', 'red', memberId, 'member', 'Snapshot has no placement',
+        `Member "${memberId}" has a resolved snapshot but is absent from party, reserve, and released placements.`,
+        [node.nodeId, memberId],
+      ));
+    }
+  }
+  return { memberIds, findings };
 }
 
 function originFindings(
@@ -327,6 +400,11 @@ function originFindings(
   if (inference.status === 'unverified') {
     findings.push(finding(
       'origin.evidence-missing', 'unverified', member.id, 'origin', 'Origin is unverified',
+      inference.explanation, inference.evidenceIds, [editMemberResolution()],
+    ));
+  } else if (inference.status === 'ordinary-timing-unverified') {
+    findings.push(finding(
+      'origin.timing-unverified', 'unverified', member.id, 'origin', 'Ordinary origin timing is unverified',
       inference.explanation, inference.evidenceIds, [editMemberResolution()],
     ));
   } else if (inference.status === 'requires-override') {
@@ -671,9 +749,9 @@ export function validateResolvedNode(
   context: TimelineValidationContext,
 ): TimelineFinding[] {
   validateCanonicalLearnsetReferences(context.pack);
-  const memberIds = validateResolvedIntegrity(node, context);
-  const findings: TimelineFinding[] = [];
-  for (const memberId of memberIds) {
+  const integrity = validateResolvedIntegrity(node, context);
+  const findings: TimelineFinding[] = [...integrity.findings];
+  for (const memberId of integrity.memberIds) {
     const member = context.members[memberId];
     const snapshot = node.snapshots[memberId];
     const inference = inferMemberOrigin(member, node.nodeId, context);
