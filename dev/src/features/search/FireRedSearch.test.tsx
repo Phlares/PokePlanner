@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FireRedSearch } from './FireRedSearch';
@@ -9,16 +10,27 @@ const DEBOUNCE = 200;
 function renderSearch(overrides: Partial<Parameters<typeof FireRedSearch>[0]> = {}) {
   const onSelectPokemon = vi.fn();
   const onRouteMatchCounts = vi.fn();
-  render(
-    <FireRedSearch
-      pack={pack}
-      onSelectPokemon={onSelectPokemon}
-      onRouteMatchCounts={onRouteMatchCounts}
-      debounceMs={DEBOUNCE}
-      {...overrides}
-    />,
-  );
-  return { onSelectPokemon, onRouteMatchCounts };
+  const onQueryChange = vi.fn();
+  const initialQuery = overrides.query ?? {};
+  function ControlledSearch() {
+    const [query, setQuery] = useState(initialQuery);
+    return (
+      <FireRedSearch
+        pack={pack}
+        onSelectPokemon={onSelectPokemon}
+        onRouteMatchCounts={onRouteMatchCounts}
+        debounceMs={DEBOUNCE}
+        {...overrides}
+        query={query}
+        onQueryChange={(next) => {
+          onQueryChange(next);
+          setQuery(next);
+        }}
+      />
+    );
+  }
+  render(<ControlledSearch />);
+  return { onSelectPokemon, onQueryChange, onRouteMatchCounts };
 }
 
 function typeName(value: string): void {
@@ -41,6 +53,23 @@ afterEach(() => {
 });
 
 describe('FireRedSearch', () => {
+  it('renders the controlled query and emits the complete next query', () => {
+    const onQueryChange = vi.fn();
+    render(
+      <FireRedSearch
+        pack={pack}
+        query={{ type: 'electric' }}
+        onQueryChange={onQueryChange}
+        onSelectPokemon={() => undefined}
+        debounceMs={DEBOUNCE}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: /type/i })).toHaveValue('electric');
+    typeName('Pikachu');
+    expect(onQueryChange).toHaveBeenCalledWith({ type: 'electric', name: 'Pikachu' });
+  });
+
   it('renders the name input and explicit type, ability, and move selects', () => {
     renderSearch();
     expect(screen.getByRole('searchbox', { name: /search/i })).toBeVisible();
@@ -53,6 +82,15 @@ describe('FireRedSearch', () => {
     const { onRouteMatchCounts } = renderSearch();
     expect(screen.getByText(/name or pick a filter/i)).toBeVisible();
     expect(onRouteMatchCounts).toHaveBeenLastCalledWith(undefined);
+  });
+
+  it('keeps a whitespace-only controlled name inactive', () => {
+    renderSearch();
+    typeName('   ');
+    settle();
+
+    expect(screen.getByText(/name or pick a filter/i)).toBeVisible();
+    expect(screen.queryByRole('button', { name: /select/i })).toBeNull();
   });
 
   it('debounces the name input before the result list updates', () => {

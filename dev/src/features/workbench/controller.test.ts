@@ -9,7 +9,6 @@ import {
 const initial = createWorkbenchState({
   currentProgressId: 'pallet-town',
   planningTargetId: 'brock-gym',
-  nodeIds: new Set(['pallet-town', 'route-22']),
 });
 
 function withCandidate(pokemonId: number): WorkbenchState {
@@ -17,14 +16,27 @@ function withCandidate(pokemonId: number): WorkbenchState {
 }
 
 describe('workbench controller', () => {
-  it('selecting a species switches modes and clears stale route detail', () => {
+  it('restores the last route after selecting a species and switching back to routes', () => {
     const routed = reduceWorkbench(initial, { type: 'route-selected', nodeId: 'route-22' });
-    const state = reduceWorkbench(routed, { type: 'candidate-selected', pokemonId: 56 });
+    const candidate = reduceWorkbench(routed, { type: 'candidate-selected', pokemonId: 56 });
+    const state = reduceWorkbench(candidate, { type: 'mode-changed', mode: 'routes' });
+
+    expect(state.mode).toBe('routes');
+    expect(state.lastRouteId).toBe('route-22');
+    expect(state.candidatePokemonId).toBe(56);
+    expect(state.detail).toEqual({ kind: 'route', nodeId: 'route-22' });
+  });
+
+  it('restores the candidate after selecting a route and switching back to pokemon', () => {
+    const candidate = reduceWorkbench(initial, { type: 'candidate-selected', pokemonId: 56 });
+    const routed = reduceWorkbench(candidate, { type: 'route-selected', nodeId: 'route-22' });
+    const state = reduceWorkbench(routed, { type: 'mode-changed', mode: 'pokemon' });
 
     expect(state.mode).toBe('pokemon');
-    expect(state.lastRouteId).toBeNull();
+    expect(state.lastRouteId).toBe('route-22');
     expect(state.candidatePokemonId).toBe(56);
-    expect(state.detail.kind).toBe('pokemon-locations');
+    expect(state.detail).toEqual({ kind: 'pokemon-locations' });
+    expect(state.sheet).toBe('inspector');
   });
 
   it('retains a candidate when its location opens', () => {
@@ -41,7 +53,6 @@ describe('workbench controller', () => {
     const state = createWorkbenchState({
       currentProgressId: 'route-22',
       planningTargetId: 'brock-gym',
-      nodeIds: new Set(['pallet-town', 'route-22']),
     });
 
     expect(state.openMilestoneIds).toEqual(new Set(['brock-gym']));
@@ -68,6 +79,37 @@ describe('workbench controller', () => {
     expect(state.candidatePokemonId).toBeNull();
     expect(state.selectedMemberId).toBeNull();
     expect(state.detail).toEqual({ kind: 'empty' });
+    expect(state.sheet).toBe('closed');
+  });
+
+  it('falls back to a valid route when the selected candidate becomes invalid', () => {
+    const routed = reduceWorkbench(initial, { type: 'route-selected', nodeId: 'route-22' });
+    const candidate = reduceWorkbench(routed, { type: 'candidate-selected', pokemonId: 56 });
+    const state = sanitizeWorkbenchState(candidate, {
+      nodeIds: new Set(['route-22']),
+      pokemonIds: new Set([1]),
+    });
+
+    expect(state.mode).toBe('routes');
+    expect(state.lastRouteId).toBe('route-22');
+    expect(state.candidatePokemonId).toBeNull();
+    expect(state.detail).toEqual({ kind: 'route', nodeId: 'route-22' });
+    expect(state.sheet).toBe('closed');
+  });
+
+  it('closes comparison when the selected member leaves the resolved target party', () => {
+    const comparing: WorkbenchState = {
+      ...withCandidate(56),
+      selectedMemberId: 'starter',
+      sheet: 'comparison',
+    };
+    const state = sanitizeWorkbenchState(comparing, {
+      nodeIds: new Set(['route-22']),
+      pokemonIds: new Set([56]),
+      memberIds: new Set(),
+    });
+
+    expect(state.selectedMemberId).toBeNull();
     expect(state.sheet).toBe('closed');
   });
 

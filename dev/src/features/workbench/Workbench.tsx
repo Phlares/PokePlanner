@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer, useState } from 'react';
+import { useMemo, useReducer, useState } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
@@ -154,7 +154,6 @@ export function Workbench({
   const [controller, dispatch] = useReducer(reduceWorkbench, {
     currentProgressId: playthrough.currentMilestoneId,
     planningTargetId: playthrough.previewMilestoneId,
-    nodeIds: new Set(pack.progression.nodes.map((node) => node.id)),
   }, createWorkbenchState);
   const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(null);
   const [releaseFocusMemberId, setReleaseFocusMemberId] = useState<string | null>(null);
@@ -342,10 +341,6 @@ export function Workbench({
     dispatch({ type: 'candidate-selected', pokemonId });
   };
 
-  const handleSearchActiveChange = useCallback((active: boolean): void => {
-    dispatch({ type: 'search-activity-changed', active });
-  }, []);
-
   const validityFor = (next: Playthrough): WorkbenchValidity => {
     const targetId = next.previewMilestoneId ?? next.currentMilestoneId;
     const configuredNodeId = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === targetId)?.nodeId;
@@ -353,12 +348,24 @@ export function Workbench({
     const nodeIds = new Set(pack.progression.nodes
       .filter((node) => !controller.milestoneFilter || targetOrder === undefined || node.goldenPathOrder <= targetOrder)
       .map((node) => node.id));
+    const resolverNodeId = configuredNodeId === 'starter' && pack.progression.nodes.some((node) => node.id === 'pallet-town')
+      ? 'pallet-town'
+      : configuredNodeId ?? targetId;
+    const resolvedTarget = resolverNodeId === null
+      ? null
+      : resolveTimelineNode({
+        timeline: resolvableTimeline(next.timeline, pack),
+        nodeId: resolverNodeId,
+        progression: pack.progression,
+        rules: FIRE_RED_RULES,
+        pack: index,
+      });
     return {
       currentProgressId: next.currentMilestoneId,
       planningTargetId: next.previewMilestoneId,
       nodeIds,
       pokemonIds: new Set(pack.pokemon.map((record) => record.id)),
-      memberIds: new Set(Object.keys(next.timeline.members)),
+      memberIds: new Set(resolvedTarget?.party.filter((memberId) => memberId !== null) ?? []),
       milestoneIds: new Set(FIRE_RED_RULES.milestones.map((milestone) => milestone.id)),
     };
   };
@@ -455,8 +462,9 @@ export function Workbench({
       <section className="workbench-rail" aria-label="Progression">
         <FireRedSearch
           pack={pack}
+          query={controller.query}
+          onQueryChange={(query) => dispatch({ type: 'query-changed', query })}
           onSelectPokemon={selectSearchResult}
-          onActiveChange={handleSearchActiveChange}
           selectedPokemonId={selectedPokemonId}
         />
         {/* An active query focuses the left column on its matches; the rail returns when it is cleared. */}

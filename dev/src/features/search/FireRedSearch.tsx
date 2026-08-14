@@ -22,29 +22,34 @@ const OBTAIN_LABEL: Record<ObtainabilityStatus, string> = {
 
 export interface FireRedSearchProps {
   pack: FireRedPack;
+  query: SearchQuery;
+  onQueryChange: (query: SearchQuery) => void;
   /** Selecting a result opens the shared inspector surface in place; no navigation, no result cards. */
   onSelectPokemon: (pokemonId: number) => void;
   /** Node-id → matching-species count for the active query, or `undefined` when no filter is set. */
   onRouteMatchCounts?: (counts: Record<string, number> | undefined) => void;
-  /** Fired when a query becomes active/inactive so the caller can focus the results (e.g. hide the rail). */
-  onActiveChange?: (active: boolean) => void;
   selectedPokemonId?: number | null;
   /** Debounce window for the free-text name field; selects apply immediately. */
   debounceMs?: number;
 }
 
-function buildQuery(name: string, type: string, ability: string, move: string): SearchQuery {
-  const query: SearchQuery = {};
-  const trimmed = name.trim();
-  if (trimmed !== '') query.name = trimmed;
-  if (type !== '') query.type = type as PokemonType;
-  if (ability !== '') query.ability = ability;
-  if (move !== '') query.move = move;
-  return query;
+function withQueryValue(
+  query: SearchQuery,
+  key: keyof SearchQuery,
+  value: string,
+): SearchQuery {
+  const next = { ...query };
+  if (value === '') delete next[key];
+  else if (key === 'type') next.type = value as PokemonType;
+  else next[key] = value;
+  return next;
 }
 
 function hasFilter(query: SearchQuery): boolean {
-  return query.name !== undefined || query.type !== undefined || query.ability !== undefined || query.move !== undefined;
+  return (query.name !== undefined && query.name.trim() !== '')
+    || query.type !== undefined
+    || query.ability !== undefined
+    || query.move !== undefined;
 }
 
 function routeCountsFor(results: readonly SearchResult[]): Record<string, number> {
@@ -65,17 +70,15 @@ function routeCountsFor(results: readonly SearchResult[]): Record<string, number
  */
 export function FireRedSearch({
   pack,
+  query,
+  onQueryChange,
   onSelectPokemon,
   onRouteMatchCounts,
-  onActiveChange,
   selectedPokemonId = null,
   debounceMs = 200,
 }: FireRedSearchProps) {
-  const [name, setName] = useState('');
-  const [debouncedName, setDebouncedName] = useState('');
-  const [type, setType] = useState('');
-  const [ability, setAbility] = useState('');
-  const [move, setMove] = useState('');
+  const name = query.name ?? '';
+  const [debouncedName, setDebouncedName] = useState(name);
 
   // Debounce only the free-text name; selects are cheap exact-index lookups and apply immediately.
   useEffect(() => {
@@ -94,17 +97,13 @@ export function FireRedSearch({
   // Route counts react to the immediate name so the rail stays live; the list uses the debounced name.
   useEffect(() => {
     if (onRouteMatchCounts === undefined) return;
-    const liveQuery = buildQuery(name, type, ability, move);
-    onRouteMatchCounts(hasFilter(liveQuery) ? routeCountsFor(searchFireRed(liveQuery, pack)) : undefined);
-  }, [name, type, ability, move, pack, onRouteMatchCounts]);
+    onRouteMatchCounts(hasFilter(query) ? routeCountsFor(searchFireRed(query, pack)) : undefined);
+  }, [query.name, query.type, query.ability, query.move, pack, onRouteMatchCounts]);
 
-  const resultsQuery = buildQuery(debouncedName, type, ability, move);
+  const resultsQuery = { ...query };
+  if (debouncedName === '') delete resultsQuery.name;
+  else resultsQuery.name = debouncedName;
   const active = hasFilter(resultsQuery);
-
-  // Tell the caller when a query is (in)active so it can focus the results, e.g. hide the rail.
-  useEffect(() => {
-    onActiveChange?.(active);
-  }, [active, onActiveChange]);
 
   const results = useMemo(
     () => (active ? searchFireRed(resultsQuery, pack) : []),
@@ -122,13 +121,13 @@ export function FireRedSearch({
             type="search"
             className="search-name-input"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => onQueryChange(withQueryValue(query, 'name', event.target.value))}
             placeholder="Name"
           />
         </div>
         <div className="search-field">
           <label htmlFor="firered-search-type">Type</label>
-          <select id="firered-search-type" value={type} onChange={(event) => setType(event.target.value)}>
+          <select id="firered-search-type" value={query.type ?? ''} onChange={(event) => onQueryChange(withQueryValue(query, 'type', event.target.value))}>
             <option value="">Any type</option>
             {typeOptions.map((option) => (
               <option key={option} value={option}>{titleCase(option)}</option>
@@ -137,7 +136,7 @@ export function FireRedSearch({
         </div>
         <div className="search-field">
           <label htmlFor="firered-search-ability">Ability</label>
-          <select id="firered-search-ability" value={ability} onChange={(event) => setAbility(event.target.value)}>
+          <select id="firered-search-ability" value={query.ability ?? ''} onChange={(event) => onQueryChange(withQueryValue(query, 'ability', event.target.value))}>
             <option value="">Any ability</option>
             {abilityOptions.map((option) => (
               <option key={option} value={option}>{titleCase(option)}</option>
@@ -146,7 +145,7 @@ export function FireRedSearch({
         </div>
         <div className="search-field">
           <label htmlFor="firered-search-move">Move</label>
-          <select id="firered-search-move" value={move} onChange={(event) => setMove(event.target.value)}>
+          <select id="firered-search-move" value={query.move ?? ''} onChange={(event) => onQueryChange(withQueryValue(query, 'move', event.target.value))}>
             <option value="">Any move</option>
             {moveOptions.map((option) => (
               <option key={option.slug} value={option.slug}>{option.name}</option>

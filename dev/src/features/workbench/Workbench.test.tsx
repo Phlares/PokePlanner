@@ -114,6 +114,27 @@ function restoredStarterPlaythrough(): Playthrough {
   return run;
 }
 
+function starterReservedAtMistyPlaythrough(): Playthrough {
+  const run = starterPlaythrough();
+  const starter = run.timeline.keyframes.starter.snapshots.starter;
+  return parsePlaythrough({
+    ...run,
+    timeline: {
+      ...run.timeline,
+      keyframes: {
+        ...run.timeline.keyframes,
+        'misty-gym': {
+          nodeId: 'misty-gym', kind: 'major', party: [null, null, null, null, null, null],
+          reserve: ['starter'], released: [],
+          snapshots: {
+            starter: { ...starter, placement: 'reserve', partySlot: null },
+          },
+        },
+      },
+    },
+  }, packIndex());
+}
+
 function renderWorkbench(overrides: Partial<Parameters<typeof Workbench>[0]> = {}) {
   const onPlaythroughChange = vi.fn();
   const view = render(
@@ -374,6 +395,17 @@ describe('Workbench', () => {
     const next = onPlaythroughChange.mock.calls[0][0];
     expect(next.previewMilestoneId).toBe('brock-gym');
     expect(next.currentMilestoneId).toBeNull();
+  });
+
+  it('closes member context when a target change resolves that member to reserve', () => {
+    renderWorkbench({ playthrough: starterReservedAtMistyPlaythrough() });
+    const previewMisty = screen.getByRole('button', { name: /Preview milestone.*Misty/i });
+    fireEvent.click(screen.getByRole('button', { name: 'Edit Bulbasaur' }));
+    expect(screen.getByRole('dialog', { name: /Edit Bulbasaur at Brock/i })).toBeVisible();
+
+    fireEvent.click(previewMisty);
+
+    expect(screen.queryByRole('dialog', { name: /Edit Bulbasaur/i })).toBeNull();
   });
 
   it('sanitizes a future route after the planning target moves earlier', () => {

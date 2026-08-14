@@ -22,7 +22,6 @@ export interface WorkbenchState {
 export interface WorkbenchStateSource {
   currentProgressId: string | null;
   planningTargetId: string | null;
-  nodeIds: ReadonlySet<string>;
 }
 
 export interface WorkbenchValidity {
@@ -38,7 +37,6 @@ export type WorkbenchAction =
   | { type: 'mode-changed'; mode: WorkbenchMode }
   | { type: 'milestone-filter-changed'; enabled: boolean }
   | { type: 'query-changed'; query: SearchQuery }
-  | { type: 'search-activity-changed'; active: boolean }
   | { type: 'milestone-toggled'; milestoneId: string }
   | { type: 'route-selected'; nodeId: string }
   | { type: 'candidate-selected'; pokemonId: number }
@@ -74,6 +72,7 @@ export function sanitizeWorkbenchState(
     && (validity.pokemonIds === undefined || validity.pokemonIds.has(state.candidatePokemonId))
     ? state.candidatePokemonId
     : null;
+  const candidateBecameInvalid = state.candidatePokemonId !== null && candidatePokemonId === null;
   const selectedMemberId = state.selectedMemberId !== null
     && (validity.memberIds === undefined || validity.memberIds.has(state.selectedMemberId))
     ? state.selectedMemberId
@@ -87,8 +86,12 @@ export function sanitizeWorkbenchState(
     openMilestoneIds.add(targetMilestoneId);
   }
 
+  let mode = state.mode;
   let detail: WorkbenchDetail = state.detail;
-  if (detail.kind === 'route' && !validity.nodeIds.has(detail.nodeId)) {
+  if (candidateBecameInvalid) {
+    mode = 'routes';
+    detail = lastRouteId === null ? { kind: 'empty' } : { kind: 'route', nodeId: lastRouteId };
+  } else if (detail.kind === 'route' && !validity.nodeIds.has(detail.nodeId)) {
     detail = state.mode === 'pokemon' && candidatePokemonId !== null
       ? { kind: 'pokemon-locations' }
       : { kind: 'empty' };
@@ -102,6 +105,7 @@ export function sanitizeWorkbenchState(
 
   return {
     ...state,
+    mode,
     openMilestoneIds,
     lastRouteId,
     candidatePokemonId,
@@ -118,7 +122,6 @@ export function reduceWorkbench(state: WorkbenchState, action: WorkbenchAction):
         return {
           ...state,
           mode: 'routes',
-          candidatePokemonId: null,
           detail: state.lastRouteId === null ? { kind: 'empty' } : { kind: 'route', nodeId: state.lastRouteId },
           sheet: 'closed',
         };
@@ -127,16 +130,12 @@ export function reduceWorkbench(state: WorkbenchState, action: WorkbenchAction):
         ...state,
         mode: 'pokemon',
         detail: state.candidatePokemonId === null ? { kind: 'empty' } : { kind: 'pokemon-locations' },
+        sheet: state.candidatePokemonId === null ? 'closed' : 'inspector',
       };
     case 'milestone-filter-changed':
       return { ...state, milestoneFilter: action.enabled };
     case 'query-changed':
       return { ...state, query: { ...action.query } };
-    case 'search-activity-changed': {
-      const currentlyActive = Object.keys(state.query).length > 0;
-      if (currentlyActive === action.active) return state;
-      return { ...state, query: action.active ? { name: '' } : {} };
-    }
     case 'milestone-toggled': {
       const next = new Set(state.openMilestoneIds);
       if (next.has(action.milestoneId)) next.delete(action.milestoneId);
@@ -148,7 +147,6 @@ export function reduceWorkbench(state: WorkbenchState, action: WorkbenchAction):
         ...state,
         mode: 'routes',
         lastRouteId: action.nodeId,
-        candidatePokemonId: null,
         detail: { kind: 'route', nodeId: action.nodeId },
         sheet: 'closed',
       };
@@ -156,7 +154,6 @@ export function reduceWorkbench(state: WorkbenchState, action: WorkbenchAction):
       return {
         ...state,
         mode: 'pokemon',
-        lastRouteId: null,
         candidatePokemonId: action.pokemonId,
         detail: { kind: 'pokemon-locations' },
         sheet: 'inspector',
