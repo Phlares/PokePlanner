@@ -3,14 +3,23 @@ import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
 import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
+import type { ProgressionContext } from '../../domain/rules/game-rules';
+import { evaluateCapability } from '../../domain/timeline/capabilities';
+import { releaseMember, restoreMember } from '../../domain/timeline/commands';
 import type { TimelineKeyframe, TimelineState } from '../../domain/timeline/model';
 import {
   resolveTimelineNode,
   type ResolvedTimelineNode,
   type TimelineResolverPackView,
 } from '../../domain/timeline/resolver';
+import { validateResolvedNode, type TimelineFinding } from '../../domain/timeline/validation';
 import { FireRedSearch } from '../search/FireRedSearch';
-import { TeamTimeline, type TimelineDisplayNode } from '../timeline/TeamTimeline';
+import {
+  explicitOverrideFrom,
+  TeamTimeline,
+  type TimelineDisplayNode,
+} from '../timeline/TeamTimeline';
+import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
 import { EncounterTable } from './EncounterTable';
 import { PokemonInspector, type MemberDraft } from './PokemonInspector';
 import { ProgressionRail } from './ProgressionRail';
@@ -74,6 +83,48 @@ function resolvableTimeline(timeline: TimelineState, pack: FireRedPack): Timelin
   };
 }
 
+function progressionNodeId(display: TimelineDisplayNode, pack: FireRedPack): string {
+  if (display.progressionNodeId) return display.progressionNodeId;
+  if (pack.progression.nodes.some((node) => node.id === display.id)) return display.id;
+  return display.resolved.nodeId;
+}
+
+function progressionContextAt(display: TimelineDisplayNode, pack: FireRedPack): ProgressionContext {
+  const currentNodeId = progressionNodeId(display, pack);
+  const currentOrder = pack.progression.nodes.find((node) => node.id === currentNodeId)?.goldenPathOrder ?? -1;
+  const completedMilestoneIds = new Set<string>();
+  for (const node of pack.progression.nodes) {
+    if (node.goldenPathOrder >= currentOrder) continue;
+    node.events.forEach((event) => completedMilestoneIds.add(event.id));
+  }
+  const selectedMilestone = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === display.id);
+  const targetMilestone = selectedMilestone
+    ?? FIRE_RED_RULES.milestones.find((milestone) => !completedMilestoneIds.has(milestone.id))
+    ?? FIRE_RED_RULES.milestones.at(-1)!;
+  const badgeIds = new Set(FIRE_RED_RULES.milestones
+    .filter((milestone) => milestone.badgeId !== null && completedMilestoneIds.has(milestone.id))
+    .map((milestone) => milestone.badgeId!));
+  return {
+    currentNodeId,
+    targetMilestoneId: targetMilestone.id,
+    completedMilestoneIds,
+    badgeIds,
+    badgeCount: badgeIds.size,
+    branchChoices: {},
+  };
+}
+
+function timelineWithExplicitNode(timeline: TimelineState, display: TimelineDisplayNode): TimelineState {
+  if (timeline.keyframes[display.id] || timeline.overrides[display.id]) return timeline;
+  return { ...timeline, overrides: { ...timeline.overrides, [display.id]: explicitOverrideFrom(display.resolved) } };
+}
+
+interface EditorSelection {
+  nodeId: string;
+  memberId: string;
+  returnFocusTo: HTMLElement | null;
+}
+
 export interface WorkbenchProps {
   pack: FireRedPack;
   playthrough: Playthrough;
@@ -97,6 +148,7 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
   const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null);
   const [, setMemberDraft] = useState<MemberDraft | null>(null);
   const [searchActive, setSearchActive] = useState(false);
+  const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(null);
 
   const availabilityContext = useMemo(
     () => ({
@@ -114,8 +166,9 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
     ? []
     : pack.encounters.filter((area) => area.nodeId === selectedNodeId);
 
+  const timelineForRoutes = useMemo(() => resolvableTimeline(playthrough.timeline, pack), [pack, playthrough.timeline]);
+
   const { majorNodes, detailedNodes } = useMemo(() => {
-    const timelineForRoutes = resolvableTimeline(playthrough.timeline, pack);
     const progressionIds = new Set(pack.progression.nodes.map((node) => node.id));
     const progressionNodeId = (milestoneId: string): string => {
       const configured = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === milestoneId)?.nodeId;
@@ -155,9 +208,85 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
         };
       });
     return { majorNodes: majors, detailedNodes: detailed };
-  }, [index, pack, playthrough.timeline]);
+  }, [index, pack, playthrough.timeline, timelineForRoutes]);
+
+  const findingsByNode = useMemo(() => {
+    const findings: Record<string, readonly TimelineFinding[]> = {};
+    for (const display of [...majorNodes, ...detailedNodes]) {
+      const nodeId = progressionNodeId(display, pack);
+      findings[display.id] = validateResolvedNode(
+        { ...display.resolved, nodeId },
+        {
+          members: timelineForRoutes.members,
+          progression: pack.progression,
+          progressionContext: progressionContextAt(display, pack),
+          rules: FIRE_RED_RULES,
+          pack: {
+            pokemon: pack.pokemon,
+            learnsets: pack.learnsets,
+            encounters: pack.encounters,
+            acquisitions: pack.acquisitions,
+            evolutions: pack.evolutions,
+          },
+        },
+      );
+    }
+    return findings;
+  }, [detailedNodes, majorNodes, pack, timelineForRoutes.members]);
 
   const speciesNames = useMemo(() => new Map(pack.pokemon.map((record) => [record.id, record.name])), [pack]);
+
+  const editorNode = editorSelection === null
+    ? null
+    : [...majorNodes, ...detailedNodes].find((node) => node.id === editorSelection.nodeId) ?? null;
+  const editorMember = editorSelection === null ? null : playthrough.timeline.members[editorSelection.memberId] ?? null;
+  const editorSnapshot = editorNode === null || editorSelection === null
+    ? null
+    : editorNode.resolved.snapshots[editorSelection.memberId] ?? null;
+  const editorTimeline = editorNode === null ? playthrough.timeline : timelineWithExplicitNode(playthrough.timeline, editorNode);
+  const timelineOrder = useMemo(() => {
+    const routeOrder = new Map(detailedNodes.map((node, index) => [node.id, index * 2]));
+    const entries = [
+      ...detailedNodes.map((node, index) => ({ id: node.id, order: index * 2 })),
+      ...majorNodes.map((node, index) => ({
+        id: node.id,
+        order: (routeOrder.get(node.progressionNodeId ?? '') ?? index * 2) + 1,
+      })),
+    ];
+    return entries.sort((left, right) => left.order - right.order || left.id.localeCompare(right.id)).map((entry) => entry.id);
+  }, [detailedNodes, majorNodes]);
+
+  const editorSpecies = editorSnapshot === null
+    ? []
+    : [...new Set([
+      editorSnapshot.speciesId,
+      ...pack.evolutions.filter((edge) => edge.fromPokemonId === editorSnapshot.speciesId).map((edge) => edge.toPokemonId),
+      ...pack.evolutions.filter((edge) => edge.toPokemonId === editorSnapshot.speciesId).map((edge) => edge.fromPokemonId),
+    ])].map((id) => pack.pokemon.find((record) => record.id === id)).filter((record) => record !== undefined);
+  const editorAbilities = pack.pokemon.find((record) => record.id === editorSnapshot?.speciesId)?.abilities ?? [];
+  const editorMoveIds = new Set(pack.learnsets
+    .find((record) => record.pokemonId === editorSnapshot?.speciesId)?.moves.map((move) => move.moveId) ?? []);
+  const editorCapabilityEvidence = editorNode === null || editorSnapshot === null
+    ? []
+    : [...FIRE_RED_RULES.capabilities.values()].map((capability) => {
+      const context = progressionContextAt(editorNode, pack);
+      const sources = pack.acquisitions
+        .filter((record) => 'moveId' in record.subject && record.subject.moveId === capability.moveId)
+        .map((record) => ({
+          id: record.id,
+          available: record.status === 'standard'
+            && (record.milestoneId === null || context.completedMilestoneIds.has(record.milestoneId)),
+        }));
+      const result = evaluateCapability(editorSnapshot, {
+        capability,
+        progressionContext: context,
+        canLearnMove: (speciesId, moveId) => (
+          pack.learnsets.find((record) => record.pokemonId === speciesId)?.moves.some((move) => move.moveId === moveId) ?? false
+        ),
+        sources,
+      });
+      return { id: capability.id, ...result };
+    });
 
   const selectRoute = (nodeId: string): void => {
     setSelectedNodeId(nodeId);
@@ -180,13 +309,54 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
           timeline={playthrough.timeline}
           majorNodes={majorNodes}
           detailedNodes={detailedNodes}
-          findingsByNode={{}}
+          findingsByNode={findingsByNode}
           pack={index}
           speciesName={(speciesId) => speciesNames.get(speciesId) ?? `Species #${speciesId}`}
           onChange={(timeline) => emit({ timeline })}
           initialNodeId={playthrough.previewMilestoneId ?? playthrough.currentMilestoneId ?? 'starter'}
+          onEditMember={(nodeId, memberId) => setEditorSelection({
+            nodeId,
+            memberId,
+            returnFocusTo: document.activeElement instanceof HTMLElement ? document.activeElement : null,
+          })}
+          onRequestRestore={(nodeId, memberId) => {
+            const display = [...majorNodes, ...detailedNodes].find((node) => node.id === nodeId);
+            if (!display) return;
+            emit({ timeline: restoreMember(timelineWithExplicitNode(playthrough.timeline, display), nodeId, memberId, index) });
+          }}
         />
       </section>
+
+      {editorSelection && editorNode && editorMember && editorSnapshot && (
+        <TimelineMemberEditor
+          timeline={editorTimeline}
+          nodeId={editorNode.id}
+          nodeName={editorNode.name}
+          member={editorMember}
+          snapshot={editorSnapshot}
+          memberName={editorMember.nickname ?? `${speciesNames.get(editorSnapshot.speciesId) ?? `Species #${editorSnapshot.speciesId}`}${
+            Object.values(playthrough.timeline.members).filter((candidate) => candidate.originalSpeciesId === editorMember.originalSpeciesId).length > 1
+              ? ` #${editorMember.speciesSequence}` : ''
+          }`}
+          milestoneOrder={timelineOrder}
+          speciesOptions={editorSpecies.map((record) => ({ id: record.id, name: record.name }))}
+          abilityOptions={editorAbilities.map((ability) => ({ id: ability.id, name: ability.name }))}
+          moveOptions={pack.moves.filter((move) => editorMoveIds.has(move.id)).map((move) => ({ id: move.id, name: move.name }))}
+          natureOptions={FIRE_RED_RULES.natures.map((nature) => ({
+            id: nature.id,
+            name: `${nature.id.charAt(0).toUpperCase()}${nature.id.slice(1)}`,
+          }))}
+          findings={(findingsByNode[editorNode.id] ?? []).filter((finding) => finding.memberId === null || finding.memberId === editorMember.id)}
+          capabilityEvidence={editorCapabilityEvidence}
+          returnFocusTo={editorSelection.returnFocusTo}
+          onApply={(application) => emit({ timeline: application.timeline })}
+          onClose={() => setEditorSelection(null)}
+          onRequestRelease={(nodeId, memberId) => {
+            emit({ timeline: releaseMember(editorTimeline, nodeId, memberId, null, index) });
+            setEditorSelection(null);
+          }}
+        />
+      )}
 
       <section className="workbench-rail" aria-label="Progression">
         <FireRedSearch

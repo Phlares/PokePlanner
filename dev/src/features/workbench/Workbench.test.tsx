@@ -72,6 +72,15 @@ function starterPlaythrough(placement: 'party' | 'released' = 'party'): Playthro
   }, packIndex());
 }
 
+function restoredStarterPlaythrough(): Playthrough {
+  const run = starterPlaythrough();
+  run.timeline.members.starter.lifecycle = [
+    { type: 'released', nodeId: 'starter', from: 'party', to: 'released', reason: null },
+    { type: 'restored', nodeId: 'starter', from: 'released', to: 'reserve', reason: null },
+  ];
+  return run;
+}
+
 function renderWorkbench(overrides: Partial<Parameters<typeof Workbench>[0]> = {}) {
   const onPlaythroughChange = vi.fn();
   render(
@@ -111,16 +120,37 @@ describe('Workbench', () => {
     expect(screen.getByRole('region', { name: /party · 1 of 6 pokémon/i })).toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
     expect(screen.getByText(starter.name)).toBeVisible();
-    expect(screen.queryByRole('button', { name: /^Edit /i })).toBeNull();
+    expect(screen.getByRole('button', { name: /^Edit /i })).toBeVisible();
     expect(screen.queryByRole('button', { name: /^Restore /i })).toBeNull();
   });
 
-  it('does not expose immediate restore actions for released members', () => {
+  it('requires confirmation before restoring released members', () => {
     const { onPlaythroughChange } = renderWorkbench({ playthrough: starterPlaythrough('released') });
 
     expect(screen.getByRole('region', { name: /released .* 1 pok/i })).toBeVisible();
-    expect(screen.queryByRole('button', { name: /^Restore /i })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /^Restore /i }));
     expect(onPlaythroughChange).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm restore' }));
+    expect(onPlaythroughChange).toHaveBeenCalledTimes(1);
+    expect(onPlaythroughChange.mock.calls[0][0].timeline.members.starter.lifecycle.at(-1)?.type).toBe('restored');
+  });
+
+  it('opens the milestone member editor from its visible keyboard action', () => {
+    renderWorkbench({ playthrough: starterPlaythrough() });
+    const trigger = screen.getByRole('button', { name: 'Edit Bulbasaur' });
+    trigger.focus();
+    fireEvent.click(trigger);
+    const dialog = screen.getByRole('dialog', { name: 'Edit Bulbasaur at Brock' });
+    expect(within(dialog).getByLabelText('Level')).toHaveValue(5);
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Close editor' }));
+    expect(trigger).toHaveFocus();
+  });
+
+  it('keys real validation findings into the selected timeline node', () => {
+    renderWorkbench({ playthrough: restoredStarterPlaythrough() });
+    expect(screen.getByText('Restored Pokémon')).toBeVisible();
+    fireEvent.click(screen.getByText('Restored Pokémon'));
+    expect(screen.getByText('This member was restored after release. The audit finding is permanent.')).toBeVisible();
   });
 
   it('selects a route into the table region without touching saved state', () => {

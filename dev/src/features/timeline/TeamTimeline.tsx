@@ -32,7 +32,7 @@ export interface TeamTimelineProps {
   propagationPreview?: PropagationPreview | null;
 }
 
-function overrideFrom(node: ResolvedTimelineNode): TimelineKeyframe {
+export function explicitOverrideFrom(node: ResolvedTimelineNode): TimelineKeyframe {
   return {
     nodeId: node.nodeId,
     kind: 'override',
@@ -123,7 +123,7 @@ export function TeamTimeline({
     if (selected.resolved.source === 'auto-filled') {
       onChange({
         ...timeline,
-        overrides: { ...timeline.overrides, [selected.id]: overrideFrom(selected.resolved) },
+        overrides: { ...timeline.overrides, [selected.id]: explicitOverrideFrom(selected.resolved) },
       });
     }
     onEditMember(selected.id, memberId);
@@ -203,6 +203,19 @@ export function TeamTimeline({
         <p className="timeline-propagation-preview" role="status">
           Pending change · {propagationPreview.targetNodeIds.length} targets · {propagationPreview.protectedNodeIds.length} protected
         </p>
+      )}
+
+      {selectedFindings.length > 0 && (
+        <section className="timeline-findings timeline-node-findings" aria-label={`Findings at ${selected.name}`}>
+          <h3>Findings</h3>
+          {selectedFindings.map((finding, index) => (
+            <details key={`${finding.code}-${finding.memberId ?? 'node'}-${index}`} className="timeline-finding" data-severity={finding.severity}>
+              <summary tabIndex={0}><span>{finding.severity}</span>{finding.summary}</summary>
+              <p tabIndex={0}>{finding.explanation}</p>
+              {finding.evidenceIds.length > 0 && <code>{finding.evidenceIds.join(' · ')}</code>}
+            </details>
+          ))}
+        </section>
       )}
 
       <section className="timeline-party" aria-label={`Party · ${filledPartyCount} of 6 Pokémon`}>

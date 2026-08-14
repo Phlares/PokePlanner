@@ -1,5 +1,5 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { PersistentMember } from '../../domain/timeline/model';
 import type { ResolvedTimelineNode } from '../../domain/timeline/resolver';
 import { MemberPool } from './MemberPool';
@@ -75,5 +75,53 @@ describe('MemberPool', () => {
     const released = screen.getByRole('region', { name: 'Released · 2 Pokémon' });
     expect(within(released).getAllByRole('listitem')).toHaveLength(2);
     expect(within(released).getByText('Historical archive')).toBeVisible();
+  });
+
+  it('confirms restoration, retains its permanent warning and restores trigger focus', () => {
+    const node = resolved(0, 1);
+    const memberId = node.released[0];
+    const members = {
+      'mankey-1': member('mankey-1', 56),
+      [memberId]: { ...member(memberId, 56), speciesSequence: 2 },
+    };
+    const onRequestRestore = vi.fn();
+    render(
+      <MemberPool
+        kind="released"
+        memberIds={node.released}
+        members={members}
+        snapshots={node.snapshots}
+        speciesName={() => 'Mankey'}
+        onRequestRestore={onRequestRestore}
+      />,
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Restore Mankey #2' });
+    fireEvent.click(trigger);
+    expect(onRequestRestore).not.toHaveBeenCalled();
+    const confirmation = screen.getByRole('alertdialog', { name: 'Restore Mankey #2?' });
+    expect(within(confirmation).getByText(/permanent restored warning/i)).toBeVisible();
+    expect(within(confirmation).getByRole('button', { name: 'Cancel restore' })).toHaveFocus();
+    fireEvent.click(within(confirmation).getByRole('button', { name: 'Confirm restore' }));
+
+    expect(onRequestRestore).toHaveBeenCalledWith(memberId);
+    expect(screen.getByText('Restored Pokémon')).toBeVisible();
+    expect(trigger).toHaveFocus();
+  });
+
+  it('collapses and restores a member pool from a visible keyboard button', () => {
+    const node = resolved(2, 0);
+    const members = Object.fromEntries(node.reserve.map((id, index) => [id, member(id, index + 1)]));
+    render(
+      <MemberPool kind="reserve" memberIds={node.reserve} members={members} snapshots={node.snapshots} speciesName={(id) => `Pokemon ${id}`} />,
+    );
+
+    const toggle = screen.getByRole('button', { name: 'Toggle Reserve pool' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('list')).toBeNull();
+    fireEvent.click(toggle);
+    expect(screen.getByRole('list')).toBeVisible();
   });
 });

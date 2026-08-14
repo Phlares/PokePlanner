@@ -192,6 +192,8 @@ describe('TeamTimeline', () => {
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'Restore Bulbasaur' }));
+    expect(onRequestRestore).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm restore' }));
     expect(onRequestRestore).toHaveBeenCalledWith('brock-gym', 'starter');
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -218,6 +220,19 @@ describe('TeamTimeline', () => {
     expect(screen.getByRole('button', { name: /Misty.*2 findings/i })).toHaveAttribute('aria-current', 'step');
     fireEvent.click(screen.getByRole('button', { name: /Brock.*1 findings/i }));
     expect(screen.getByText('1 finding')).toBeVisible();
+  });
+
+  it('renders selected-node findings as focusable details', () => {
+    const finding: TimelineFinding = {
+      code: 'ability.illegal', severity: 'red', memberId: 'starter', field: 'ability',
+      summary: 'Ability is not legal', explanation: 'Choose an ability listed for this evolution stage.',
+      evidenceIds: ['ability:72'], resolutions: [],
+    };
+    renderTimeline({ findingsByNode: { 'misty-gym': [finding] } });
+
+    expect(screen.getByText('Ability is not legal')).toHaveAttribute('tabindex', '0');
+    fireEvent.click(screen.getByText('Ability is not legal'));
+    expect(screen.getByText(/Choose an ability listed/)).toHaveAttribute('tabindex', '0');
   });
 
   it('summarizes an injected propagation preview without applying it', () => {
