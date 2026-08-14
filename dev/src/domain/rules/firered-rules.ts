@@ -1,5 +1,5 @@
 import type { ProgressionEvent, ProgressionNode, RouteProgression } from '../progression';
-import type { CapabilityRule, GameRules, NatureRule, PlanningMilestone } from './game-rules';
+import type { CapabilityRule, GameRules, NatureRule, PlanningMilestone, ProgressionContext } from './game-rules';
 
 /** Ordered FireRed availability milestones retained for compatibility with the legacy API. */
 export const FIRE_RED_MILESTONE_ORDER = [
@@ -58,6 +58,27 @@ const CAPABILITIES: readonly CapabilityRule[] = [
 ];
 
 const MILESTONE_BY_ID = new Map(MILESTONES.map((milestone) => [milestone.id, milestone]));
+
+/** Pack acquisitions whose location is documented but not linked to a progression event. */
+const ACQUISITION_NODE_IDS: Readonly<Record<string, string>> = {
+  'starter-bulbasaur': 'pallet-town',
+  'starter-charmander': 'pallet-town',
+  'starter-squirtle': 'pallet-town',
+  'trade-farfetchd': 'vermilion-city',
+  'trade-jynx': 'cerulean-city',
+  'trade-lickitung': 'kanto-route-18',
+  'trade-mr-mime': 'kanto-route-2',
+  'trade-seel': 'cinnabar-island',
+  'trade-tangela': 'cinnabar-island',
+};
+
+function tradedObedienceLimit(context: ProgressionContext): number | null {
+  if (context.badgeIds.has('earth-badge')) return null;
+  if (context.badgeIds.has('marsh-badge')) return 70;
+  if (context.badgeIds.has('rainbow-badge')) return 50;
+  if (context.badgeIds.has('cascade-badge')) return 30;
+  return 10;
+}
 
 interface MilestoneBoundary {
   milestone: PlanningMilestone;
@@ -131,4 +152,6 @@ export const FIRE_RED_RULES: GameRules = {
   targetLevel: (milestoneId) => MILESTONE_BY_ID.get(milestoneId)?.targetLevel ?? 0,
   targetLevelAtNode,
   canTrade: (context) => context.completedMilestoneIds.has('viridian-oaks-parcel'),
+  acquisitionNodeId: (acquisitionId) => ACQUISITION_NODE_IDS[acquisitionId] ?? null,
+  tradedObedienceLimit,
 };

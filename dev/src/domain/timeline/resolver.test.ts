@@ -43,6 +43,8 @@ const rules: GameRules = {
   targetLevel: (milestoneId) => milestoneId === 'brock-gym' ? 14 : milestoneId === 'misty-gym' ? 20 : 0,
   targetLevelAtNode: (nodeId) => nodeId === 'route-1' || nodeId === 'route-22' || nodeId === 'pewter-city' ? 14 : 20,
   canTrade: () => true,
+  acquisitionNodeId: () => null,
+  tradedObedienceLimit: () => null,
 };
 
 function edge(

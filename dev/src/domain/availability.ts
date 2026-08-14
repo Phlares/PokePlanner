@@ -1,5 +1,7 @@
 import type { FireRedPack } from '../data/game-pack';
 import type { AcquisitionRecord, LearnsetRecord } from './pack';
+import type { RouteProgression } from './progression';
+import type { GameRules } from './rules/game-rules';
 import { FIRE_RED_MILESTONE_ORDER } from './rules/firered-rules';
 
 /**
@@ -50,6 +52,44 @@ export interface MoveAvailabilityReport {
   futureLevel: MoveAvailabilityEntry[];
   futureMilestone: MoveAvailabilityEntry[];
   unavailable: MoveAvailabilityEntry[];
+}
+
+/** Evidence-backed acquisition timing; null availability means the pack/rules cannot place it. */
+export interface AcquisitionAtNode {
+  nodeId: string | null;
+  available: boolean | null;
+  evidenceIds: readonly string[];
+}
+
+function progressionAcquisitionNodeId(
+  acquisitionId: string,
+  progression: RouteProgression,
+): string | null {
+  for (const node of progression.nodes) {
+    if (node.events.some((event) => event.acquisitionIds?.includes(acquisitionId))) return node.id;
+  }
+  return null;
+}
+
+/** Resolve one canonical acquisition against a selected route node without inventing timing. */
+export function evaluateAcquisitionAtNode(
+  record: AcquisitionRecord,
+  targetNodeId: string,
+  progression: RouteProgression,
+  rules: GameRules,
+): AcquisitionAtNode {
+  const nodeId = rules.acquisitionNodeId(record.id)
+    ?? progressionAcquisitionNodeId(record.id, progression)
+    ?? rules.milestones.find((milestone) => milestone.id === record.milestoneId)?.nodeId
+    ?? progression.nodes.find((node) => node.events.some((event) => event.id === record.milestoneId))?.id
+    ?? null;
+  if (nodeId === null) return { nodeId: null, available: null, evidenceIds: [record.id] };
+
+  const source = progression.nodes.find((node) => node.id === nodeId);
+  const target = progression.nodes.find((node) => node.id === targetNodeId);
+  const evidenceIds = [record.id, nodeId];
+  if (!source || !target) return { nodeId, available: null, evidenceIds };
+  return { nodeId, available: source.goldenPathOrder <= target.goldenPathOrder, evidenceIds };
 }
 
 /** Ordinal 0 is "obtainable from the start" (null / starter-selection); gyms are 1…9. */

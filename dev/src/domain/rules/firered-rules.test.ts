@@ -59,4 +59,23 @@ describe('FIRE_RED_RULES', () => {
     expect(FIRE_RED_RULES.canTrade(beforeBrock)).toBe(false);
     expect(FIRE_RED_RULES.canTrade(afterPokedex)).toBe(true);
   });
+
+  it('maps canonical acquisitions to their earliest progression nodes', () => {
+    expect(FIRE_RED_RULES.acquisitionNodeId('starter-charmander')).toBe('pallet-town');
+    expect(FIRE_RED_RULES.acquisitionNodeId('trade-mr-mime')).toBe('kanto-route-2');
+    expect(FIRE_RED_RULES.acquisitionNodeId('unknown-acquisition')).toBeNull();
+  });
+
+  it('uses FireRed badge identities for traded obedience limits', () => {
+    const context = {
+      currentNodeId: 'pallet-town', targetMilestoneId: 'brock-gym',
+      completedMilestoneIds: new Set<string>(), badgeIds: new Set<string>(), badgeCount: 0, branchChoices: {},
+    };
+
+    expect(FIRE_RED_RULES.tradedObedienceLimit(context)).toBe(10);
+    expect(FIRE_RED_RULES.tradedObedienceLimit({ ...context, badgeIds: new Set(['cascade-badge']) })).toBe(30);
+    expect(FIRE_RED_RULES.tradedObedienceLimit({ ...context, badgeIds: new Set(['rainbow-badge']) })).toBe(50);
+    expect(FIRE_RED_RULES.tradedObedienceLimit({ ...context, badgeIds: new Set(['marsh-badge']) })).toBe(70);
+    expect(FIRE_RED_RULES.tradedObedienceLimit({ ...context, badgeIds: new Set(['earth-badge']) })).toBeNull();
+  });
 });

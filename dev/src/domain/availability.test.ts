@@ -3,7 +3,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { loadFireRedPack, type FireRedPack } from '../data/game-pack';
-import { evaluateMoveAvailability, MILESTONE_ORDER, type AvailabilityContext, type MoveAvailabilityReport } from './availability';
+import type { AcquisitionRecord } from './pack';
+import {
+  evaluateAcquisitionAtNode,
+  evaluateMoveAvailability,
+  MILESTONE_ORDER,
+  type AvailabilityContext,
+  type MoveAvailabilityReport,
+} from './availability';
 import { FIRE_RED_RULES } from './rules/firered-rules';
 
 /**
@@ -50,6 +57,35 @@ describe('availability milestone compatibility', () => {
     expect(MILESTONE_ORDER).toEqual([
       'brock-gym', 'misty-gym', 'surge-gym', 'erika-gym', 'koga-gym', 'sabrina-gym', 'blaine-gym', 'giovanni-gym', 'champion',
     ]);
+  });
+
+  it('resolves static rule and milestone acquisition timing without guessing absent evidence', () => {
+    const record = (id: string, milestoneId: string | null): AcquisitionRecord => ({
+      id,
+      name: id,
+      subject: { kind: 'trade', pokemonId: 122 },
+      milestoneId,
+      prerequisites: [],
+      repeatable: false,
+      status: 'standard',
+      provenance: [{
+        sourceId: 'test-source', revision: '1', locator: null,
+        method: 'manual', confidence: 'verified', note: null,
+      }],
+    });
+
+    expect(evaluateAcquisitionAtNode(
+      record('trade-mr-mime', null), 'kanto-route-1', pack.progression, FIRE_RED_RULES,
+    )).toMatchObject({ nodeId: 'kanto-route-2', available: false, evidenceIds: ['trade-mr-mime', 'kanto-route-2'] });
+    expect(evaluateAcquisitionAtNode(
+      record('trade-mr-mime', null), 'pewter-city', pack.progression, FIRE_RED_RULES,
+    )).toMatchObject({ nodeId: 'kanto-route-2', available: true });
+    expect(evaluateAcquisitionAtNode(
+      record('unknown-acquisition', 'brock-gym'), 'kanto-route-22', pack.progression, FIRE_RED_RULES,
+    )).toMatchObject({ nodeId: 'pewter-city', available: false });
+    expect(evaluateAcquisitionAtNode(
+      record('unknown-acquisition', null), 'pewter-city', pack.progression, FIRE_RED_RULES,
+    )).toEqual({ nodeId: null, available: null, evidenceIds: ['unknown-acquisition'] });
   });
 });
 

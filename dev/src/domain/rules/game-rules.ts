@@ -56,4 +56,8 @@ export interface GameRules {
   targetLevel(milestoneId: string): number;
   targetLevelAtNode(nodeId: string, progression: RouteProgression): number;
   canTrade(context: ProgressionContext): boolean;
+  /** Earliest ordinary node for version-specific acquisitions absent from generic pack links. */
+  acquisitionNodeId(acquisitionId: string): string | null;
+  /** Highest level at which a traded member obeys, or null when all traded levels obey. */
+  tradedObedienceLimit(context: ProgressionContext): number | null;
 }
