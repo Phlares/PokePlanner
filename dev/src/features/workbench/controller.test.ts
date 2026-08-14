@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   createWorkbenchState,
   reduceWorkbench,
+  sameWorkbenchValidity,
   sanitizeWorkbenchState,
   type WorkbenchState,
+  type WorkbenchValidity,
 } from './controller';
 
 const initial = createWorkbenchState({
@@ -124,5 +126,39 @@ describe('workbench controller', () => {
 
     expect(state.openMilestoneIds).toContain('misty-gym');
     expect(state.detail).toEqual({ kind: 'empty' });
+  });
+});
+
+describe('workbench validity comparison', () => {
+  const base: WorkbenchValidity = {
+    currentProgressId: 'starter',
+    planningTargetId: 'brock-gym',
+    nodeIds: new Set(['pallet-town']),
+    pokemonIds: new Set([1]),
+    memberIds: new Set(['starter']),
+    milestoneIds: new Set(['brock-gym']),
+  };
+
+  it('treats a re-derived validity with the same content as already sanitized against', () => {
+    expect(sameWorkbenchValidity(base, {
+      currentProgressId: 'starter',
+      planningTargetId: 'brock-gym',
+      nodeIds: new Set(['pallet-town']),
+      pokemonIds: new Set([1]),
+      memberIds: new Set(['starter']),
+      milestoneIds: new Set(['brock-gym']),
+    })).toBe(true);
+  });
+
+  it.each<[string, Partial<WorkbenchValidity>]>([
+    ['current progress moves', { currentProgressId: 'brock-gym' }],
+    ['the planning target moves', { planningTargetId: 'misty-gym' }],
+    ['an equally sized node scope names other nodes', { nodeIds: new Set(['viridian-city']) }],
+    ['the species scope grows', { pokemonIds: new Set([1, 4]) }],
+    ['the target party changes', { memberIds: new Set<string>() }],
+    ['the milestone set changes', { milestoneIds: new Set(['brock-gym', 'misty-gym']) }],
+    ['a set stops being constrained', { pokemonIds: undefined }],
+  ])('needs sanitizing again when %s', (_case, change) => {
+    expect(sameWorkbenchValidity(base, { ...base, ...change })).toBe(false);
   });
 });

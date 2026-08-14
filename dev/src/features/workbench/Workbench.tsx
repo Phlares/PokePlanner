@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
@@ -24,7 +24,12 @@ import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
 import { EncounterTable } from './EncounterTable';
 import { PokemonInspector, type MemberDraft } from './PokemonInspector';
 import { ProgressionRail } from './ProgressionRail';
-import { createWorkbenchState, reduceWorkbench, type WorkbenchValidity } from './controller';
+import {
+  createWorkbenchState,
+  reduceWorkbench,
+  sameWorkbenchValidity,
+  type WorkbenchValidity,
+} from './controller';
 
 /** Local id-resolution surface so emitted playthrough changes are re-validated before they leave. */
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex & TimelineResolverPackView {
@@ -59,27 +64,31 @@ function resolvedFromFrame(frame: TimelineKeyframe): ResolvedTimelineNode {
   };
 }
 
-/** Map persisted milestone ids onto their progression locations for route interpolation only. */
-function resolvableTimeline(timeline: TimelineState, pack: FireRedPack): TimelineState {
-  const progressionIds = new Set(pack.progression.nodes.map((node) => node.id));
-  const progressionNodeId = (nodeId: string): string => {
-    const configured = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === nodeId)?.nodeId;
-    if (configured && progressionIds.has(configured)) return configured;
-    if (nodeId === 'starter' && progressionIds.has('pallet-town')) return 'pallet-town';
-    return nodeId;
-  };
+/**
+ * Map one persisted milestone or node id onto the progression location that carries it. The starter
+ * milestone is configured before the pack's first node, so it borrows that node's location.
+ */
+function progressionNodeIdFor(nodeId: string, progressionIds: ReadonlySet<string>): string {
+  const configured = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === nodeId)?.nodeId;
+  if (configured && progressionIds.has(configured)) return configured;
+  if (nodeId === 'starter' && progressionIds.has('pallet-town')) return 'pallet-town';
+  return configured ?? nodeId;
+}
+
+/** Rewrite a timeline onto progression locations so route interpolation can order every frame. */
+function resolvableTimeline(timeline: TimelineState, progressionIds: ReadonlySet<string>): TimelineState {
   return {
     ...timeline,
     members: Object.fromEntries(Object.entries(timeline.members).map(([memberId, member]) => [memberId, {
       ...member,
-      acquiredAtNodeId: progressionNodeId(member.acquiredAtNodeId),
+      acquiredAtNodeId: progressionNodeIdFor(member.acquiredAtNodeId, progressionIds),
     }])),
     keyframes: Object.fromEntries(Object.values(timeline.keyframes).map((frame) => {
-      const nodeId = progressionNodeId(frame.nodeId);
+      const nodeId = progressionNodeIdFor(frame.nodeId, progressionIds);
       return [nodeId, { ...frame, nodeId }];
     })),
     overrides: Object.fromEntries(Object.values(timeline.overrides).map((frame) => {
-      const nodeId = progressionNodeId(frame.nodeId);
+      const nodeId = progressionNodeIdFor(frame.nodeId, progressionIds);
       return [nodeId, { ...frame, nodeId }];
     })),
   };
@@ -116,6 +125,39 @@ function progressionContextAt(display: TimelineDisplayNode, pack: FireRedPack): 
   };
 }
 
+/** Derive which ephemeral selections the durable run still admits; the sole input to sanitization. */
+function workbenchValidity(
+  playthrough: Playthrough,
+  pack: FireRedPack,
+  index: PlaythroughPackIndex & TimelineResolverPackView,
+  milestoneFilter: boolean,
+): WorkbenchValidity {
+  const progressionIds = new Set(pack.progression.nodes.map((node) => node.id));
+  const targetId = playthrough.previewMilestoneId ?? playthrough.currentMilestoneId;
+  const targetNodeId = targetId === null ? null : progressionNodeIdFor(targetId, progressionIds);
+  const targetOrder = pack.progression.nodes.find((node) => node.id === targetNodeId)?.goldenPathOrder;
+  const nodeIds = new Set(pack.progression.nodes
+    .filter((node) => !milestoneFilter || targetOrder === undefined || node.goldenPathOrder <= targetOrder)
+    .map((node) => node.id));
+  const resolvedTarget = targetNodeId === null
+    ? null
+    : resolveTimelineNode({
+      timeline: resolvableTimeline(playthrough.timeline, progressionIds),
+      nodeId: targetNodeId,
+      progression: pack.progression,
+      rules: FIRE_RED_RULES,
+      pack: index,
+    });
+  return {
+    currentProgressId: playthrough.currentMilestoneId,
+    planningTargetId: playthrough.previewMilestoneId,
+    nodeIds,
+    pokemonIds: new Set(pack.pokemon.map((record) => record.id)),
+    memberIds: new Set(resolvedTarget?.party.filter((memberId) => memberId !== null) ?? []),
+    milestoneIds: new Set(FIRE_RED_RULES.milestones.map((milestone) => milestone.id)),
+  };
+}
+
 function timelineWithExplicitNode(timeline: TimelineState, display: TimelineDisplayNode): TimelineState {
   if (timeline.keyframes[display.id] || timeline.overrides[display.id]) return timeline;
   return { ...timeline, overrides: { ...timeline.overrides, [display.id]: explicitOverrideFrom(display.resolved) } };
@@ -137,12 +179,13 @@ export interface WorkbenchProps {
 }
 
 /**
- * The FireRed timeline workbench shell: the chronological progression rail, a route-detail
- * region, a contextual inspector region, and the full-width milestone team timeline. Selected route,
- * event, and search text are ephemeral view state owned here; only milestone changes are
- * validated and emitted upward for App to persist. Selecting a wild Pokémon in the encounter
- * table opens the inspector in place; the inspector can commit a candidate into the active preview
- * checkpoint while field edits continue through the scoped timeline editor.
+ * The FireRed timeline workbench shell: search and the progression rail, a route-detail region, the
+ * inspector, and the full-width milestone team timeline. Every ephemeral navigation choice — mode,
+ * query, folds, last route, candidate, selected member, detail and sheet — lives in the controller
+ * reducer, so no second copy is kept here; the member editor's node and return-focus target are the
+ * one exception, and are released whenever the controller drops the selected member. The durable run
+ * belongs to App: changes are re-validated before they are emitted upward and only take effect when
+ * they come back as a prop, which is also what reconciles ephemeral selections against it.
  */
 export function Workbench({
   pack,
@@ -159,6 +202,28 @@ export function Workbench({
   const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(null);
   const [releaseFocusMemberId, setReleaseFocusMemberId] = useState<string | null>(null);
   const [reserveFocusMemberId, setReserveFocusMemberId] = useState<string | null>(null);
+
+  // The durable run arrives as a prop from any source — a milestone control here, an imported run in
+  // App — so ephemeral selections are reconciled against what the run currently admits rather than
+  // by whichever caller changed it.
+  const validity = useMemo(
+    () => workbenchValidity(playthrough, pack, index, controller.milestoneFilter),
+    [controller.milestoneFilter, index, pack, playthrough],
+  );
+  const [sanitizedAgainst, setSanitizedAgainst] = useState(validity);
+  if (!sameWorkbenchValidity(sanitizedAgainst, validity)) {
+    setSanitizedAgainst(validity);
+    dispatch({ type: 'sanitize', validity });
+  }
+
+  // Sanitization can drop the selected member while its editor is open. The editor restores focus
+  // only from its own close controls, so the trigger is released here on that involuntary close.
+  useEffect(() => {
+    if (controller.selectedMemberId !== null || editorSelection === null) return;
+    const trigger = editorSelection.returnFocusTo;
+    setEditorSelection(null);
+    queueMicrotask(() => trigger?.focus());
+  }, [controller.selectedMemberId, editorSelection]);
 
   const availabilityContext = useMemo(
     () => ({
@@ -180,16 +245,13 @@ export function Workbench({
     ? []
     : pack.encounters.filter((area) => area.nodeId === selectedNodeId);
 
-  const timelineForRoutes = useMemo(() => resolvableTimeline(playthrough.timeline, pack), [pack, playthrough.timeline]);
+  const progressionIds = useMemo(() => new Set(pack.progression.nodes.map((node) => node.id)), [pack]);
+  const timelineForRoutes = useMemo(
+    () => resolvableTimeline(playthrough.timeline, progressionIds),
+    [playthrough.timeline, progressionIds],
+  );
 
   const { majorNodes, detailedNodes } = useMemo(() => {
-    const progressionIds = new Set(pack.progression.nodes.map((node) => node.id));
-    const progressionNodeId = (milestoneId: string): string => {
-      const configured = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === milestoneId)?.nodeId;
-      if (configured && progressionIds.has(configured)) return configured;
-      if (milestoneId === 'starter' && progressionIds.has('pallet-town')) return 'pallet-town';
-      return configured ?? milestoneId;
-    };
     const resolveRoute = (nodeId: string): ResolvedTimelineNode => resolveTimelineNode({
       timeline: timelineForRoutes,
       nodeId,
@@ -199,12 +261,13 @@ export function Workbench({
     });
     const majors: TimelineDisplayNode[] = FIRE_RED_RULES.milestones.map((milestone) => {
       const explicit = playthrough.timeline.overrides[milestone.id] ?? playthrough.timeline.keyframes[milestone.id];
+      const milestoneNodeId = progressionNodeIdFor(milestone.id, progressionIds);
       const resolved = explicit
         ? resolvedFromFrame(explicit)
-        : { ...resolveRoute(progressionNodeId(milestone.id)), nodeId: milestone.id };
+        : { ...resolveRoute(milestoneNodeId), nodeId: milestone.id };
       return {
         id: milestone.id,
-        progressionNodeId: progressionNodeId(milestone.id),
+        progressionNodeId: milestoneNodeId,
         name: milestone.name,
         targetLevel: milestone.targetLevel,
         resolved,
@@ -222,7 +285,7 @@ export function Workbench({
         };
       });
     return { majorNodes: majors, detailedNodes: detailed };
-  }, [index, pack, playthrough.timeline, timelineForRoutes]);
+  }, [index, pack, playthrough.timeline, progressionIds, timelineForRoutes]);
 
   const findingsByNode = useMemo(() => {
     const findings: Record<string, readonly TimelineFinding[]> = {};
@@ -342,41 +405,6 @@ export function Workbench({
     dispatch({ type: 'candidate-selected', pokemonId });
   };
 
-  const validityFor = (next: Playthrough): WorkbenchValidity => {
-    const targetId = next.previewMilestoneId ?? next.currentMilestoneId;
-    const configuredNodeId = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === targetId)?.nodeId;
-    const targetOrder = pack.progression.nodes.find((node) => node.id === configuredNodeId)?.goldenPathOrder;
-    const nodeIds = new Set(pack.progression.nodes
-      .filter((node) => !controller.milestoneFilter || targetOrder === undefined || node.goldenPathOrder <= targetOrder)
-      .map((node) => node.id));
-    const resolverNodeId = configuredNodeId === 'starter' && pack.progression.nodes.some((node) => node.id === 'pallet-town')
-      ? 'pallet-town'
-      : configuredNodeId ?? targetId;
-    const resolvedTarget = resolverNodeId === null
-      ? null
-      : resolveTimelineNode({
-        timeline: resolvableTimeline(next.timeline, pack),
-        nodeId: resolverNodeId,
-        progression: pack.progression,
-        rules: FIRE_RED_RULES,
-        pack: index,
-      });
-    return {
-      currentProgressId: next.currentMilestoneId,
-      planningTargetId: next.previewMilestoneId,
-      nodeIds,
-      pokemonIds: new Set(pack.pokemon.map((record) => record.id)),
-      memberIds: new Set(resolvedTarget?.party.filter((memberId) => memberId !== null) ?? []),
-      milestoneIds: new Set(FIRE_RED_RULES.milestones.map((milestone) => milestone.id)),
-    };
-  };
-
-  const emitTarget = (patch: Pick<Partial<Playthrough>, 'currentMilestoneId' | 'previewMilestoneId'>): void => {
-    const next = parsePlaythrough({ ...playthrough, ...patch, updatedAt: now() }, index);
-    onPlaythroughChange(next);
-    dispatch({ type: 'sanitize', validity: validityFor(next) });
-  };
-
   return (
     <div className="workbench">
       <section className="workbench-timeline" aria-label="Team timeline">
@@ -477,8 +505,8 @@ export function Workbench({
             previewMilestoneId={playthrough.previewMilestoneId}
             onSelectNode={selectRoute}
             onSelectEvent={() => undefined}
-            onSetCurrentMilestone={(milestoneId) => emitTarget({ currentMilestoneId: milestoneId })}
-            onSetPreviewMilestone={(milestoneId) => emitTarget({ previewMilestoneId: milestoneId })}
+            onSetCurrentMilestone={(milestoneId) => emit({ currentMilestoneId: milestoneId })}
+            onSetPreviewMilestone={(milestoneId) => emit({ previewMilestoneId: milestoneId })}
           />
         )}
       </section>

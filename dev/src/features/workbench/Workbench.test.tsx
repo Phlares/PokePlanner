@@ -149,6 +149,15 @@ function renderWorkbench(overrides: Partial<Parameters<typeof Workbench>[0]> = {
   return { onPlaythroughChange, ...view };
 }
 
+/** Render behind a state-holding parent, so emitted changes return as props the way App feeds them. */
+function renderControlledWorkbench(initial: Playthrough = emptyPlaythrough()) {
+  function ControlledWorkbench() {
+    const [playthrough, setPlaythrough] = useState(initial);
+    return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
+  }
+  return render(<ControlledWorkbench />);
+}
+
 function siblingBranchesOutside(boundary: HTMLElement): HTMLElement[] {
   const branches = new Set<HTMLElement>();
   let branch: HTMLElement = boundary;
@@ -212,15 +221,10 @@ describe('Workbench', () => {
   });
 
   it('makes restore confirmation modal across the full shell and releases the boundary on cancel and confirm', async () => {
-    function ControlledWorkbench() {
-      const [playthrough, setPlaythrough] = useState(() => starterPlaythrough('released'));
-      return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
-    }
-
     const sentinel = document.createElement('button');
     sentinel.setAttribute('aria-hidden', 'false');
     document.body.append(sentinel);
-    render(<ControlledWorkbench />);
+    renderControlledWorkbench(starterPlaythrough('released'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Restore Bulbasaur' }));
     let confirmation = screen.getByRole('alertdialog', { name: 'Restore Bulbasaur?' });
@@ -242,12 +246,7 @@ describe('Workbench', () => {
   });
 
   it('moves focus to the restored reserve member after the controlled rerender', async () => {
-    function ControlledWorkbench() {
-      const [playthrough, setPlaythrough] = useState(() => starterPlaythrough('released'));
-      return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
-    }
-
-    render(<ControlledWorkbench />);
+    renderControlledWorkbench(starterPlaythrough('released'));
     fireEvent.click(screen.getByRole('button', { name: 'Restore Bulbasaur' }));
     fireEvent.click(screen.getByRole('button', { name: 'Confirm restore' }));
 
@@ -306,12 +305,7 @@ describe('Workbench', () => {
   });
 
   it('moves focus to the released member Restore control after the controlled rerender', async () => {
-    function ControlledWorkbench() {
-      const [playthrough, setPlaythrough] = useState(() => starterPlaythrough());
-      return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
-    }
-
-    render(<ControlledWorkbench />);
+    renderControlledWorkbench(starterPlaythrough());
     const originalEdit = screen.getByRole('button', { name: 'Edit Bulbasaur' });
     originalEdit.focus();
     fireEvent.click(originalEdit);
@@ -326,12 +320,7 @@ describe('Workbench', () => {
   });
 
   it('moves focus to the boxed member Reserve Edit control after the controlled rerender', async () => {
-    function ControlledWorkbench() {
-      const [playthrough, setPlaythrough] = useState(() => starterPlaythrough());
-      return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
-    }
-
-    render(<ControlledWorkbench />);
+    renderControlledWorkbench(starterPlaythrough());
     const originalEdit = screen.getByRole('button', { name: 'Edit Bulbasaur' });
     originalEdit.focus();
     fireEvent.click(originalEdit);
@@ -398,7 +387,7 @@ describe('Workbench', () => {
   });
 
   it('closes member context when a target change resolves that member to reserve', () => {
-    renderWorkbench({ playthrough: starterReservedAtMistyPlaythrough() });
+    renderControlledWorkbench(starterReservedAtMistyPlaythrough());
     const previewMisty = screen.getByRole('button', { name: /Preview milestone.*Misty/i });
     fireEvent.click(screen.getByRole('button', { name: 'Edit Bulbasaur' }));
     expect(screen.getByRole('dialog', { name: /Edit Bulbasaur at Brock/i })).toBeVisible();
@@ -408,12 +397,44 @@ describe('Workbench', () => {
     expect(screen.queryByRole('dialog', { name: /Edit Bulbasaur/i })).toBeNull();
   });
 
+  it('returns focus to the editor trigger when a target change closes the member editor', async () => {
+    renderControlledWorkbench(starterReservedAtMistyPlaythrough());
+    // The rail goes inert behind the editor, so its control is captured before the modal opens.
+    const previewMisty = screen.getByRole('button', { name: /Preview milestone.*Misty/i });
+    const trigger = screen.getByRole('button', { name: 'Edit Bulbasaur' });
+    trigger.focus();
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog', { name: /Edit Bulbasaur at Brock/i })).toBeVisible();
+    expect(trigger).not.toHaveFocus();
+
+    fireEvent.click(previewMisty);
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Edit Bulbasaur' })).toHaveFocus());
+  });
+
   it('sanitizes a future route after the planning target moves earlier', () => {
-    renderWorkbench();
+    renderControlledWorkbench();
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
     expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
 
     fireEvent.click(screen.getByRole('button', { name: /Preview milestone.*Brock/i }));
+
+    expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
+  });
+
+  it('scopes selections to the starter location when the durable run switches to that target', () => {
+    const { onPlaythroughChange, rerender } = renderWorkbench();
+    fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
+    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
+
+    rerender(
+      <Workbench
+        pack={pack}
+        playthrough={parsePlaythrough({ ...emptyPlaythrough(), currentMilestoneId: 'starter' }, packIndex())}
+        onPlaythroughChange={onPlaythroughChange}
+        now={() => 1000}
+      />,
+    );
 
     expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
   });

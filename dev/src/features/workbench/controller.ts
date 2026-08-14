@@ -61,6 +61,25 @@ export function createWorkbenchState(source: WorkbenchStateSource): WorkbenchSta
   };
 }
 
+function sameIds<Id>(left: ReadonlySet<Id> | undefined, right: ReadonlySet<Id> | undefined): boolean {
+  if (left === right) return true;
+  if (left === undefined || right === undefined) return false;
+  return left.size === right.size && [...left].every((id) => right.has(id));
+}
+
+/**
+ * Compare two validities by the selections they accept. Sanitization is idempotent whenever this
+ * holds, so callers reconcile on content rather than on the identity of a freshly derived object.
+ */
+export function sameWorkbenchValidity(left: WorkbenchValidity, right: WorkbenchValidity): boolean {
+  return left.currentProgressId === right.currentProgressId
+    && left.planningTargetId === right.planningTargetId
+    && sameIds(left.nodeIds, right.nodeIds)
+    && sameIds(left.pokemonIds, right.pokemonIds)
+    && sameIds(left.memberIds, right.memberIds)
+    && sameIds(left.milestoneIds, right.milestoneIds);
+}
+
 export function sanitizeWorkbenchState(
   state: WorkbenchState,
   validity: WorkbenchValidity,

@@ -281,6 +281,39 @@ describe('App boot and persistence', () => {
     expect(after).toEqual(before);
   });
 
+  it('sanitizes stale workbench selections when an imported run replaces the mounted one', async () => {
+    const { factory, get } = sharedRepoFactory();
+    render(<App {...baseProps({ openRepository: factory })} />);
+    await createRun();
+
+    // Plan against Misty so Cerulean City is inside the target's scope, then select it.
+    fireEvent.click(screen.getByRole('button', { name: /preview milestone.*misty/i }));
+    await waitFor(async () => expect((await get()!.list())[0].previewMilestoneId).toBe('misty-gym'));
+    fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
+    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Export run' }));
+    const exported = JSON.parse(
+      ((await screen.findByLabelText('Playthrough export JSON')) as HTMLTextAreaElement).value,
+    );
+    fireEvent.change(screen.getByLabelText('Import run JSON'), {
+      target: {
+        value: JSON.stringify({
+          ...exported,
+          id: 'imported-run',
+          name: 'Imported run',
+          previewMilestoneId: 'brock-gym',
+        }),
+      },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Import run' }));
+
+    // The import replaces the durable target under a still-mounted workbench.
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /preview milestone.*brock/i })).toHaveAttribute('aria-pressed', 'true'));
+    expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
+  });
+
   it('shows an actionable error and no partial UI when the pack is corrupt', async () => {
     const fetcher = vi.fn(async () => new Response('', { status: 500 })) as unknown as typeof fetch;
     const { factory } = sharedRepoFactory();
