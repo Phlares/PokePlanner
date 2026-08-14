@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { editAbility, replaceSlotEdit } from './commands';
+import { editAbility, editSnapshotField, replaceSlotEdit } from './commands';
 import { applyPropagation, previewPropagation } from './propagation';
 import type { MemberSnapshot, PersistentMember, TimelineKeyframe, TimelineState } from './model';
 
@@ -85,6 +85,20 @@ describe('scoped timeline propagation', () => {
     expect(preview.conflictNodeIds).toEqual([]);
   });
 
+  it('stops forward slot replacement at an explicit override retaining the original occupant', () => {
+    const timeline: TimelineState = {
+      ...timelineWithReplacementBoundary(),
+      overrides: {
+        'koga-gym': frame('koga-gym', 'old', { old: snapshot({ level: 40 }) }, 'override'),
+      },
+    };
+
+    const preview = previewPropagation(timeline, replaceSlotEdit('misty-gym', 0, 'pikachu'), 'forward', order);
+
+    expect(preview.targetNodeIds).toEqual(['misty-gym', 'erika-gym']);
+    expect(preview.protectedNodeIds).toEqual(['koga-gym']);
+  });
+
   it('moves each displaced slot occupant to reserve without changing its independent level', () => {
     const timeline = timelineWithReplacementBoundary();
     const edit = replaceSlotEdit('misty-gym', 0, 'pikachu');
@@ -113,6 +127,20 @@ describe('scoped timeline propagation', () => {
     expect(next.keyframes['erika-gym'].snapshots.old.level).toBe(31);
     expect(next.overrides['koga-gym'].snapshots.protected.abilityId).toBe(61);
     expect(preview.skippedNodeIds).toEqual(['koga-gym']);
+  });
+
+  it('clones caller-owned moves before applying a field propagation', () => {
+    const timeline = timelineWithReplacementBoundary();
+    const callerMoves = [{ moveId: 11, status: 'available-now' as const, level: null, milestoneId: null }];
+    const edit = editSnapshotField('old', 'moves', callerMoves);
+    const preview = previewPropagation(timeline, edit, 'all-populated', order);
+
+    const next = applyPropagation(timeline, edit, 'all-populated', order, preview);
+    callerMoves[0].moveId = 99;
+
+    expect(next.keyframes['misty-gym'].snapshots.old.moves).toEqual([
+      { moveId: 11, status: 'available-now', level: null, milestoneId: null },
+    ]);
   });
 
   it('only affects the selected populated node for the here scope', () => {

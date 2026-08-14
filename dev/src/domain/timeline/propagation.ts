@@ -117,17 +117,15 @@ function replacementPreview(
   if (!timeline.members[edit.memberId] || !findSnapshot(timeline, edit.memberId) || !source) {
     return { targetNodeIds: [], skippedNodeIds: [], protectedNodeIds: [], conflictNodeIds: candidates.map((frame) => frame.nodeId) };
   }
-  const originalOccupant = source.keyframe.party[edit.slot];
   const targets: string[] = [];
   const protectedNodeIds: string[] = [];
   const conflictNodeIds: string[] = [];
   const milestoneOrders = new Map(milestoneOrder.map((nodeId, order) => [nodeId, order]));
   for (const frame of candidates) {
-    const laterChangedOverride = scope === 'forward'
+    const laterExplicitOverride = scope === 'forward'
       && frame.order > source.order
-      && timeline.overrides[frame.nodeId] !== undefined
-      && frame.keyframe.party[edit.slot] !== originalOccupant;
-    if (laterChangedOverride) {
+      && timeline.overrides[frame.nodeId] !== undefined;
+    if (laterExplicitOverride) {
       protectedNodeIds.push(frame.nodeId);
       break;
     }
@@ -208,12 +206,13 @@ export function applyPropagation(
     throw new Error('Propagation preview is stale; create a new preview before applying');
   }
   if (edit.kind === 'snapshot-field') {
+    const value = edit.field === 'moves' ? edit.value.map((move) => ({ ...move })) : edit.value;
     return current.targetNodeIds.reduce((next, nodeId) => {
       const keyframe = next.overrides[nodeId] ?? next.keyframes[nodeId];
       const snapshot = keyframe.snapshots[edit.memberId];
       return withFrame(next, nodeId, {
         ...keyframe,
-        snapshots: { ...keyframe.snapshots, [edit.memberId]: { ...snapshot, [edit.field]: edit.value } },
+        snapshots: { ...keyframe.snapshots, [edit.memberId]: { ...snapshot, [edit.field]: value } },
       });
     }, timeline);
   }
