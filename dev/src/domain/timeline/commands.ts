@@ -177,6 +177,7 @@ export function moveToReserve(state: TimelineState, nodeId: string, memberId: st
   const location = keyframeAt(state, nodeId, pack);
   const { keyframe: removed, from } = withoutMember(location.keyframe, memberId);
   if (from === null) throw new Error(`Timeline member "${memberId}" has no placement at node "${nodeId}"`);
+  if (from === 'released') throw new Error(`Timeline member "${memberId}" must be restored before moving to reserve`);
   const keyframe = withSnapshotPlacement({ ...removed, reserve: [...removed.reserve, memberId] }, memberId, snapshotFor(state, location.keyframe, memberId), 'reserve', null);
   return parsed(withLifecycle(withKeyframe(state, location, keyframe), memberId, lifecycle('moved-reserve', nodeId, from, 'reserve', null)), pack);
 }
@@ -186,6 +187,7 @@ export function releaseMember(state: TimelineState, nodeId: string, memberId: st
   const location = keyframeAt(state, nodeId, pack);
   const { keyframe: removed, from } = withoutMember(location.keyframe, memberId);
   if (from === null) throw new Error(`Timeline member "${memberId}" has no placement at node "${nodeId}"`);
+  if (from === 'released') throw new Error(`Timeline member "${memberId}" is already released`);
   const keyframe = withSnapshotPlacement({ ...removed, released: [...removed.released, memberId] }, memberId, snapshotFor(state, location.keyframe, memberId), 'released', null);
   return parsed(withLifecycle(withKeyframe(state, location, keyframe), memberId, lifecycle('released', nodeId, from, 'released', reason)), pack);
 }

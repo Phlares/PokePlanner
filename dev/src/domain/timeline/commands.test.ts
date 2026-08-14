@@ -85,6 +85,18 @@ describe('timeline lifecycle commands', () => {
     expect(() => placeInParty(released, 'misty-gym', 'm1', 0, view)).toThrow(/restore/i);
   });
 
+  it('requires restoration before a released member can move to reserve', () => {
+    const released = releaseMember(stateWithParty('m1'), 'misty-gym', 'm1', 'permadeath', view);
+
+    expect(() => moveToReserve(released, 'misty-gym', 'm1', view)).toThrow(/restore/i);
+  });
+
+  it('rejects releasing an already released member', () => {
+    const released = releaseMember(stateWithParty('m1'), 'misty-gym', 'm1', 'permadeath', view);
+
+    expect(() => releaseMember(released, 'misty-gym', 'm1', 'again', view)).toThrow(/already released/i);
+  });
+
   it('moves a party member between slots without duplicating its placement', () => {
     const state = stateWithParty('m1');
     const next = placeInParty(state, 'misty-gym', 'm1', 1, view);
