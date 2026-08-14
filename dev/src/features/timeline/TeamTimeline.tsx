@@ -73,6 +73,7 @@ export function TeamTimeline({
   const [mode, setMode] = useState<TimelineMode>('major');
   const [selectedNodeId, setSelectedNodeId] = useState(initialMajor?.id ?? '');
   const [copyOpen, setCopyOpen] = useState(false);
+  const [restoreFocusMemberId, setRestoreFocusMemberId] = useState<string | null>(null);
   const [autoLevel, setAutoLevel] = useState(false);
   const [levelMode, setLevelMode] = useState<Exclude<LevelMode, 'manual'>>(
     timeline.preferences.levelMode === 'manual' ? 'match' : timeline.preferences.levelMode,
@@ -255,6 +256,8 @@ export function TeamTimeline({
           snapshots={selected.resolved.snapshots}
           speciesName={speciesName}
           onEditMember={onEditMember ? editMember : undefined}
+          focusMemberId={restoreFocusMemberId}
+          onFocusHandled={() => setRestoreFocusMemberId(null)}
         />
         <MemberPool
           kind="released"
@@ -263,7 +266,10 @@ export function TeamTimeline({
           snapshots={selected.resolved.snapshots}
           speciesName={speciesName}
           onEditMember={onEditMember ? editMember : undefined}
-          onRequestRestore={onRequestRestore ? (memberId) => onRequestRestore(selected.id, memberId) : undefined}
+          onRequestRestore={onRequestRestore ? (memberId) => {
+            setRestoreFocusMemberId(memberId);
+            onRequestRestore(selected.id, memberId);
+          } : undefined}
         />
       </div>
     </div>

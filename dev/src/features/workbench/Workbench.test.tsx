@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Workbench } from './Workbench';
@@ -72,6 +73,38 @@ function starterPlaythrough(placement: 'party' | 'released' = 'party'): Playthro
   }, packIndex());
 }
 
+function speciesPlaythrough(speciesId: number, moveIds: readonly number[]): Playthrough {
+  const pokemon = pack.pokemon.find((record) => record.id === speciesId)!;
+  const base = emptyPlaythrough();
+  return parsePlaythrough({
+    ...base,
+    currentMilestoneId: 'starter',
+    previewMilestoneId: 'brock-gym',
+    timeline: {
+      members: {
+        member: {
+          id: 'member', originalSpeciesId: speciesId, speciesSequence: 1, nickname: null, natureId: null,
+          origin: { type: 'inferred', acquisitionId: null, note: null }, acquiredAtNodeId: 'starter', notes: '', lifecycle: [],
+        },
+      },
+      keyframes: {
+        starter: {
+          nodeId: 'starter', kind: 'major', party: ['member', null, null, null, null, null], reserve: [], released: [],
+          snapshots: {
+            member: {
+              speciesId, level: 7, abilityId: pokemon.abilities.find((ability) => ability.slot === 1)!.id,
+              moves: moveIds.map((moveId) => ({ moveId, status: 'available-now' as const, level: null, milestoneId: null })),
+              heldItemId: null, placement: 'party', partySlot: 0, review: { moves: false, heldItem: false },
+            },
+          },
+        },
+      },
+      overrides: {},
+      preferences: { levelMode: 'manual', autoEvolveLevel: false },
+    },
+  }, packIndex());
+}
+
 function restoredStarterPlaythrough(): Playthrough {
   const run = starterPlaythrough();
   run.timeline.members.starter.lifecycle = [
@@ -135,6 +168,22 @@ describe('Workbench', () => {
     expect(onPlaythroughChange.mock.calls[0][0].timeline.members.starter.lifecycle.at(-1)?.type).toBe('restored');
   });
 
+  it('moves focus to the restored reserve member after the controlled rerender', async () => {
+    function ControlledWorkbench() {
+      const [playthrough, setPlaythrough] = useState(() => starterPlaythrough('released'));
+      return <Workbench pack={pack} playthrough={playthrough} onPlaythroughChange={setPlaythrough} now={() => 1000} />;
+    }
+
+    render(<ControlledWorkbench />);
+    fireEvent.click(screen.getByRole('button', { name: 'Restore Bulbasaur' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm restore' }));
+
+    const reserve = await screen.findByRole('region', { name: /Reserve .* 1 Pok/i });
+    const edit = within(reserve).getByRole('button', { name: 'Edit Bulbasaur' });
+    await waitFor(() => expect(edit).toHaveFocus());
+    expect(screen.queryByRole('button', { name: 'Restore Bulbasaur' })).toBeNull();
+  });
+
   it('opens the milestone member editor from its visible keyboard action', () => {
     renderWorkbench({ playthrough: starterPlaythrough() });
     const trigger = screen.getByRole('button', { name: 'Edit Bulbasaur' });
@@ -144,6 +193,24 @@ describe('Workbench', () => {
     expect(within(dialog).getByLabelText('Level')).toHaveValue(5);
     fireEvent.click(within(dialog).getByRole('button', { name: 'Close editor' }));
     expect(trigger).toHaveFocus();
+  });
+
+  it('atomically reconciles Caterpie ability and moves when evolving to Metapod', () => {
+    const { onPlaythroughChange } = renderWorkbench({ playthrough: speciesPlaythrough(10, [33, 81]) });
+    fireEvent.click(screen.getByRole('button', { name: 'Edit Caterpie' }));
+    const dialog = screen.getByRole('dialog', { name: 'Edit Caterpie at Brock' });
+    fireEvent.change(within(dialog).getByLabelText('Evolution stage'), { target: { value: '11' } });
+    fireEvent.click(within(dialog).getByRole('radio', { name: 'This milestone only' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Apply change' }));
+
+    const next = onPlaythroughChange.mock.calls.at(-1)![0] as Playthrough;
+    expect(next.timeline.overrides['brock-gym'].snapshots.member).toMatchObject({
+      speciesId: 11,
+      abilityId: 61,
+      moves: [],
+      review: { moves: true, heldItem: false },
+    });
+    expect(() => parsePlaythrough(next, packIndex())).not.toThrow();
   });
 
   it('keys real validation findings into the selected timeline node', () => {

@@ -74,6 +74,10 @@ function renderEditor(overrides: Partial<Parameters<typeof TimelineMemberEditor>
       abilityOptions={[{ id: 61, name: 'Vital Spirit' }, { id: 72, name: 'Anger Point' }]}
       moveOptions={[{ id: 68, name: 'Counter' }]}
       natureOptions={[{ id: 'adamant', name: 'Adamant' }]}
+      speciesCompatibility={[
+        { speciesId: 56, legalAbilityIds: [61, 72], defaultAbilityId: 61, legalMoveIds: [68] },
+        { speciesId: 57, legalAbilityIds: [61, 72], defaultAbilityId: 61, legalMoveIds: [68] },
+      ]}
       findings={[originFinding]}
       capabilityEvidence={[{ id: 'cut', state: 'conditional', explanation: 'Can learn Cut after the Cascade Badge.' }]}
       onApply={onApply}
@@ -176,5 +180,67 @@ describe('TimelineMemberEditor', () => {
     expect(onRequestRelease).not.toHaveBeenCalled();
     fireEvent.click(within(confirmation).getByRole('button', { name: 'Confirm release' }));
     expect(onRequestRelease).toHaveBeenCalledWith('brock-gym', 'mankey-2');
+  });
+
+  it('traps release confirmation focus and Escape cancels only the alertdialog', () => {
+    const { onClose } = renderEditor({ onRequestRelease: vi.fn() });
+    fireEvent.click(screen.getByRole('button', { name: 'Release Mankey #2' }));
+
+    const confirmation = screen.getByRole('alertdialog', { name: 'Release Mankey #2?' });
+    const cancel = within(confirmation).getByRole('button', { name: 'Cancel release' });
+    const confirm = within(confirmation).getByRole('button', { name: 'Confirm release' });
+    expect(screen.getByRole('region', { name: 'Member configuration' }).closest('.timeline-editor-body')).toHaveAttribute('inert');
+    expect(cancel).toHaveFocus();
+
+    fireEvent.keyDown(confirmation, { key: 'Tab', shiftKey: true });
+    expect(confirm).toHaveFocus();
+    fireEvent.keyDown(confirmation, { key: 'Tab' });
+    expect(cancel).toHaveFocus();
+    fireEvent.keyDown(confirmation, { key: 'Escape' });
+
+    expect(screen.queryByRole('alertdialog', { name: 'Release Mankey #2?' })).toBeNull();
+    expect(screen.getByRole('dialog', { name: 'Edit Mankey #2 at Brock' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Release Mankey #2' })).toHaveFocus();
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it('offers release only for party and reserve placements', () => {
+    const onRequestRelease = vi.fn();
+    const baseSnapshot = timeline().keyframes['brock-gym'].snapshots['mankey-2'];
+    const { rerender } = render(
+      <TimelineMemberEditor
+        timeline={timeline()} nodeId="brock-gym" member={member} memberName="Mankey #2"
+        milestoneOrder={['brock-gym']} speciesOptions={[{ id: 56, name: 'Mankey' }]}
+        abilityOptions={[{ id: 61, name: 'Vital Spirit' }]} moveOptions={[]} natureOptions={[]}
+        speciesCompatibility={[{ speciesId: 56, legalAbilityIds: [61], defaultAbilityId: 61, legalMoveIds: [] }]}
+        findings={[]} capabilityEvidence={[]} onApply={vi.fn()} onClose={vi.fn()} onRequestRelease={onRequestRelease}
+        snapshot={baseSnapshot}
+      />,
+    );
+    expect(screen.getByRole('button', { name: 'Release Mankey #2' })).toBeVisible();
+
+    rerender(
+      <TimelineMemberEditor
+        timeline={timeline()} nodeId="brock-gym" member={member} memberName="Mankey #2"
+        milestoneOrder={['brock-gym']} speciesOptions={[{ id: 56, name: 'Mankey' }]}
+        abilityOptions={[{ id: 61, name: 'Vital Spirit' }]} moveOptions={[]} natureOptions={[]}
+        speciesCompatibility={[{ speciesId: 56, legalAbilityIds: [61], defaultAbilityId: 61, legalMoveIds: [] }]}
+        findings={[]} capabilityEvidence={[]} onApply={vi.fn()} onClose={vi.fn()} onRequestRelease={onRequestRelease}
+        snapshot={{ ...baseSnapshot, placement: 'reserve', partySlot: null }}
+      />,
+    );
+    expect(screen.getByRole('button', { name: 'Release Mankey #2' })).toBeVisible();
+
+    rerender(
+      <TimelineMemberEditor
+        timeline={timeline()} nodeId="brock-gym" member={member} memberName="Mankey #2"
+        milestoneOrder={['brock-gym']} speciesOptions={[{ id: 56, name: 'Mankey' }]}
+        abilityOptions={[{ id: 61, name: 'Vital Spirit' }]} moveOptions={[]} natureOptions={[]}
+        speciesCompatibility={[{ speciesId: 56, legalAbilityIds: [61], defaultAbilityId: 61, legalMoveIds: [] }]}
+        findings={[]} capabilityEvidence={[]} onApply={vi.fn()} onClose={vi.fn()} onRequestRelease={onRequestRelease}
+        snapshot={{ ...baseSnapshot, placement: 'released', partySlot: null }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Release Mankey #2' })).toBeNull();
   });
 });

@@ -9,6 +9,8 @@ export interface MemberPoolProps {
   speciesName: (speciesId: number) => string;
   onEditMember?: (memberId: string) => void;
   onRequestRestore?: (memberId: string) => void;
+  focusMemberId?: string | null;
+  onFocusHandled?: () => void;
 }
 
 function speciesCounts(members: Readonly<Record<string, PersistentMember>>): ReadonlyMap<number, number> {
@@ -31,38 +33,82 @@ export function memberDisplayName(
 }
 
 /** An unbounded ownership pool. Reserve and released members are rendered by separate instances. */
-export function MemberPool({ kind, memberIds, members, snapshots, speciesName, onEditMember, onRequestRestore }: MemberPoolProps) {
+export function MemberPool({
+  kind,
+  memberIds,
+  members,
+  snapshots,
+  speciesName,
+  onEditMember,
+  onRequestRestore,
+  focusMemberId = null,
+  onFocusHandled,
+}: MemberPoolProps) {
   const title = kind === 'reserve' ? 'Reserve' : 'Released';
   const counts = speciesCounts(members);
   const [restoreMemberId, setRestoreMemberId] = useState<string | null>(null);
   const [restoredMemberIds, setRestoredMemberIds] = useState<ReadonlySet<string>>(new Set());
   const [open, setOpen] = useState(true);
+  const poolToggle = useRef<HTMLButtonElement>(null);
+  const editTriggers = useRef(new Map<string, HTMLButtonElement>());
   const restoreTriggers = useRef(new Map<string, HTMLButtonElement>());
   const restoreCancel = useRef<HTMLButtonElement>(null);
+  const restoreConfirm = useRef<HTMLButtonElement>(null);
+  const restoreFocusAfterCancel = useRef<string | null>(null);
   useEffect(() => {
-    if (restoreMemberId !== null) restoreCancel.current?.focus();
+    if (restoreMemberId !== null) {
+      restoreCancel.current?.focus();
+    } else if (restoreFocusAfterCancel.current !== null) {
+      restoreTriggers.current.get(restoreFocusAfterCancel.current)?.focus();
+      restoreFocusAfterCancel.current = null;
+    }
   }, [restoreMemberId]);
+  useEffect(() => {
+    if (focusMemberId === null || !memberIds.includes(focusMemberId)) return;
+    (editTriggers.current.get(focusMemberId) ?? poolToggle.current)?.focus();
+    onFocusHandled?.();
+  }, [focusMemberId, memberIds, onFocusHandled]);
   const finishRestore = (memberId: string): void => {
     onRequestRestore?.(memberId);
     setRestoredMemberIds((current) => new Set([...current, memberId]));
     setRestoreMemberId(null);
-    restoreTriggers.current.get(memberId)?.focus();
   };
   const cancelRestore = (memberId: string): void => {
+    restoreFocusAfterCancel.current = memberId;
     setRestoreMemberId(null);
-    restoreTriggers.current.get(memberId)?.focus();
   };
+  const onRestoreKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      if (restoreMemberId !== null) cancelRestore(restoreMemberId);
+    } else if (event.key === 'Tab') {
+      const first = restoreCancel.current;
+      const last = restoreConfirm.current;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    }
+  };
+  const restoringMember = restoreMemberId === null ? undefined : members[restoreMemberId];
+  const restoringSnapshot = restoreMemberId === null ? undefined : snapshots[restoreMemberId];
+  const restoringName = restoringMember && restoringSnapshot
+    ? memberDisplayName(restoringMember, restoringSnapshot, speciesName, counts)
+    : null;
   return (
     <section className="timeline-pool" aria-label={`${title} · ${memberIds.length} Pokémon`}>
-      <header className="timeline-pool-head">
+      <header className="timeline-pool-head" inert={restoreMemberId !== null || undefined}>
         <h3>
-          <button type="button" className="timeline-pool-toggle" aria-label={`Toggle ${title} pool`} aria-expanded={open} onClick={() => setOpen((current) => !current)}>
+          <button ref={poolToggle} type="button" className="timeline-pool-toggle" aria-label={`Toggle ${title} pool`} aria-expanded={open} onClick={() => setOpen((current) => !current)}>
             {title}
           </button>
         </h3>
         <p>{kind === 'reserve' ? 'Unbounded pool' : 'Historical archive'}</p>
       </header>
-      {open && <ul className="timeline-pool-list">
+      {open && <ul className="timeline-pool-list" inert={restoreMemberId !== null || undefined}>
         {memberIds.map((memberId) => {
           const member = members[memberId];
           const snapshot = snapshots[memberId];
@@ -73,7 +119,13 @@ export function MemberPool({ kind, memberIds, members, snapshots, speciesName, o
               <span className="timeline-member-name">{name}</span>
               <span className="timeline-member-level">Lv {snapshot.level}</span>
               {onEditMember && (
-                <button type="button" className="timeline-text-action" aria-label={`Edit ${name}`} onClick={() => onEditMember(memberId)}>
+                <button
+                  ref={(element) => { if (element) editTriggers.current.set(memberId, element); }}
+                  type="button"
+                  className="timeline-text-action"
+                  aria-label={`Edit ${name}`}
+                  onClick={() => onEditMember(memberId)}
+                >
                   Edit
                 </button>
               )}
@@ -89,19 +141,25 @@ export function MemberPool({ kind, memberIds, members, snapshots, speciesName, o
                   Restore
                 </button>
               )}
-              {restoreMemberId === memberId && (
-                <div className="timeline-lifecycle-confirmation" role="alertdialog" aria-modal="true" aria-label={`Restore ${name}?`}>
-                  <p>Restoring moves this member to reserve and adds a permanent restored warning to its history.</p>
-                  <button ref={restoreCancel} type="button" onClick={() => cancelRestore(memberId)}>Cancel restore</button>
-                  <button type="button" onClick={() => finishRestore(memberId)}>Confirm restore</button>
-                </div>
-              )}
               {restoredMemberIds.has(memberId) && <p className="timeline-restored-warning" role="status">Restored Pokémon</p>}
             </li>
           );
         })}
       </ul>}
       {open && memberIds.length === 0 && <p className="timeline-pool-empty">No {title.toLowerCase()} members.</p>}
+      {restoreMemberId !== null && restoringName !== null && (
+        <div
+          className="timeline-lifecycle-confirmation"
+          role="alertdialog"
+          aria-modal="true"
+          aria-label={`Restore ${restoringName}?`}
+          onKeyDown={onRestoreKeyDown}
+        >
+          <p>Restoring moves this member to reserve and adds a permanent restored warning to its history.</p>
+          <button ref={restoreCancel} type="button" onClick={() => cancelRestore(restoreMemberId)}>Cancel restore</button>
+          <button ref={restoreConfirm} type="button" onClick={() => finishRestore(restoreMemberId)}>Confirm restore</button>
+        </div>
+      )}
     </section>
   );
 }

@@ -77,7 +77,7 @@ describe('MemberPool', () => {
     expect(within(released).getByText('Historical archive')).toBeVisible();
   });
 
-  it('confirms restoration, retains its permanent warning and restores trigger focus', () => {
+  it('confirms restoration and retains its permanent warning', () => {
     const node = resolved(0, 1);
     const memberId = node.released[0];
     const members = {
@@ -106,7 +106,41 @@ describe('MemberPool', () => {
 
     expect(onRequestRestore).toHaveBeenCalledWith(memberId);
     expect(screen.getByText('Restored Pokémon')).toBeVisible();
+  });
+
+  it('traps restore confirmation focus and Escape cancels without restoring', () => {
+    const node = resolved(0, 1);
+    const memberId = node.released[0];
+    const onRequestRestore = vi.fn();
+    render(
+      <MemberPool
+        kind="released"
+        memberIds={node.released}
+        members={{ [memberId]: member(memberId, 56) }}
+        snapshots={node.snapshots}
+        speciesName={() => 'Mankey'}
+        onRequestRestore={onRequestRestore}
+      />,
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Restore Mankey' });
+    fireEvent.click(trigger);
+    const confirmation = screen.getByRole('alertdialog', { name: 'Restore Mankey?' });
+    const cancel = within(confirmation).getByRole('button', { name: 'Cancel restore' });
+    const confirm = within(confirmation).getByRole('button', { name: 'Confirm restore' });
+    const pool = screen.getByRole('region', { name: /Released/ });
+    expect(pool.querySelector('.timeline-pool-list')).toHaveAttribute('inert');
+    expect(cancel).toHaveFocus();
+
+    fireEvent.keyDown(confirmation, { key: 'Tab', shiftKey: true });
+    expect(confirm).toHaveFocus();
+    fireEvent.keyDown(confirmation, { key: 'Tab' });
+    expect(cancel).toHaveFocus();
+    fireEvent.keyDown(confirmation, { key: 'Escape' });
+
+    expect(screen.queryByRole('alertdialog', { name: 'Restore Mankey?' })).toBeNull();
     expect(trigger).toHaveFocus();
+    expect(onRequestRestore).not.toHaveBeenCalled();
   });
 
   it('collapses and restores a member pool from a visible keyboard button', () => {

@@ -21,6 +21,13 @@ export interface EditorCapabilityEvidence {
   explanation: string;
 }
 
+export interface EditorSpeciesCompatibility {
+  speciesId: number;
+  legalAbilityIds: readonly number[];
+  defaultAbilityId: number;
+  legalMoveIds: readonly number[];
+}
+
 export type TimelineMemberEditorField = SnapshotEditableField | 'natureId' | 'notes' | 'origin';
 
 export interface TimelineMemberEditorApply {
@@ -42,6 +49,7 @@ export interface TimelineMemberEditorProps {
   abilityOptions: readonly EditorOption<number>[];
   moveOptions: readonly EditorOption<number>[];
   natureOptions: readonly EditorOption<string>[];
+  speciesCompatibility: readonly EditorSpeciesCompatibility[];
   findings: readonly TimelineFinding[];
   capabilityEvidence: readonly EditorCapabilityEvidence[];
   onApply: (application: TimelineMemberEditorApply) => void;
@@ -97,6 +105,41 @@ function focusableElements(dialog: HTMLElement): HTMLElement[] {
   });
 }
 
+function reconcileSpeciesTargets(
+  timeline: TimelineState,
+  memberId: string,
+  targetNodeIds: readonly string[],
+  compatibility: EditorSpeciesCompatibility,
+): TimelineState {
+  return targetNodeIds.reduce((next, targetNodeId) => {
+    const collection = next.overrides[targetNodeId] ? 'overrides' : 'keyframes';
+    const frame = next[collection][targetNodeId];
+    const snapshot = frame.snapshots[memberId];
+    const moves = snapshot.moves.filter((move) => compatibility.legalMoveIds.includes(move.moveId));
+    const abilityId = compatibility.legalAbilityIds.includes(snapshot.abilityId)
+      ? snapshot.abilityId
+      : compatibility.defaultAbilityId;
+    return {
+      ...next,
+      [collection]: {
+        ...next[collection],
+        [targetNodeId]: {
+          ...frame,
+          snapshots: {
+            ...frame.snapshots,
+            [memberId]: {
+              ...snapshot,
+              abilityId,
+              moves,
+              review: { ...snapshot.review, moves: snapshot.review.moves || moves.length !== snapshot.moves.length },
+            },
+          },
+        },
+      },
+    };
+  }, timeline);
+}
+
 /** One-change-at-a-time milestone editor. No draft mutates timeline state before scope confirmation. */
 export function TimelineMemberEditor({
   timeline,
@@ -110,6 +153,7 @@ export function TimelineMemberEditor({
   abilityOptions,
   moveOptions,
   natureOptions,
+  speciesCompatibility,
   findings,
   capabilityEvidence,
   onApply,
@@ -121,10 +165,17 @@ export function TimelineMemberEditor({
   const closeRef = useRef<HTMLButtonElement>(null);
   const releaseRef = useRef<HTMLButtonElement>(null);
   const cancelReleaseRef = useRef<HTMLButtonElement>(null);
+  const confirmReleaseRef = useRef<HTMLButtonElement>(null);
+  const restoreReleaseFocus = useRef(false);
   const fieldRefs = useRef<Partial<Record<TimelineMemberEditorField, HTMLElement | null>>>({});
   const [pending, setPending] = useState<PendingChange | null>(null);
   const [scope, setScope] = useState<PropagationScope | null>(null);
   const [releaseOpen, setReleaseOpen] = useState(false);
+  const canRelease = snapshot.placement !== 'released' && onRequestRelease !== undefined;
+  const compatibilityBySpecies = useMemo(
+    () => new Map(speciesCompatibility.map((entry) => [entry.speciesId, entry])),
+    [speciesCompatibility],
+  );
 
   const choosePending = (change: PendingChange): void => {
     setPending(change);
@@ -140,8 +191,11 @@ export function TimelineMemberEditor({
       && (!Number.isInteger(pending.value) || pending.value < 1)) {
       return 'Held item ID must be a positive whole number.';
     }
+    if (pending.field === 'speciesId' && !compatibilityBySpecies.has(pending.value)) {
+      return 'Canonical evolution configuration is unavailable.';
+    }
     return null;
-  }, [pending]);
+  }, [compatibilityBySpecies, pending]);
 
   const preview = useMemo(() => {
     if (!pending || !scope || pendingError) return null;
@@ -167,10 +221,37 @@ export function TimelineMemberEditor({
   }, []);
 
   useEffect(() => {
-    if (releaseOpen) cancelReleaseRef.current?.focus();
+    if (releaseOpen) {
+      cancelReleaseRef.current?.focus();
+    } else if (restoreReleaseFocus.current) {
+      restoreReleaseFocus.current = false;
+      releaseRef.current?.focus();
+    }
   }, [releaseOpen]);
 
+  const cancelRelease = (): void => {
+    restoreReleaseFocus.current = true;
+    setReleaseOpen(false);
+  };
+
   const onDialogKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (releaseOpen) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        cancelRelease();
+      } else if (event.key === 'Tab') {
+        const first = cancelReleaseRef.current;
+        const last = confirmReleaseRef.current;
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+      return;
+    }
     if (event.key === 'Escape') {
       event.preventDefault();
       closeEditor();
@@ -197,6 +278,9 @@ export function TimelineMemberEditor({
     if (pending.kind === 'snapshot') {
       const edit = editSnapshotField(member.id, pending.field, pending.value, nodeId);
       next = applyPropagation(timeline, edit, scope, milestoneOrder, preview as PropagationPreview);
+      if (pending.field === 'speciesId') {
+        next = reconcileSpeciesTargets(next, member.id, preview.targetNodeIds, compatibilityBySpecies.get(pending.value)!);
+      }
     } else {
       const updatedMember = pending.field === 'natureId'
         ? { ...member, natureId: pending.value }
@@ -239,7 +323,7 @@ export function TimelineMemberEditor({
       aria-label={`Edit ${memberName} at ${nodeName}`}
       onKeyDown={onDialogKeyDown}
     >
-      <header className="timeline-editor-head">
+      <header className="timeline-editor-head" inert={releaseOpen || undefined}>
         <div>
           <p className="eyebrow">{nodeName} snapshot</p>
           <h2>Edit {memberName}</h2>
@@ -247,7 +331,7 @@ export function TimelineMemberEditor({
         <button ref={closeRef} type="button" className="timeline-editor-close" onClick={closeEditor}>Close editor</button>
       </header>
 
-      <div className="timeline-editor-body">
+      <div className="timeline-editor-body" inert={releaseOpen || undefined}>
         <section className="timeline-editor-fields" aria-label="Member configuration">
           <label>
             <span>Level</span>
@@ -403,19 +487,19 @@ export function TimelineMemberEditor({
         )}
       </div>
 
-      <footer className="timeline-editor-foot">
+      {canRelease && <footer className="timeline-editor-foot">
         {releaseOpen ? (
           <div role="alertdialog" aria-modal="true" aria-label={`Release ${memberName}?`} className="timeline-lifecycle-confirmation">
             <p>Release keeps this member in the historical archive and records the transition permanently.</p>
-            <button ref={cancelReleaseRef} type="button" onClick={() => setReleaseOpen(false)}>Cancel release</button>
-            <button type="button" onClick={() => { onRequestRelease?.(nodeId, member.id); closeEditor(); }}>Confirm release</button>
+            <button ref={cancelReleaseRef} type="button" onClick={cancelRelease}>Cancel release</button>
+            <button ref={confirmReleaseRef} type="button" onClick={() => { onRequestRelease?.(nodeId, member.id); closeEditor(); }}>Confirm release</button>
           </div>
         ) : (
-          <button ref={releaseRef} type="button" className="timeline-editor-release" disabled={!onRequestRelease} onClick={() => setReleaseOpen(true)}>
+          <button ref={releaseRef} type="button" className="timeline-editor-release" onClick={() => setReleaseOpen(true)}>
             Release {memberName}
           </button>
         )}
-      </footer>
+      </footer>}
     </div>
   );
 }

@@ -346,6 +346,16 @@ export function Workbench({ pack, playthrough, onPlaythroughChange, now = Date.n
             id: nature.id,
             name: `${nature.id.charAt(0).toUpperCase()}${nature.id.slice(1)}`,
           }))}
+          speciesCompatibility={editorSpecies.map((record) => {
+            const legalMoveIds = pack.learnsets.find((learnset) => learnset.pokemonId === record.id)?.moves.map((move) => move.moveId) ?? [];
+            const defaultAbility = record.abilities.find((ability) => ability.slot === 1) ?? record.abilities[0];
+            return {
+              speciesId: record.id,
+              legalAbilityIds: record.abilities.map((ability) => ability.id),
+              defaultAbilityId: defaultAbility.id,
+              legalMoveIds: [...new Set(legalMoveIds)],
+            };
+          })}
           findings={(findingsByNode[editorNode.id] ?? []).filter((finding) => finding.memberId === null || finding.memberId === editorMember.id)}
           capabilityEvidence={editorCapabilityEvidence}
           returnFocusTo={editorSelection.returnFocusTo}
