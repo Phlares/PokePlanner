@@ -66,7 +66,7 @@ function baseProps(overrides: Partial<Parameters<typeof App>[0]> = {}) {
 }
 
 async function createRun(): Promise<void> {
-  fireEvent.click(await screen.findByRole('button', { name: /create playthrough/i }));
+  fireEvent.click(await screen.findByRole('button', { name: /start firered/i }));
   await screen.findByRole('region', { name: /team manifest/i });
 }
 
@@ -77,6 +77,24 @@ describe('App boot and persistence', () => {
     const { factory } = sharedRepoFactory();
     render(<App {...baseProps({ openRepository: factory })} />);
     expect(await screen.findByText(/set up a run/i)).toBeVisible();
+  });
+
+  it('creates the selected starter member and targets Brock', async () => {
+    const { factory, get } = sharedRepoFactory();
+    render(<App {...baseProps({ openRepository: factory })} />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Charmander' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Start FireRed' }));
+
+    await screen.findByRole('region', { name: /team manifest/i });
+    await waitFor(async () => expect((await get()!.list()).length).toBe(1));
+    const saved = (await get()!.list())[0];
+    const starterMemberId = Object.keys(saved.timeline.members)[0];
+    expect(saved.currentMilestoneId).toBe('starter');
+    expect(saved.previewMilestoneId).toBe('brock-gym');
+    expect(saved.timeline.members[starterMemberId].originalSpeciesId).toBe(4);
+    expect(saved.timeline.keyframes.starter.party[0]).toBe(starterMemberId);
+    expect(screen.getByRole('button', { name: /preview milestone.*brock/i })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('restores the saved run after a reload', async () => {
@@ -101,6 +119,43 @@ describe('App boot and persistence', () => {
       const records = await get()!.list();
       expect(records[0].currentMilestoneId).toBe('brock-gym');
     });
+  });
+
+  it('keeps unsaved edits rendered and offers Retry and Export when a write fails', async () => {
+    let repo: MemoryPlaythroughRepository | undefined;
+    let putCount = 0;
+    const factory = async (options: RepositoryOptions): Promise<PlaythroughRepository> => {
+      repo ??= new MemoryPlaythroughRepository(options);
+      return {
+        list: () => repo!.list(),
+        get: (id) => repo!.get(id),
+        put: async (record) => {
+          putCount += 1;
+          if (putCount === 2) throw new Error('disk full');
+          return repo!.put(record);
+        },
+        delete: (id) => repo!.delete(id),
+      };
+    };
+    render(<App {...baseProps({ openRepository: factory })} />);
+    await createRun();
+    await waitFor(() => expect(putCount).toBe(1));
+
+    fireEvent.click(screen.getByRole('button', { name: /set current milestone.*brock/i }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/not saved/i);
+    expect(screen.getByRole('button', { name: /set current milestone.*brock/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Retry save' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Export unsaved changes' })).toBeEnabled();
+    expect((await repo!.list())[0].currentMilestoneId).toBe('starter');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Export unsaved changes' }));
+    const output = screen.getByLabelText(/playthrough export/i) as HTMLTextAreaElement;
+    expect(JSON.parse(output.value).currentMilestoneId).toBe('brock-gym');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Retry save' }));
+    await waitFor(() => expect(screen.queryByText(/not saved/i)).toBeNull());
+    expect((await repo!.list())[0].currentMilestoneId).toBe('brock-gym');
   });
 
   it('exports the active run as validated JSON', async () => {

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
+import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
 import type { TeamState } from '../../domain/team';
 import { FireRedSearch } from '../search/FireRedSearch';
 import { TeamManifest } from '../team/TeamManifest';
@@ -12,7 +13,10 @@ import { ProgressionRail } from './ProgressionRail';
 /** Local id-resolution surface so emitted playthrough changes are re-validated before they leave. */
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
   const pokemonById = new Map(pack.pokemon.map((record) => [record.id, record]));
-  const milestones = new Set<string>(MILESTONE_ORDER);
+  const milestones = new Set<string>([
+    ...MILESTONE_ORDER,
+    ...FIRE_RED_RULES.milestones.map((milestone) => milestone.id),
+  ]);
   const acquisitions = new Set(pack.acquisitions.map((record) => record.id));
   const nodes = new Set(pack.progression.nodes.map((node) => node.id));
   return {
@@ -22,8 +26,8 @@ function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
       (pack.learnsets.find((record) => record.pokemonId === id)?.moves ?? []).some((move) => move.moveId === moveId),
     hasMilestone: (id) => milestones.has(id),
     hasAcquisition: (id) => acquisitions.has(id),
-    hasNode: (id) => nodes.has(id),
-    starterNodeId: () => 'starter-selection',
+    hasNode: (id) => nodes.has(id) || milestones.has(id),
+    starterNodeId: () => FIRE_RED_RULES.initialProgress().currentNodeId,
   };
 }
 

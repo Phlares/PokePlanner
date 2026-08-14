@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { loadFireRedPack, type FireRedDigest, type FireRedPack } from './data/game-pack';
 import { MILESTONE_ORDER } from './domain/availability';
 import { type Playthrough, type PlaythroughPackIndex } from './domain/playthrough';
+import { FIRE_RED_RULES } from './domain/rules/firered-rules';
 import { preparePlaythroughImport, serializePlaythroughExport } from './persistence/export-import';
 import {
   MemoryPlaythroughRepository,
@@ -17,7 +18,10 @@ import { applyTheme, readStoredTheme, type Theme } from './theme';
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
   const pokemonById = new Map(pack.pokemon.map((record) => [record.id, record]));
   const learnsetByPokemon = new Map(pack.learnsets.map((record) => [record.pokemonId, record]));
-  const milestones = new Set<string>(MILESTONE_ORDER);
+  const milestones = new Set<string>([
+    ...MILESTONE_ORDER,
+    ...FIRE_RED_RULES.milestones.map((milestone) => milestone.id),
+  ]);
   const acquisitions = new Set(pack.acquisitions.map((record) => record.id));
   const nodes = new Set(pack.progression.nodes.map((node) => node.id));
   return {
@@ -27,8 +31,8 @@ function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
       (learnsetByPokemon.get(id)?.moves ?? []).some((move) => move.moveId === moveId),
     hasMilestone: (id) => milestones.has(id),
     hasAcquisition: (id) => acquisitions.has(id),
-    hasNode: (id) => nodes.has(id),
-    starterNodeId: () => 'starter-selection',
+    hasNode: (id) => nodes.has(id) || milestones.has(id),
+    starterNodeId: () => FIRE_RED_RULES.initialProgress().currentNodeId,
   };
 }
 
@@ -76,7 +80,10 @@ export function App({
   createId = () => crypto.randomUUID(),
 }: AppProps) {
   const [boot, setBoot] = useState<BootState>({ status: 'loading' });
-  const [active, setActive] = useState<Playthrough | null>(null);
+  const [lastDurable, setLastDurable] = useState<Playthrough | null>(null);
+  const [activeDraft, setActiveDraft] = useState<Playthrough | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const saveAttempt = useRef(0);
   const [pack, setPack] = useState<FireRedPack | null>(null);
   const [exportText, setExportText] = useState<string | null>(null);
   const [importText, setImportText] = useState('');
@@ -92,7 +99,10 @@ export function App({
     let alive = true;
     const controller = new AbortController();
     setBoot({ status: 'loading' });
-    setActive(null);
+    saveAttempt.current += 1;
+    setLastDurable(null);
+    setActiveDraft(null);
+    setSaveError(null);
     setPack(null);
 
     (async () => {
@@ -131,7 +141,8 @@ export function App({
       if (!alive) return;
 
       setPack(loaded);
-      setActive(restored);
+      setLastDurable(restored);
+      setActiveDraft(restored);
       setBoot({ status: 'ready', pack: index, repo, temporary });
     })();
 
@@ -144,11 +155,25 @@ export function App({
   const persist = useCallback(
     async (record: Playthrough): Promise<void> => {
       if (boot.status !== 'ready') return;
+      const attempt = ++saveAttempt.current;
+      // The draft becomes the rendered source of truth immediately; persistence success only
+      // advances the durable checkpoint and must never be required to keep an edit on screen.
+      setActiveDraft(record);
       // The repository validates against the schema + pack index before it writes, so an invalid or
       // canonical-tainted record can never reach storage; the returned record is the validated one.
-      const stored = await boot.repo.put(record);
-      setActive(stored);
-      setExportText(null);
+      try {
+        const stored = await boot.repo.put(record);
+        setLastDurable(stored);
+        if (saveAttempt.current === attempt) {
+          setActiveDraft(stored);
+          setSaveError(null);
+          setExportText(null);
+        }
+      } catch (error) {
+        if (saveAttempt.current === attempt) {
+          setSaveError(error instanceof Error ? error.message : 'The save failed.');
+        }
+      }
     },
     [boot],
   );
@@ -162,7 +187,7 @@ export function App({
   };
 
   const handleExport = (): void => {
-    if (active !== null) setExportText(serializePlaythroughExport(active));
+    if (activeDraft !== null) setExportText(serializePlaythroughExport(activeDraft));
   };
 
   const handleImport = (): void => {
@@ -214,7 +239,7 @@ export function App({
             </p>
           )}
 
-          {active !== null && (
+          {activeDraft !== null && (
             <section className="app-tools" aria-label="Run data">
               <div className="app-tool">
                 <button type="button" className="app-tool-button" onClick={handleExport}>
@@ -249,12 +274,33 @@ export function App({
             </section>
           )}
 
-          {pack !== null && active === null && (
+          {saveError !== null && activeDraft !== null && (
+            <div role="alert" className="app-error">
+              <p>
+                Changes are not saved: {saveError}.{' '}
+                {lastDurable === null
+                  ? 'This run has not been saved yet.'
+                  : 'The last saved version remains safe.'}
+              </p>
+              <button type="button" className="app-tool-button" onClick={() => void persist(activeDraft)}>
+                Retry save
+              </button>
+              <button
+                type="button"
+                className="app-tool-button"
+                onClick={() => setExportText(serializePlaythroughExport(activeDraft))}
+              >
+                Export unsaved changes
+              </button>
+            </div>
+          )}
+
+          {pack !== null && activeDraft === null && (
             <GameSetup pack={pack} onCreate={handleCreate} createId={createId} now={now} />
           )}
 
-          {pack !== null && active !== null && (
-            <Workbench pack={pack} playthrough={active} onPlaythroughChange={handleChange} now={now} />
+          {pack !== null && activeDraft !== null && (
+            <Workbench pack={pack} playthrough={activeDraft} onPlaythroughChange={handleChange} now={now} />
           )}
         </>
       )}

@@ -137,6 +137,61 @@ describe('MemoryPlaythroughRepository — migration + error surfacing on read', 
     expect(loaded?.checkoffs).toEqual({ routesCompleted: {}, encountered: {}, captured: {} });
   });
 
+  it('writes a validated get migration back without changing its timestamp', async () => {
+    let starterNodeAvailable = true;
+    const migrationPack: PlaythroughPackIndex = {
+      ...pack,
+      starterNodeId: () => {
+        if (!starterNodeAvailable) throw new Error('starter lookup unavailable');
+        return 'starter-selection';
+      },
+    };
+    const raw = { ...legacyV0, currentMilestoneId: null, updatedAt: 6 };
+    const repo = new MemoryPlaythroughRepository({ pack: migrationPack, now: () => 99_999 }, [['p-old', raw]]);
+
+    expect((await repo.get('p-old'))?.updatedAt).toBe(6);
+    starterNodeAvailable = false;
+    expect((await repo.get('p-old'))?.schemaVersion).toBe(2);
+  });
+
+  it('writes validated list migrations back without changing their timestamps', async () => {
+    let starterNodeAvailable = true;
+    const migrationPack: PlaythroughPackIndex = {
+      ...pack,
+      starterNodeId: () => {
+        if (!starterNodeAvailable) throw new Error('starter lookup unavailable');
+        return 'starter-selection';
+      },
+    };
+    const raw = { ...legacyV0, currentMilestoneId: null, updatedAt: 6 };
+    const repo = new MemoryPlaythroughRepository({ pack: migrationPack, now: () => 99_999 }, [['p-old', raw]]);
+
+    expect((await repo.list())[0].updatedAt).toBe(6);
+    starterNodeAvailable = false;
+    expect((await repo.get('p-old'))?.schemaVersion).toBe(2);
+  });
+
+  it('validates every list migration before writing any candidate back', async () => {
+    let starterNodeAvailable = true;
+    const migrationPack: PlaythroughPackIndex = {
+      ...pack,
+      starterNodeId: () => {
+        if (!starterNodeAvailable) throw new Error('starter lookup unavailable');
+        return 'starter-selection';
+      },
+    };
+    const validRaw = { ...legacyV0, id: 'valid', currentMilestoneId: null };
+    const corruptRaw = { id: 'broken', schemaVersion: 1, junk: true };
+    const repo = new MemoryPlaythroughRepository(
+      { pack: migrationPack, now: () => 99_999 },
+      [['valid', validRaw], ['broken', corruptRaw]],
+    );
+
+    await expect(repo.list()).rejects.toThrow(/corrupt/i);
+    starterNodeAvailable = false;
+    await expect(repo.get('valid')).rejects.toThrow(/starter lookup unavailable/i);
+  });
+
   it('surfaces a corrupt stored record as a rejected promise', async () => {
     const repo = new MemoryPlaythroughRepository(options(), [['broken', { schemaVersion: 1, junk: true }]]);
     await expect(repo.get('broken')).rejects.toThrow();

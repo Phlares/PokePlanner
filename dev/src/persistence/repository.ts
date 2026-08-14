@@ -54,9 +54,26 @@ export function validateForStorage(record: Playthrough, options: RepositoryOptio
  * promise rather than returning a broken playthrough.
  */
 export function migrateStored(raw: unknown, options: RepositoryOptions): Playthrough {
+  return prepareStoredMigration(raw, options).playthrough;
+}
+
+/** A fully validated read candidate plus whether its durable representation needs replacement. */
+export interface StoredMigration {
+  playthrough: Playthrough;
+  migrated: boolean;
+}
+
+/**
+ * Prepare a stored value for return and possible write-back. The migrated candidate is parsed a
+ * second time at this repository boundary before callers replace the previous raw value.
+ */
+export function prepareStoredMigration(raw: unknown, options: RepositoryOptions): StoredMigration {
   const result = migratePlaythrough(raw, options.pack);
   if (!result.ok) throw new Error(`Corrupt stored playthrough: ${result.error}`);
-  return result.playthrough;
+  return {
+    playthrough: parsePlaythrough(result.playthrough, options.pack),
+    migrated: result.migrated,
+  };
 }
 
 /**
@@ -77,13 +94,20 @@ export class MemoryPlaythroughRepository implements PlaythroughRepository {
   }
 
   async list(): Promise<Playthrough[]> {
-    return Array.from(this.store.values(), (raw) => migrateStored(raw, this.options));
+    // Prepare every candidate first. If one is corrupt, no earlier candidate is written back.
+    const prepared = Array.from(this.store, ([id, raw]) => [id, prepareStoredMigration(raw, this.options)] as const);
+    for (const [id, result] of prepared) {
+      if (result.migrated) this.store.set(id, structuredClone(result.playthrough));
+    }
+    return prepared.map(([, result]) => result.playthrough);
   }
 
   async get(id: string): Promise<Playthrough | undefined> {
     const raw = this.store.get(id);
     if (raw === undefined) return undefined;
-    return migrateStored(raw, this.options);
+    const prepared = prepareStoredMigration(raw, this.options);
+    if (prepared.migrated) this.store.set(id, structuredClone(prepared.playthrough));
+    return prepared.playthrough;
   }
 
   async put(record: Playthrough): Promise<Playthrough> {

@@ -4,13 +4,17 @@ import { GameSetup } from './GameSetup';
 import { loadFireRedPackFixture } from '../../test/firered-pack';
 import { parsePlaythrough, type PlaythroughPackIndex } from '../../domain/playthrough';
 import { MILESTONE_ORDER } from '../../domain/availability';
+import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
 
 const pack = loadFireRedPackFixture();
 
 /** A real id-resolution surface built from the committed pack, used only to re-validate emissions. */
 function packIndex(): PlaythroughPackIndex {
   const byId = new Map(pack.pokemon.map((record) => [record.id, record]));
-  const milestones = new Set<string>(MILESTONE_ORDER);
+  const milestones = new Set<string>([
+    ...MILESTONE_ORDER,
+    ...FIRE_RED_RULES.milestones.map((milestone) => milestone.id),
+  ]);
   const acquisitions = new Set(pack.acquisitions.map((record) => record.id));
   return {
     hasSpecies: (id) => byId.has(id),
@@ -62,22 +66,28 @@ describe('GameSetup', () => {
     expect(screen.getByRole('button', { name: /Professor Oak/i })).toBeDisabled();
   });
 
-  it('emits a valid 6 + 6 empty Standard playthrough on creation', () => {
+  it('creates the selected starter member at the rules-provided gate and targets Brock', () => {
     const onCreate = vi.fn();
-    render(<GameSetup pack={pack} onCreate={onCreate} createId={() => 'run-1'} now={() => 1000} />);
+    let id = 0;
+    render(<GameSetup pack={pack} onCreate={onCreate} createId={() => `created-${++id}`} now={() => 1000} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /Create playthrough/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Charmander' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Start FireRed' }));
 
     expect(onCreate).toHaveBeenCalledTimes(1);
     const playthrough = onCreate.mock.calls[0][0];
     expect(() => parsePlaythrough(playthrough, packIndex())).not.toThrow();
     expect(playthrough.game).toBe('firered');
     expect(playthrough.type).toBe('standard');
-    expect(playthrough.team.primary).toHaveLength(6);
-    expect(playthrough.team.reserve).toHaveLength(6);
-    expect(playthrough.team.primary.every((slot: unknown) => slot === null)).toBe(true);
-    expect(playthrough.team.reserve.every((slot: unknown) => slot === null)).toBe(true);
-    expect(playthrough.currentMilestoneId).toBeNull();
-    expect(playthrough.previewMilestoneId).toBeNull();
+    expect(playthrough.currentMilestoneId).toBe('starter');
+    expect(playthrough.previewMilestoneId).toBe('brock-gym');
+    expect(playthrough.starterSpeciesId).toBe(4);
+    expect(playthrough.timeline.members['created-2']).toMatchObject({
+      id: 'created-2',
+      originalSpeciesId: 4,
+      acquiredAtNodeId: 'starter',
+    });
+    expect(playthrough.timeline.keyframes.starter.party[0]).toBe('created-2');
+    expect(playthrough.team.primary[0]?.id).toBe('created-2');
   });
 });

@@ -64,6 +64,14 @@ function putRaw(db: IDBDatabase, value: unknown): Promise<void> {
   });
 }
 
+function getRaw(db: IDBDatabase, id: string): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    const request = db.transaction('playthroughs', 'readonly').objectStore('playthroughs').get(id);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
 describe('openIndexedDbRepository — native adapter behind the repository interface', () => {
   it('uses one database named pokeplanner with a playthroughs store keyed by id', async () => {
     const { factory, opts } = options();
@@ -122,6 +130,59 @@ describe('openIndexedDbRepository — native adapter behind the repository inter
     const loaded = await repo.get('p-old');
     expect(loaded?.schemaVersion).toBe(2);
     expect(loaded?.checkoffs).toEqual({ routesCompleted: {}, encountered: {}, captured: {} });
+    const migratedDb = await openRawDb(factory);
+    expect(await getRaw(migratedDb, 'p-old')).toMatchObject({ schemaVersion: 2, updatedAt: 6 });
+    migratedDb.close();
+  });
+
+  it('writes validated list migrations back without changing their timestamps', async () => {
+    const { factory, opts } = options();
+    const db = await openRawDb(factory);
+    await putRaw(db, {
+      schemaVersion: 0,
+      id: 'p-old',
+      name: 'Legacy',
+      packVersion: 'firered-test',
+      starterSpeciesId: 1,
+      createdAt: 5,
+      updatedAt: 6,
+      currentMilestoneId: 'brock-gym',
+      team: createEmptyTeam(),
+    });
+    db.close();
+
+    const repo = await openIndexedDbRepository(factory, opts);
+    expect((await repo.list())[0]).toMatchObject({ schemaVersion: 2, updatedAt: 6 });
+    const migratedDb = await openRawDb(factory);
+    expect(await getRaw(migratedDb, 'p-old')).toMatchObject({ schemaVersion: 2, updatedAt: 6 });
+    migratedDb.close();
+  });
+
+  it('validates every list migration before writing any candidate back', async () => {
+    const { factory, opts } = options();
+    const validRaw = {
+      schemaVersion: 0,
+      id: 'valid',
+      name: 'Legacy',
+      packVersion: 'firered-test',
+      starterSpeciesId: 1,
+      createdAt: 5,
+      updatedAt: 6,
+      currentMilestoneId: 'brock-gym',
+      team: createEmptyTeam(),
+    };
+    const corruptRaw = { id: 'broken', schemaVersion: 1, junk: true };
+    const db = await openRawDb(factory);
+    await putRaw(db, validRaw);
+    await putRaw(db, corruptRaw);
+    db.close();
+
+    const repo = await openIndexedDbRepository(factory, opts);
+    await expect(repo.list()).rejects.toThrow(/corrupt/i);
+    const rawDb = await openRawDb(factory);
+    expect(await getRaw(rawDb, 'valid')).toEqual(validRaw);
+    expect(await getRaw(rawDb, 'broken')).toEqual(corruptRaw);
+    rawDb.close();
   });
 
   it('surfaces a corrupt stored record as a rejected promise', async () => {

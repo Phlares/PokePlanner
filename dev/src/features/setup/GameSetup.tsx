@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
-import { MILESTONE_ORDER } from '../../domain/availability';
 import {
   createStandardPlaythrough,
   type Playthrough,
   type PlaythroughPackIndex,
 } from '../../domain/playthrough';
+import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
+import { acquireMember, placeInParty } from '../../domain/timeline/commands';
+import { createEmptyTimeline } from '../../domain/timeline/model';
 
 /**
  * Build the id-resolution surface a new playthrough validates against, from the loaded pack.
@@ -13,7 +15,7 @@ import {
  */
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
   const pokemonById = new Map(pack.pokemon.map((record) => [record.id, record]));
-  const milestones = new Set<string>(MILESTONE_ORDER);
+  const milestones = new Set(FIRE_RED_RULES.milestones.map((milestone) => milestone.id));
   const acquisitions = new Set(pack.acquisitions.map((record) => record.id));
   const nodes = new Set(pack.progression.nodes.map((node) => node.id));
   return {
@@ -23,8 +25,8 @@ function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
       (pack.learnsets.find((record) => record.pokemonId === id)?.moves ?? []).some((move) => move.moveId === moveId),
     hasMilestone: (id) => milestones.has(id),
     hasAcquisition: (id) => acquisitions.has(id),
-    hasNode: (id) => nodes.has(id),
-    starterNodeId: () => 'starter-selection',
+    hasNode: (id) => nodes.has(id) || milestones.has(id),
+    starterNodeId: () => FIRE_RED_RULES.initialProgress().currentNodeId,
   };
 }
 
@@ -63,15 +65,16 @@ export interface GameSetupProps {
 /**
  * Generation and game selection for the FireRed vertical slice. Generation III and FireRed are
  * the only enabled tiles; every other generation, game, and playthrough type is rendered but
- * disabled so the supported path is unambiguous. Creating a run emits a validated, empty
- * Standard {@link Playthrough}; App wires persistence.
+ * disabled so the supported path is unambiguous. Creating a run emits a validated Standard
+ * {@link Playthrough} with the selected starter at the rules-provided initial gate; App wires
+ * persistence.
  */
 export function GameSetup({ pack, onCreate, createId = () => crypto.randomUUID(), now = Date.now }: GameSetupProps) {
   const starters = useMemo(() => {
     const list: { id: number; name: string }[] = [];
     for (const record of pack.acquisitions) {
       if (record.subject.kind === 'starter') {
-        list.push({ id: record.subject.pokemonId, name: record.name });
+        list.push({ id: record.subject.pokemonId, name: record.name.replace(/\s+\(starter\)$/iu, '') });
       }
     }
     return list;
@@ -85,14 +88,37 @@ export function GameSetup({ pack, onCreate, createId = () => crypto.randomUUID()
 
   const create = (): void => {
     const timestamp = now();
+    const runId = createId();
+    const starterMemberId = createId();
+    const progress = FIRE_RED_RULES.initialProgress();
+    const starter = pack.pokemon.find((record) => record.id === starterSpeciesId);
+    const abilityId = starter?.abilities[0]?.id;
+    if (abilityId === undefined) throw new Error(`Starter species ${starterSpeciesId} has no FireRed ability`);
+    const acquired = acquireMember(createEmptyTimeline(), {
+      memberId: starterMemberId,
+      speciesId: starterSpeciesId,
+      nodeId: progress.currentNodeId,
+      abilityId,
+      level: FIRE_RED_RULES.targetLevel(progress.currentNodeId),
+      moves: [],
+      heldItemId: null,
+      origin: { type: 'inferred', acquisitionId: null, note: null },
+      nickname: null,
+      natureId: null,
+      notes: '',
+    }, index);
+    const timeline = placeInParty(acquired, progress.currentNodeId, starterMemberId, 0, index);
     const playthrough = createStandardPlaythrough(
       {
-        id: createId(),
+        id: runId,
         name: name.trim() === '' ? 'FireRed Run' : name.trim(),
         starterSpeciesId,
         createdAt: timestamp,
         updatedAt: timestamp,
         packVersion: pack.manifest.packVersion,
+        currentMilestoneId: progress.currentNodeId,
+        previewMilestoneId: progress.targetMilestoneId,
+        timeline,
       },
       index,
     );
@@ -187,7 +213,7 @@ export function GameSetup({ pack, onCreate, createId = () => crypto.randomUUID()
       </div>
 
       <button type="button" className="setup-create" onClick={create}>
-        Create playthrough
+        Start FireRed
       </button>
     </section>
   );

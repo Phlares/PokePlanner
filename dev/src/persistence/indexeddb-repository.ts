@@ -1,6 +1,6 @@
 import type { Playthrough } from '../domain/playthrough';
 import {
-  migrateStored,
+  prepareStoredMigration,
   validateForStorage,
   type PlaythroughRepository,
   type RepositoryOptions,
@@ -73,14 +73,26 @@ class IndexedDbPlaythroughRepository implements PlaythroughRepository {
   }
 
   async list(): Promise<Playthrough[]> {
-    const raw = await this.run('readonly', (store) => requestToPromise(store.getAll()));
-    return raw.map((value) => migrateStored(value, this.options));
+    return this.run('readwrite', async (store) => {
+      const raw = await requestToPromise(store.getAll());
+      // Validate the complete batch before issuing a put. Aborting the transaction preserves every
+      // previous raw record if either candidate validation or a later write fails.
+      const prepared = raw.map((value) => prepareStoredMigration(value, this.options));
+      for (const result of prepared) {
+        if (result.migrated) await requestToPromise(store.put(result.playthrough));
+      }
+      return prepared.map((result) => result.playthrough);
+    });
   }
 
   async get(id: string): Promise<Playthrough | undefined> {
-    const raw = await this.run('readonly', (store) => requestToPromise(store.get(id)));
-    if (raw === undefined) return undefined;
-    return migrateStored(raw, this.options);
+    return this.run('readwrite', async (store) => {
+      const raw = await requestToPromise(store.get(id));
+      if (raw === undefined) return undefined;
+      const prepared = prepareStoredMigration(raw, this.options);
+      if (prepared.migrated) await requestToPromise(store.put(prepared.playthrough));
+      return prepared.playthrough;
+    });
   }
 
   async put(record: Playthrough): Promise<Playthrough> {
