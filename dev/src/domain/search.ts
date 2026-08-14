@@ -15,6 +15,12 @@ export interface SearchQuery {
   move?: string;
 }
 
+/** True when at least one supported filter has a non-whitespace value. */
+export function hasActiveSearchQuery(query: SearchQuery): boolean {
+  return [query.name, query.type, query.ability, query.move]
+    .some((value) => value !== undefined && value.trim() !== '');
+}
+
 export type ObtainabilityStatus =
   | 'standard'
   | 'postgame'

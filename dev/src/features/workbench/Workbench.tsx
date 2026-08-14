@@ -2,6 +2,7 @@ import { useMemo, useReducer, useState } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
+import { hasActiveSearchQuery } from '../../domain/search';
 import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
 import type { ProgressionContext } from '../../domain/rules/game-rules';
 import { evaluateCapability } from '../../domain/timeline/capabilities';
@@ -169,7 +170,7 @@ export function Workbench({
 
   const selectedNodeId = controller.detail.kind === 'route' ? controller.detail.nodeId : null;
   const selectedPokemonId = controller.candidatePokemonId;
-  const searchActive = Object.keys(controller.query).length > 0;
+  const searchActive = hasActiveSearchQuery(controller.query);
 
   const selectedNode = selectedNodeId === null
     ? null

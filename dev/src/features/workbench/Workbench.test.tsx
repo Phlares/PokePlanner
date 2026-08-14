@@ -438,6 +438,14 @@ describe('Workbench', () => {
     expect(await screen.findByRole('button', { name: 'Route 22' })).toBeVisible();
   });
 
+  it('keeps the progression rail visible for a whitespace-only name query', () => {
+    renderWorkbench();
+    fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value: '   ' } });
+
+    expect(screen.getByRole('button', { name: 'Route 22' })).toBeVisible();
+    expect(screen.getByText(/name or pick a filter/i)).toBeVisible();
+  });
+
   it('clears stale route detail when a search result opens Pokémon locations', async () => {
     renderWorkbench();
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));

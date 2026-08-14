@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import {
+  hasActiveSearchQuery,
   searchFireRed,
   type ObtainabilityStatus,
   type PokemonType,
@@ -43,13 +44,6 @@ function withQueryValue(
   else if (key === 'type') next.type = value as PokemonType;
   else next[key] = value;
   return next;
-}
-
-function hasFilter(query: SearchQuery): boolean {
-  return (query.name !== undefined && query.name.trim() !== '')
-    || query.type !== undefined
-    || query.ability !== undefined
-    || query.move !== undefined;
 }
 
 function routeCountsFor(results: readonly SearchResult[]): Record<string, number> {
@@ -97,13 +91,13 @@ export function FireRedSearch({
   // Route counts react to the immediate name so the rail stays live; the list uses the debounced name.
   useEffect(() => {
     if (onRouteMatchCounts === undefined) return;
-    onRouteMatchCounts(hasFilter(query) ? routeCountsFor(searchFireRed(query, pack)) : undefined);
+    onRouteMatchCounts(hasActiveSearchQuery(query) ? routeCountsFor(searchFireRed(query, pack)) : undefined);
   }, [query.name, query.type, query.ability, query.move, pack, onRouteMatchCounts]);
 
   const resultsQuery = { ...query };
   if (debouncedName === '') delete resultsQuery.name;
   else resultsQuery.name = debouncedName;
-  const active = hasFilter(resultsQuery);
+  const active = hasActiveSearchQuery(resultsQuery);
 
   const results = useMemo(
     () => (active ? searchFireRed(resultsQuery, pack) : []),
