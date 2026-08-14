@@ -1,4 +1,4 @@
-import type { RouteProgression } from '../progression';
+import type { ProgressionEvent, ProgressionNode, RouteProgression } from '../progression';
 import type { CapabilityRule, GameRules, NatureRule, PlanningMilestone } from './game-rules';
 
 /** Ordered FireRed availability milestones retained for compatibility with the legacy API. */
@@ -59,18 +59,64 @@ const CAPABILITIES: readonly CapabilityRule[] = [
 
 const MILESTONE_BY_ID = new Map(MILESTONES.map((milestone) => [milestone.id, milestone]));
 
+interface MilestoneBoundary {
+  milestone: PlanningMilestone;
+  event: ProgressionEvent;
+  phaseStart: number;
+  phaseEnd: number;
+}
+
+/**
+ * Gym events live on their city node even when preparation continues later in the same phase.
+ * A gated revisit such as Giovanni is anchored after its prerequisite and before the next
+ * intended milestone instead of at the city's first golden-path visit.
+ */
+function progressionMilestoneBoundaries(progression: RouteProgression): Array<MilestoneBoundary & { order: number }> {
+  const phaseRange = new Map<string, { start: number; end: number }>();
+  const eventOwner = new Map<string, ProgressionNode>();
+  for (const node of progression.nodes) {
+    const range = phaseRange.get(node.phase);
+    phaseRange.set(node.phase, {
+      start: Math.min(range?.start ?? node.goldenPathOrder, node.goldenPathOrder),
+      end: Math.max(range?.end ?? node.goldenPathOrder, node.goldenPathOrder),
+    });
+    node.events.forEach((event) => { eventOwner.set(event.id, node); });
+  }
+
+  const positioned = MILESTONES.flatMap((milestone): MilestoneBoundary[] => {
+    const owner = eventOwner.get(milestone.id);
+    const event = owner?.events.find((candidate) => candidate.id === milestone.id);
+    const range = owner && phaseRange.get(owner.phase);
+    return owner && event && range
+      ? [{ milestone, event, phaseStart: range.start, phaseEnd: range.end }]
+      : [];
+  });
+  const boundaryByMilestoneId = new Map<string, number>();
+  const lastProgressionOrder = Math.max(...progression.nodes.map((node) => node.goldenPathOrder));
+
+  return positioned.map((entry, index) => {
+    const prerequisiteOrder = Math.max(-1, ...entry.event.conditions
+      .filter((condition) => condition.kind === 'milestone-complete' && typeof condition.value === 'string')
+      .map((condition) => boundaryByMilestoneId.get(String(condition.value)) ?? -1));
+    let order = entry.phaseEnd;
+    if (order <= prerequisiteOrder) {
+      const nextPhaseStart = Math.min(
+        ...positioned.slice(index + 1).map((candidate) => candidate.phaseStart).filter((start) => start > prerequisiteOrder),
+        lastProgressionOrder + 1,
+      );
+      order = Math.max(prerequisiteOrder + 1, nextPhaseStart - 1);
+    }
+    boundaryByMilestoneId.set(entry.milestone.id, order);
+    return { ...entry, order };
+  });
+}
+
 function targetLevelAtNode(nodeId: string, progression: RouteProgression): number {
   const directMilestone = MILESTONE_BY_ID.get(nodeId);
   if (directMilestone) return directMilestone.targetLevel;
   const targetNode = progression.nodes.find((node) => node.id === nodeId);
   if (!targetNode) return 0;
-  const positionedMilestones = MILESTONES
-    .map((milestone) => ({
-      milestone,
-      order: progression.nodes.find((node) => node.id === milestone.nodeId)?.goldenPathOrder,
-    }))
-    .filter((entry): entry is { milestone: PlanningMilestone; order: number } => entry.order !== undefined)
-    .sort((left, right) => left.order - right.order);
+  const positionedMilestones = progressionMilestoneBoundaries(progression);
   return positionedMilestones.find((entry) => entry.order >= targetNode.goldenPathOrder)?.milestone.targetLevel
     ?? positionedMilestones.at(-1)?.milestone.targetLevel
     ?? 0;
