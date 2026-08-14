@@ -3,7 +3,16 @@ import { loadFireRedPack, type FireRedDigest, type FireRedPack } from './data/ga
 import { MILESTONE_ORDER } from './domain/availability';
 import { type Playthrough, type PlaythroughPackIndex } from './domain/playthrough';
 import { FIRE_RED_RULES } from './domain/rules/firered-rules';
-import { preparePlaythroughImport, serializePlaythroughExport } from './persistence/export-import';
+import {
+  createPlaythroughDownload,
+  preparePlaythroughImport,
+  serializePlaythroughExport,
+} from './persistence/export-import';
+import {
+  encodePlanCode,
+  preparePlanCodeImport,
+  type PlanCodeImportPreview,
+} from './persistence/plan-code';
 import {
   MemoryPlaythroughRepository,
   type PlaythroughRepository,
@@ -96,8 +105,13 @@ export function App({
   const repositoryGeneration = useRef(0);
   const [pack, setPack] = useState<FireRedPack | null>(null);
   const [exportText, setExportText] = useState<string | null>(null);
+  const [exportFilename, setExportFilename] = useState<string | null>(null);
   const [importText, setImportText] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
+  const [planCodeExport, setPlanCodeExport] = useState<string | null>(null);
+  const [planCodeImport, setPlanCodeImport] = useState('');
+  const [planCodePreview, setPlanCodePreview] = useState<PlanCodeImportPreview | null>(null);
+  const [planCodeError, setPlanCodeError] = useState<string | null>(null);
   const [theme, setTheme] = useState<Theme>(readStoredTheme);
 
   // Keep the document and localStorage in step with the chosen theme; dark is the default.
@@ -198,6 +212,8 @@ export function App({
           setActiveDraft(stored);
           setSaveError(null);
           setExportText(null);
+          setExportFilename(null);
+          setPlanCodeExport(null);
         }
       } catch (error) {
         if (saveAttempt.current === attempt) {
@@ -217,7 +233,9 @@ export function App({
   };
 
   const handleExport = (): void => {
-    if (activeDraft !== null) setExportText(serializePlaythroughExport(activeDraft));
+    if (activeDraft === null) return;
+    setExportText(serializePlaythroughExport(activeDraft));
+    setExportFilename(createPlaythroughDownload(activeDraft).filename);
   };
 
   const handleImport = (): void => {
@@ -232,6 +250,27 @@ export function App({
     }
     setImportError(null);
     setImportText('');
+    void persist(imported);
+  };
+
+  const handlePlanCodePreview = (): void => {
+    if (boot.status !== 'ready') return;
+    try {
+      const preview = preparePlanCodeImport(planCodeImport, boot.pack, pack?.manifest.packVersion);
+      setPlanCodePreview(preview);
+      setPlanCodeError(null);
+    } catch (error) {
+      setPlanCodePreview(null);
+      setPlanCodeError(error instanceof Error ? error.message : 'Plan code failed validation.');
+    }
+  };
+
+  const confirmPlanCodeImport = (): void => {
+    if (planCodePreview === null) return;
+    const imported = planCodePreview.playthrough;
+    setPlanCodePreview(null);
+    setPlanCodeImport('');
+    setPlanCodeError(null);
     void persist(imported);
   };
 
@@ -307,40 +346,104 @@ export function App({
             </p>
           )}
 
-          {activeDraft !== null && (
-            <section className="app-tools" aria-label="Run data">
+          <section className="app-tools" aria-label="Run data">
+            {activeDraft !== null && (
               <div className="app-tool">
                 <button type="button" className="app-tool-button" onClick={handleExport}>
                   Export run
                 </button>
                 {exportText !== null && (
+                  <>
+                    <a
+                      className="app-tool-button"
+                      href={`data:application/json;charset=utf-8,${encodeURIComponent(exportText)}`}
+                      download={exportFilename ?? 'pokeplanner-plan.json'}
+                    >
+                      Download JSON
+                    </a>
+                    <textarea
+                      className="app-export"
+                      aria-label="Playthrough export JSON"
+                      readOnly
+                      value={exportText}
+                      rows={6}
+                    />
+                  </>
+                )}
+              </div>
+            )}
+            <div className="app-tool">
+              <label className="app-tool-label" htmlFor="app-import">Import run JSON</label>
+              <textarea
+                id="app-import"
+                className="app-import"
+                value={importText}
+                onChange={(event) => setImportText(event.target.value)}
+                rows={3}
+              />
+              <button type="button" className="app-tool-button" onClick={handleImport}>
+                Import run
+              </button>
+              {importError !== null && (
+                <p role="alert" className="app-error">Import failed: {importError}</p>
+              )}
+            </div>
+            {activeDraft !== null && (
+              <div className="app-tool">
+                <button
+                  type="button"
+                  className="app-tool-button"
+                  onClick={() => setPlanCodeExport(encodePlanCode(activeDraft))}
+                >
+                  Export plan code
+                </button>
+                {planCodeExport !== null && (
                   <textarea
                     className="app-export"
-                    aria-label="Playthrough export JSON"
+                    aria-label="Plan code export"
                     readOnly
-                    value={exportText}
-                    rows={6}
+                    value={planCodeExport}
+                    rows={3}
                   />
                 )}
               </div>
-              <div className="app-tool">
-                <label className="app-tool-label" htmlFor="app-import">Import run JSON</label>
-                <textarea
-                  id="app-import"
-                  className="app-import"
-                  value={importText}
-                  onChange={(event) => setImportText(event.target.value)}
-                  rows={3}
-                />
-                <button type="button" className="app-tool-button" onClick={handleImport}>
-                  Import run
-                </button>
-                {importError !== null && (
-                  <p role="alert" className="app-error">Import failed: {importError}</p>
-                )}
-              </div>
-            </section>
-          )}
+            )}
+            <div className="app-tool">
+              <label className="app-tool-label" htmlFor="app-plan-code-import">Import plan code</label>
+              <textarea
+                id="app-plan-code-import"
+                className="app-import"
+                value={planCodeImport}
+                onChange={(event) => {
+                  setPlanCodeImport(event.target.value);
+                  setPlanCodePreview(null);
+                  setPlanCodeError(null);
+                }}
+                rows={3}
+              />
+              <button type="button" className="app-tool-button" onClick={handlePlanCodePreview}>
+                Preview plan code
+              </button>
+              {planCodeError !== null && (
+                <p role="alert" className="app-error">Plan code import failed: {planCodeError}</p>
+              )}
+              {planCodePreview !== null && (
+                <div role="dialog" aria-label="Plan code import preview" className="app-import-preview">
+                  <h2>{planCodePreview.name}</h2>
+                  <p>{planCodePreview.game} · {planCodePreview.memberCount} members · {planCodePreview.milestoneCount} milestones</p>
+                  {planCodePreview.warnings.length > 0 && (
+                    <ul>{planCodePreview.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>
+                  )}
+                  <button type="button" className="app-tool-button" onClick={() => setPlanCodePreview(null)}>
+                    Cancel plan code import
+                  </button>
+                  <button type="button" className="app-tool-button" onClick={confirmPlanCodeImport}>
+                    Confirm plan code import
+                  </button>
+                </div>
+              )}
+            </div>
+          </section>
 
           {saveError !== null && activeDraft !== null && (
             <div role="alert" className="app-error">
