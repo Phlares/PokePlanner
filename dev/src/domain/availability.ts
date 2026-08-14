@@ -1,5 +1,6 @@
 import type { FireRedPack } from '../data/game-pack';
 import type { AcquisitionRecord, LearnsetRecord } from './pack';
+import { FIRE_RED_MILESTONE_ORDER } from './rules/firered-rules';
 
 /**
  * The chronological FireRed gym progression used to order milestones. This is the play
@@ -8,9 +9,7 @@ import type { AcquisitionRecord, LearnsetRecord } from './pack';
  * are fought in, which differs from the geographic node order (Viridian's Giovanni gym is
  * reached early but fought last).
  */
-export const MILESTONE_ORDER = [
-  'brock-gym', 'misty-gym', 'surge-gym', 'erika-gym', 'koga-gym', 'sabrina-gym', 'blaine-gym', 'giovanni-gym', 'champion',
-] as const;
+export const MILESTONE_ORDER = FIRE_RED_MILESTONE_ORDER;
 
 export type MilestoneId = (typeof MILESTONE_ORDER)[number];
 

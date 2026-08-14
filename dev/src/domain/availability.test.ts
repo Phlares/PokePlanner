@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { loadFireRedPack, type FireRedPack } from '../data/game-pack';
-import { evaluateMoveAvailability, type AvailabilityContext, type MoveAvailabilityReport } from './availability';
+import { evaluateMoveAvailability, MILESTONE_ORDER, type AvailabilityContext, type MoveAvailabilityReport } from './availability';
+import { FIRE_RED_RULES } from './rules/firered-rules';
 
 /**
  * Build the real, verified pack from the committed assets by driving the real loader with a
@@ -43,6 +44,14 @@ function findEntry(report: MoveAvailabilityReport, moveId: number) {
   }
   return null;
 }
+
+describe('availability milestone compatibility', () => {
+  it('delegates the legacy milestone order to FireRed planning rules', () => {
+    expect(MILESTONE_ORDER).toEqual([
+      'brock-gym', 'misty-gym', 'surge-gym', 'erika-gym', 'koga-gym', 'sabrina-gym', 'blaine-gym', 'giovanni-gym', 'champion',
+    ]);
+  });
+});
 
 describe('evaluateMoveAvailability — Route 22 Mankey before Brock', () => {
   const beforeBrock: AvailabilityContext = { currentMilestoneId: 'starter-selection' };
