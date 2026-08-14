@@ -1,5 +1,25 @@
 import { describe, expect, it } from 'vitest';
+import type { RouteProgression } from '../progression';
 import { FIRE_RED_RULES } from './firered-rules';
+
+const levelProgression: RouteProgression = {
+  schemaVersion: 1,
+  game: { id: 'firered', name: 'FireRed', versionId: 10, versionGroupId: 7, generationId: 3 },
+  sources: [],
+  nodes: ['route-22', 'pewter-city', 'route-24', 'cerulean-city'].map((id, goldenPathOrder) => ({
+    id,
+    name: id,
+    kind: id.startsWith('route') ? 'route' : 'city',
+    phase: 'test',
+    goldenPathOrder,
+    prerequisiteEventIds: [],
+    nextNodeIds: [],
+    location: { pokeApiLocationId: null, pokeApiLocationAreaIds: [], sourceMapIds: [] },
+    versionFlags: {},
+    events: [],
+    provenance: [],
+  })),
+};
 
 describe('FIRE_RED_RULES', () => {
   it('starts at Starter and targets Brock', () => {
@@ -28,6 +48,13 @@ describe('FIRE_RED_RULES', () => {
   it('uses leader and Champion targets for level planning', () => {
     expect(FIRE_RED_RULES.targetLevel('brock-gym')).toBe(14);
     expect(FIRE_RED_RULES.targetLevel('champion')).toBe(63);
+  });
+
+  it('uses the next FireRed challenge target at each detailed route node', () => {
+    expect(FIRE_RED_RULES.targetLevelAtNode('route-22', levelProgression)).toBe(14);
+    expect(FIRE_RED_RULES.targetLevelAtNode('pewter-city', levelProgression)).toBe(14);
+    expect(FIRE_RED_RULES.targetLevelAtNode('route-24', levelProgression)).toBe(21);
+    expect(FIRE_RED_RULES.targetLevelAtNode('cerulean-city', levelProgression)).toBe(21);
   });
 
   it('unlocks trading after the parcel delivery', () => {

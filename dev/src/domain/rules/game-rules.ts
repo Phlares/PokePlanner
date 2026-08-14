@@ -1,3 +1,5 @@
+import type { RouteProgression } from '../progression';
+
 export type StatKey = 'hp' | 'attack' | 'defense' | 'specialAttack' | 'specialDefense' | 'speed';
 export type LevelMode = 'manual' | 'under' | 'match' | 'over';
 
@@ -52,5 +54,6 @@ export interface GameRules {
   natures: readonly NatureRule[];
   capabilities: ReadonlyMap<string, CapabilityRule>;
   targetLevel(milestoneId: string): number;
+  targetLevelAtNode(nodeId: string, progression: RouteProgression): number;
   canTrade(context: ProgressionContext): boolean;
 }

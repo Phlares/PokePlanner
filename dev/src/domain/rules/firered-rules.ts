@@ -1,3 +1,4 @@
+import type { RouteProgression } from '../progression';
 import type { CapabilityRule, GameRules, NatureRule, PlanningMilestone } from './game-rules';
 
 /** Ordered FireRed availability milestones retained for compatibility with the legacy API. */
@@ -58,6 +59,23 @@ const CAPABILITIES: readonly CapabilityRule[] = [
 
 const MILESTONE_BY_ID = new Map(MILESTONES.map((milestone) => [milestone.id, milestone]));
 
+function targetLevelAtNode(nodeId: string, progression: RouteProgression): number {
+  const directMilestone = MILESTONE_BY_ID.get(nodeId);
+  if (directMilestone) return directMilestone.targetLevel;
+  const targetNode = progression.nodes.find((node) => node.id === nodeId);
+  if (!targetNode) return 0;
+  const positionedMilestones = MILESTONES
+    .map((milestone) => ({
+      milestone,
+      order: progression.nodes.find((node) => node.id === milestone.nodeId)?.goldenPathOrder,
+    }))
+    .filter((entry): entry is { milestone: PlanningMilestone; order: number } => entry.order !== undefined)
+    .sort((left, right) => left.order - right.order);
+  return positionedMilestones.find((entry) => entry.order >= targetNode.goldenPathOrder)?.milestone.targetLevel
+    ?? positionedMilestones.at(-1)?.milestone.targetLevel
+    ?? 0;
+}
+
 export const FIRE_RED_RULES: GameRules = {
   gameId: 'firered',
   initialProgress: () => ({ currentNodeId: 'starter', targetMilestoneId: 'brock-gym' }),
@@ -65,5 +83,6 @@ export const FIRE_RED_RULES: GameRules = {
   natures: NATURES,
   capabilities: new Map(CAPABILITIES.map((capability) => [capability.id, capability])),
   targetLevel: (milestoneId) => MILESTONE_BY_ID.get(milestoneId)?.targetLevel ?? 0,
+  targetLevelAtNode,
   canTrade: (context) => context.completedMilestoneIds.has('viridian-oaks-parcel'),
 };
