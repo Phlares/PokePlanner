@@ -39,6 +39,12 @@ export interface CapabilityRule {
   availableAtMilestoneId: string | null;
 }
 
+/** Optional canonical counts for resources that a plan can assign more than once. */
+export interface FiniteResourceInventory {
+  heldItems: ReadonlyMap<number, number>;
+  moves: ReadonlyMap<number, number>;
+}
+
 /** The selected active-party level policy at one planning checkpoint. */
 export interface LevelPolicy {
   mode: LevelMode;
@@ -56,6 +62,8 @@ export interface GameRules {
   targetLevel(milestoneId: string): number;
   targetLevelAtNode(nodeId: string, progression: RouteProgression): number;
   canTrade(context: ProgressionContext): boolean;
+  /** Undefined means this ruleset cannot yet verify finite-resource assignments. */
+  finiteResourceInventory?(context: ProgressionContext): FiniteResourceInventory | undefined;
   /** Earliest ordinary node for version-specific acquisitions absent from generic pack links. */
   acquisitionNodeId(acquisitionId: string): string | null;
   /** Highest level at which a traded member obeys, or null when all traded levels obey. */

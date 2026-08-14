@@ -1,4 +1,6 @@
 import type { SlotIndex } from '../team';
+import type { LevelMode } from '../rules/game-rules';
+import { eligibleLevelEvolution, type TimelineResolverPackView } from './resolver';
 import {
   parseTimelineState,
   type LifecycleEvent,
@@ -13,6 +15,15 @@ import {
 
 type KeyframeCollection = 'keyframes' | 'overrides';
 export type MemberSnapshotPatch = Partial<Omit<MemberSnapshot, 'placement' | 'partySlot'>>;
+
+export interface CopyKeyframeOptions {
+  levelMode: LevelMode;
+  /** Required for non-manual copy leveling; omission preserves the source level safely. */
+  targetLevel?: number;
+  autoEvolveLevel: boolean;
+  /** Injected only when the caller wants deterministic level evolution during copying. */
+  pack?: TimelineResolverPackView;
+}
 
 export type SnapshotEditableField = 'speciesId' | 'level' | 'abilityId' | 'moves' | 'heldItemId';
 
@@ -155,6 +166,56 @@ function withLifecycle(state: TimelineState, memberId: string, event: LifecycleE
 
 function parsed(state: TimelineState, pack: TimelinePackView): TimelineState {
   return parseTimelineState(state, pack);
+}
+
+function copiedLevel(level: number, options: CopyKeyframeOptions): number {
+  if (options.levelMode === 'manual' || options.targetLevel === undefined) return level;
+  const offset = options.levelMode === 'under' ? -5 : options.levelMode === 'over' ? 5 : 0;
+  return Math.max(1, Math.min(100, options.targetLevel + offset));
+}
+
+function copiedSpecies(speciesId: number, level: number, options: CopyKeyframeOptions): number {
+  if (!options.autoEvolveLevel || !options.pack) return speciesId;
+  let current = speciesId;
+  const visited = new Set<number>();
+  while (!visited.has(current)) {
+    visited.add(current);
+    const evolution = eligibleLevelEvolution(current, level, options.pack);
+    if (!evolution) break;
+    current = evolution.toPokemonId;
+  }
+  return current;
+}
+
+/**
+ * Copy a major checkpoint without copying generated state. Active members may receive the selected
+ * level policy and deterministic level evolutions; reserve members retain their source state.
+ */
+export function copyKeyframe(
+  state: TimelineState,
+  fromNodeId: string,
+  toNodeId: string,
+  options: CopyKeyframeOptions,
+): TimelineState {
+  const source = state.keyframes[fromNodeId];
+  if (!source) throw new Error(`Cannot copy missing major keyframe "${fromNodeId}"`);
+  const party = [...source.party] as TimelineKeyframe['party'];
+  const reserve = [...source.reserve];
+  const snapshots: Record<string, MemberSnapshot> = {};
+  for (const [memberId, snapshot] of Object.entries(source.snapshots)) {
+    const active = party.includes(memberId);
+    if (!active && !reserve.includes(memberId)) continue;
+    const level = active ? copiedLevel(snapshot.level, options) : snapshot.level;
+    snapshots[memberId] = {
+      ...snapshot,
+      speciesId: active ? copiedSpecies(snapshot.speciesId, level, options) : snapshot.speciesId,
+      level,
+      moves: snapshot.moves.map((move) => ({ ...move })),
+      review: { moves: true, heldItem: true },
+    };
+  }
+  const copied: TimelineKeyframe = { nodeId: toNodeId, kind: 'major', party, reserve, released: [], snapshots };
+  return { ...state, keyframes: { ...state.keyframes, [toNodeId]: copied } };
 }
 
 /** Acquire an identity once and place its first snapshot into the unbounded reserve pool. */

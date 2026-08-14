@@ -10,6 +10,7 @@ import type { RouteProgression } from '../progression';
 import type { GameRules, ProgressionContext } from '../rules/game-rules';
 import type { MemberOrigin, MemberSnapshot, PersistentMember } from './model';
 import type { ResolvedTimelineNode } from './resolver';
+import { evaluateResourceAssignments } from './capabilities';
 
 export type FindingSeverity = 'review' | 'yellow' | 'red' | 'unverified';
 export type FindingField = 'member' | 'origin' | 'level' | 'evolution' | 'ability' | 'move' | 'held-item' | 'resource';
@@ -768,5 +769,9 @@ export function validateResolvedNode(
     findings.push(...evolutionFindings(member, snapshot, context));
     findings.push(...moveFindings(member, snapshot, node, context));
   }
+  findings.push(...evaluateResourceAssignments(
+    node,
+    context.rules.finiteResourceInventory?.(context.progressionContext),
+  ));
   return findings;
 }
