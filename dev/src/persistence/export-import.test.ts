@@ -6,7 +6,7 @@ import {
 } from '../domain/playthrough';
 import { createEmptyTeam, type TeamMember } from '../domain/team';
 import { MemoryPlaythroughRepository } from './repository';
-import { preparePlaythroughImport, serializePlaythroughExport } from './export-import';
+import { createPlaythroughDownload, preparePlaythroughImport, serializePlaythroughExport } from './export-import';
 
 const LEGAL_ABILITIES: Record<number, number[]> = { 1: [65], 56: [72] };
 const pack: PlaythroughPackIndex = {
@@ -90,6 +90,19 @@ describe('serializePlaythroughExport — stable, pretty, version-carrying JSON',
     const a = makePlaythrough({ branchChoices: { alpha: 'x', beta: 'y' } });
     const b = makePlaythrough({ branchChoices: { beta: 'y', alpha: 'x' } });
     expect(serializePlaythroughExport(a)).toBe(serializePlaythroughExport(b));
+  });
+
+  it('creates a JSON download with a normalized run-name filename', async () => {
+    const playthrough = makePlaythrough({ name: '  Élite / Four: Run?!  ' });
+    const download = createPlaythroughDownload(playthrough);
+
+    expect(download.filename).toBe('elite-four-run.json');
+    expect(download.blob.type).toBe('application/json;charset=utf-8');
+    expect(await download.blob.text()).toBe(serializePlaythroughExport(playthrough));
+  });
+
+  it('uses a portable fallback filename when the normalized run name is empty', () => {
+    expect(createPlaythroughDownload(makePlaythrough({ name: '🔥' })).filename).toBe('pokeplanner-plan.json');
   });
 });
 

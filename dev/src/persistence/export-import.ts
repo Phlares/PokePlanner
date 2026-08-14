@@ -39,6 +39,26 @@ export function serializePlaythroughExport(playthrough: Playthrough): string {
   return `${stableStringify(playthrough, 2, 0)}\n`;
 }
 
+function normalizedFilenameStem(name: string): string {
+  return name
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/gu, '-')
+    .replace(/^-+|-+$/gu, '')
+    .slice(0, 80)
+    .replace(/-+$/gu, '');
+}
+
+/** Create a portable, deterministic JSON file without triggering browser navigation or writes. */
+export function createPlaythroughDownload(playthrough: Playthrough): { filename: string; blob: Blob } {
+  const filenameStem = normalizedFilenameStem(playthrough.name) || 'pokeplanner-plan';
+  return {
+    filename: `${filenameStem}.json`,
+    blob: new Blob([serializePlaythroughExport(playthrough)], { type: 'application/json;charset=utf-8' }),
+  };
+}
+
 /**
  * Parse → migrate → validate imported text WITHOUT writing anything. On success it returns a
  * validated current-schema record; the CALLER is responsible for writing it once (and for
