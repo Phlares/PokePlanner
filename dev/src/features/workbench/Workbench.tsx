@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useReducer, useState } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
@@ -23,6 +23,7 @@ import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
 import { EncounterTable } from './EncounterTable';
 import { PokemonInspector, type MemberDraft } from './PokemonInspector';
 import { ProgressionRail } from './ProgressionRail';
+import { createWorkbenchState, reduceWorkbench, type WorkbenchValidity } from './controller';
 
 /** Local id-resolution surface so emitted playthrough changes are re-validated before they leave. */
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex & TimelineResolverPackView {
@@ -121,7 +122,6 @@ function timelineWithExplicitNode(timeline: TimelineState, display: TimelineDisp
 
 interface EditorSelection {
   nodeId: string;
-  memberId: string;
   returnFocusTo: HTMLElement | null;
 }
 
@@ -151,11 +151,11 @@ export function Workbench({
   createId = () => crypto.randomUUID(),
 }: WorkbenchProps) {
   const index = useMemo(() => packIndexOf(pack), [pack]);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [, setSelectedEventId] = useState<string | null>(null);
-  const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null);
-  const [, setMemberDraft] = useState<MemberDraft | null>(null);
-  const [searchActive, setSearchActive] = useState(false);
+  const [controller, dispatch] = useReducer(reduceWorkbench, {
+    currentProgressId: playthrough.currentMilestoneId,
+    planningTargetId: playthrough.previewMilestoneId,
+    nodeIds: new Set(pack.progression.nodes.map((node) => node.id)),
+  }, createWorkbenchState);
   const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(null);
   const [releaseFocusMemberId, setReleaseFocusMemberId] = useState<string | null>(null);
   const [reserveFocusMemberId, setReserveFocusMemberId] = useState<string | null>(null);
@@ -167,6 +167,10 @@ export function Workbench({
     }),
     [playthrough.currentMilestoneId, playthrough.previewMilestoneId],
   );
+
+  const selectedNodeId = controller.detail.kind === 'route' ? controller.detail.nodeId : null;
+  const selectedPokemonId = controller.candidatePokemonId;
+  const searchActive = Object.keys(controller.query).length > 0;
 
   const selectedNode = selectedNodeId === null
     ? null
@@ -249,10 +253,10 @@ export function Workbench({
   const editorNode = editorSelection === null
     ? null
     : [...majorNodes, ...detailedNodes].find((node) => node.id === editorSelection.nodeId) ?? null;
-  const editorMember = editorSelection === null ? null : playthrough.timeline.members[editorSelection.memberId] ?? null;
-  const editorSnapshot = editorNode === null || editorSelection === null
+  const editorMember = controller.selectedMemberId === null ? null : playthrough.timeline.members[controller.selectedMemberId] ?? null;
+  const editorSnapshot = editorNode === null || controller.selectedMemberId === null
     ? null
-    : editorNode.resolved.snapshots[editorSelection.memberId] ?? null;
+    : editorNode.resolved.snapshots[controller.selectedMemberId] ?? null;
   const editorTimeline = editorNode === null ? playthrough.timeline : timelineWithExplicitNode(playthrough.timeline, editorNode);
   const timelineOrder = useMemo(() => {
     const routeOrder = new Map(detailedNodes.map((node, index) => [node.id, index * 2]));
@@ -299,8 +303,7 @@ export function Workbench({
     });
 
   const selectRoute = (nodeId: string): void => {
-    setSelectedNodeId(nodeId);
-    setSelectedPokemonId(null);
+    dispatch({ type: 'route-selected', nodeId });
   };
 
   const emit = (patch: Partial<Playthrough>): void => {
@@ -336,7 +339,34 @@ export function Workbench({
   };
 
   const selectSearchResult = (pokemonId: number): void => {
-    setSelectedPokemonId(pokemonId);
+    dispatch({ type: 'candidate-selected', pokemonId });
+  };
+
+  const handleSearchActiveChange = useCallback((active: boolean): void => {
+    dispatch({ type: 'search-activity-changed', active });
+  }, []);
+
+  const validityFor = (next: Playthrough): WorkbenchValidity => {
+    const targetId = next.previewMilestoneId ?? next.currentMilestoneId;
+    const configuredNodeId = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === targetId)?.nodeId;
+    const targetOrder = pack.progression.nodes.find((node) => node.id === configuredNodeId)?.goldenPathOrder;
+    const nodeIds = new Set(pack.progression.nodes
+      .filter((node) => !controller.milestoneFilter || targetOrder === undefined || node.goldenPathOrder <= targetOrder)
+      .map((node) => node.id));
+    return {
+      currentProgressId: next.currentMilestoneId,
+      planningTargetId: next.previewMilestoneId,
+      nodeIds,
+      pokemonIds: new Set(pack.pokemon.map((record) => record.id)),
+      memberIds: new Set(Object.keys(next.timeline.members)),
+      milestoneIds: new Set(FIRE_RED_RULES.milestones.map((milestone) => milestone.id)),
+    };
+  };
+
+  const emitTarget = (patch: Pick<Partial<Playthrough>, 'currentMilestoneId' | 'previewMilestoneId'>): void => {
+    const next = parsePlaythrough({ ...playthrough, ...patch, updatedAt: now() }, index);
+    onPlaythroughChange(next);
+    dispatch({ type: 'sanitize', validity: validityFor(next) });
   };
 
   return (
@@ -351,11 +381,13 @@ export function Workbench({
           speciesName={(speciesId) => speciesNames.get(speciesId) ?? `Species #${speciesId}`}
           onChange={(timeline) => emit({ timeline })}
           initialNodeId={playthrough.previewMilestoneId ?? playthrough.currentMilestoneId ?? 'starter'}
-          onEditMember={(nodeId, memberId) => setEditorSelection({
-            nodeId,
-            memberId,
-            returnFocusTo: document.activeElement instanceof HTMLElement ? document.activeElement : null,
-          })}
+          onEditMember={(nodeId, memberId) => {
+            dispatch({ type: 'member-selected', memberId });
+            setEditorSelection({
+              nodeId,
+              returnFocusTo: document.activeElement instanceof HTMLElement ? document.activeElement : null,
+            });
+          }}
           onRequestRestore={(nodeId, memberId) => {
             const display = [...majorNodes, ...detailedNodes].find((node) => node.id === nodeId);
             if (!display) return;
@@ -401,15 +433,20 @@ export function Workbench({
           capabilityEvidence={editorCapabilityEvidence}
           returnFocusTo={editorSelection.returnFocusTo}
           onApply={(application) => emit({ timeline: application.timeline })}
-          onClose={() => setEditorSelection(null)}
+          onClose={() => {
+            dispatch({ type: 'member-selected', memberId: null });
+            setEditorSelection(null);
+          }}
           onRequestRelease={(nodeId, memberId) => {
             emit({ timeline: releaseMember(editorTimeline, nodeId, memberId, null, index) });
             setReleaseFocusMemberId(memberId);
+            dispatch({ type: 'member-selected', memberId: null });
             setEditorSelection(null);
           }}
           onRequestMoveToReserve={(nodeId, memberId) => {
             setReserveFocusMemberId(memberId);
             emit({ timeline: moveToReserve(editorTimeline, nodeId, memberId, index) });
+            dispatch({ type: 'member-selected', memberId: null });
             setEditorSelection(null);
           }}
         />
@@ -419,7 +456,7 @@ export function Workbench({
         <FireRedSearch
           pack={pack}
           onSelectPokemon={selectSearchResult}
-          onActiveChange={setSearchActive}
+          onActiveChange={handleSearchActiveChange}
           selectedPokemonId={selectedPokemonId}
         />
         {/* An active query focuses the left column on its matches; the rail returns when it is cleared. */}
@@ -430,9 +467,9 @@ export function Workbench({
             currentMilestoneId={playthrough.currentMilestoneId}
             previewMilestoneId={playthrough.previewMilestoneId}
             onSelectNode={selectRoute}
-            onSelectEvent={setSelectedEventId}
-            onSetCurrentMilestone={(milestoneId) => emit({ currentMilestoneId: milestoneId })}
-            onSetPreviewMilestone={(milestoneId) => emit({ previewMilestoneId: milestoneId })}
+            onSelectEvent={() => undefined}
+            onSetCurrentMilestone={(milestoneId) => emitTarget({ currentMilestoneId: milestoneId })}
+            onSetPreviewMilestone={(milestoneId) => emitTarget({ previewMilestoneId: milestoneId })}
           />
         )}
       </section>
@@ -453,7 +490,13 @@ export function Workbench({
             area={area}
             pack={pack}
             selectedPokemonId={selectedPokemonId}
-            onSelectPokemon={setSelectedPokemonId}
+            onSelectPokemon={(pokemonId) => {
+              dispatch({ type: 'candidate-selected', pokemonId });
+              dispatch({
+                type: 'candidate-location-selected',
+                nodeId: area.nodeId ?? selectedNodeId!,
+              });
+            }}
           />
         ))}
       </section>
@@ -467,7 +510,6 @@ export function Workbench({
             pokemonId={selectedPokemonId}
             pack={pack}
             context={availabilityContext}
-            onDraftMember={setMemberDraft}
             onAddMember={addDraftToPreviewParty}
             addMemberLabel={(() => {
               const species = pack.pokemon.find((record) => record.id === selectedPokemonId);

@@ -376,6 +376,16 @@ describe('Workbench', () => {
     expect(next.currentMilestoneId).toBeNull();
   });
 
+  it('sanitizes a future route after the planning target moves earlier', () => {
+    renderWorkbench();
+    fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
+    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: /Preview milestone.*Brock/i }));
+
+    expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
+  });
+
   it('hides the progression rail and shows only the matches when a search query is active', async () => {
     renderWorkbench();
     // The rail is present before any query.
@@ -394,6 +404,28 @@ describe('Workbench', () => {
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull());
     fireEvent.change(box, { target: { value: '' } });
     expect(await screen.findByRole('button', { name: 'Route 22' })).toBeVisible();
+  });
+
+  it('clears stale route detail when a search result opens Pokémon locations', async () => {
+    renderWorkbench();
+    fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
+    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText(/Route 22/i)).toBeVisible();
+
+    fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value: 'Mankey' } });
+    fireEvent.click(await screen.findByRole('button', { name: /select Mankey/i }));
+
+    const detail = screen.getByRole('region', { name: /route detail/i });
+    expect(within(detail).queryByText(/Route 22/i)).toBeNull();
+    expect(within(screen.getByRole('region', { name: /inspector/i })).getByText('Mankey')).toBeVisible();
+  });
+
+  it('retains the selected candidate when an encounter location opens it', () => {
+    renderWorkbench();
+    fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
+    fireEvent.click(within(screen.getByRole('region', { name: /route detail/i })).getByRole('button', { name: 'Mankey' }));
+
+    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText(/Route 22/i)).toBeVisible();
+    expect(within(screen.getByRole('region', { name: /inspector/i })).getByText('Mankey')).toBeVisible();
   });
 
   it('never surfaces opponent or exposure analysis in the workbench shell', () => {
