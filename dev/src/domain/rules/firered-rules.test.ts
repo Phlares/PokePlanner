@@ -19,6 +19,12 @@ describe('FIRE_RED_RULES', () => {
     expect(FIRE_RED_RULES.capabilities.get('surf')).toMatchObject({ kind: 'field-move', moveId: 57 });
   });
 
+  it('marks Waterfall as a postgame field move requiring the Volcano Badge', () => {
+    expect(FIRE_RED_RULES.capabilities.get('waterfall')).toMatchObject({
+      kind: 'field-move', moveId: 127, requiredBadgeId: 'volcano-badge', availableAtMilestoneId: 'champion',
+    });
+  });
+
   it('uses leader and Champion targets for level planning', () => {
     expect(FIRE_RED_RULES.targetLevel('brock-gym')).toBe(14);
     expect(FIRE_RED_RULES.targetLevel('champion')).toBe(63);

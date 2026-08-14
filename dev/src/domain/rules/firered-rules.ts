@@ -51,7 +51,7 @@ const CAPABILITIES: readonly CapabilityRule[] = [
   { id: 'fly', kind: 'field-move', moveId: 19, requiredBadgeId: 'thunder-badge', availableAtMilestoneId: 'surge-gym' },
   { id: 'surf', kind: 'field-move', moveId: 57, requiredBadgeId: 'soul-badge', availableAtMilestoneId: 'koga-gym' },
   { id: 'strength', kind: 'field-move', moveId: 70, requiredBadgeId: 'rainbow-badge', availableAtMilestoneId: 'erika-gym' },
-  { id: 'waterfall', kind: 'field-move', moveId: 127, requiredBadgeId: 'rainbow-badge', availableAtMilestoneId: 'erika-gym' },
+  { id: 'waterfall', kind: 'field-move', moveId: 127, requiredBadgeId: 'volcano-badge', availableAtMilestoneId: 'champion' },
   { id: 'flash', kind: 'field-move', moveId: 148, requiredBadgeId: 'boulder-badge', availableAtMilestoneId: 'brock-gym' },
   { id: 'rock-smash', kind: 'field-move', moveId: 249, requiredBadgeId: 'marsh-badge', availableAtMilestoneId: 'sabrina-gym' },
 ];
