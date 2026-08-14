@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createEmptyTimeline, parseTimelineState, type TimelineState } from './timeline/model';
+import { createEmptyTimeline, parseTimelineState, type TimelinePackView, type TimelineState } from './timeline/model';
 import { createEmptyTeam, validateTeamState, type MemberPackView, type PlannedMove, type TeamMember, type TeamState } from './team';
 
 /** The current on-disk schema version for a serialized playthrough. */
@@ -7,9 +7,8 @@ export const CURRENT_SCHEMA_VERSION = 2 as const;
 const LEGACY_SCHEMA_VERSION = 1 as const;
 
 /** The injected id-resolution surface for a playthrough. */
-export interface PlaythroughPackIndex extends MemberPackView {
-  hasMilestone(milestoneId: string): boolean;
-  hasAcquisition(acquisitionId: string): boolean;
+export interface PlaythroughPackIndex extends TimelinePackView {
+  starterNodeId(): string;
 }
 
 export interface CheckoffMaps {
@@ -118,8 +117,11 @@ function validateReferences(playthrough: Omit<Playthrough, 'team'>, pack: Playth
   parseTimelineState(playthrough.timeline, pack);
 }
 
-function legacyTeamView(timeline: TimelineState): TeamState {
-  const keyframe = Object.values(timeline.keyframes)[0];
+function legacyTeamView(playthrough: Pick<Playthrough, 'timeline' | 'currentMilestoneId' | 'previewMilestoneId'>): TeamState {
+  const { timeline } = playthrough;
+  const keyframe = (playthrough.currentMilestoneId === null ? undefined : timeline.keyframes[playthrough.currentMilestoneId])
+    ?? (playthrough.previewMilestoneId === null ? undefined : timeline.keyframes[playthrough.previewMilestoneId])
+    ?? Object.keys(timeline.keyframes).sort().map((nodeId) => timeline.keyframes[nodeId])[0];
   if (!keyframe) return createEmptyTeam();
   const memberAt = (memberId: string | null): TeamMember | null => {
     if (memberId === null) return null;
@@ -143,7 +145,7 @@ function legacyTeamView(timeline: TimelineState): TeamState {
 
 function withLegacyTeamView(playthrough: Omit<Playthrough, 'team'>): Playthrough {
   Object.defineProperty(playthrough, 'team', {
-    value: legacyTeamView(playthrough.timeline), enumerable: false, writable: false, configurable: false,
+    value: legacyTeamView(playthrough), enumerable: false, writable: false, configurable: false,
   });
   return playthrough as Playthrough;
 }
@@ -201,8 +203,8 @@ function parseLegacyV1(input: unknown, pack: PlaythroughPackIndex): LegacyPlayth
   return legacy;
 }
 
-function migrationNodeId(playthrough: LegacyPlaythroughV1): string {
-  return playthrough.currentMilestoneId ?? playthrough.previewMilestoneId ?? 'starter';
+function migrationNodeId(playthrough: LegacyPlaythroughV1, pack: PlaythroughPackIndex): string {
+  return playthrough.currentMilestoneId ?? playthrough.previewMilestoneId ?? pack.starterNodeId();
 }
 
 function copyMoves(moves: readonly PlannedMove[]): PlannedMove[] {
@@ -213,7 +215,7 @@ function copyMoves(moves: readonly PlannedMove[]): PlannedMove[] {
 export function migratePlaythroughV1(input: unknown, pack: PlaythroughPackIndex): Playthrough {
   // Validation happens before the replacement candidate is built, preserving corrupt v1 data.
   const legacy = parseLegacyV1(input, pack);
-  const nodeId = migrationNodeId(legacy);
+  const nodeId = migrationNodeId(legacy, pack);
   const members: TimelineState['members'] = {};
   const snapshots: Record<string, TimelineState['keyframes'][string]['snapshots'][string]> = {};
   const party: [string | null, string | null, string | null, string | null, string | null, string | null] = [null, null, null, null, null, null];

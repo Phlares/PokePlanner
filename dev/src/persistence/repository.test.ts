@@ -18,6 +18,8 @@ const pack: PlaythroughPackIndex = {
   isVersionValidMove: (_species, moveId) => VERSION_VALID_MOVES.has(moveId),
   hasMilestone: (id) => MILESTONES.has(id),
   hasAcquisition: (id) => ACQUISITIONS.has(id),
+  hasNode: (id) => id === 'starter-selection' || MILESTONES.has(id),
+  starterNodeId: () => 'starter-selection',
 };
 
 function makePlaythrough(overrides: Partial<Parameters<typeof createStandardPlaythrough>[0]> = {}): Playthrough {

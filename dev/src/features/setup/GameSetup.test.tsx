@@ -19,6 +19,8 @@ function packIndex(): PlaythroughPackIndex {
       (pack.learnsets.find((record) => record.pokemonId === id)?.moves ?? []).some((move) => move.moveId === moveId),
     hasMilestone: (id) => milestones.has(id),
     hasAcquisition: (id) => acquisitions.has(id),
+    hasNode: (id) => id === 'starter-selection' || milestones.has(id),
+    starterNodeId: () => 'starter-selection',
   };
 }
 

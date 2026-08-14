@@ -15,6 +15,8 @@ const pack: PlaythroughPackIndex = {
   isVersionValidMove: (_species, moveId) => new Set([10, 43, 89]).has(moveId),
   hasMilestone: (id) => new Set(['brock-gym', 'misty-gym', 'giovanni-gym']).has(id),
   hasAcquisition: (id) => new Set(['tm26-earthquake']).has(id),
+  hasNode: (id) => id === 'starter-selection' || new Set(['brock-gym', 'misty-gym', 'giovanni-gym']).has(id),
+  starterNodeId: () => 'starter-selection',
 };
 
 const mankey: TeamMember = {

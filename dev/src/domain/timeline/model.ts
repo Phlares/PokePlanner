@@ -5,6 +5,13 @@ import { validateTeamMember } from '../team';
 
 export type MemberPlacement = 'party' | 'reserve' | 'released';
 
+/** Canonical lookup boundary required to validate every persisted timeline reference. */
+export interface TimelinePackView extends MemberPackView {
+  hasNode(nodeId: string): boolean;
+  hasMilestone(milestoneId: string): boolean;
+  hasAcquisition(acquisitionId: string): boolean;
+}
+
 /** A saved origin choice. `inferred` deliberately carries no claimed canonical acquisition. */
 export interface MemberOrigin {
   type: 'inferred' | 'hatched' | 'external-trade' | 'transfer' | 'event' | 'other';
@@ -154,7 +161,7 @@ export function createEmptyTimeline(): TimelineState {
   return { members: {}, keyframes: {}, overrides: {}, preferences: defaultTimelinePreferences() };
 }
 
-function assertMemberSnapshot(snapshot: MemberSnapshot, memberId: string, pack: MemberPackView): void {
+function assertMemberSnapshot(snapshot: MemberSnapshot, memberId: string, pack: TimelinePackView): void {
   validateTeamMember({
     id: memberId,
     speciesId: snapshot.speciesId,
@@ -165,10 +172,16 @@ function assertMemberSnapshot(snapshot: MemberSnapshot, memberId: string, pack: 
   if ((snapshot.placement === 'party') !== (snapshot.partySlot !== null)) {
     throw new Error(`Snapshot for member "${memberId}" must carry a party slot exactly when placed in party`);
   }
+  for (const move of snapshot.moves) {
+    if (move.milestoneId !== null && !pack.hasMilestone(move.milestoneId)) {
+      throw new Error(`Unknown future-move milestone id "${move.milestoneId}" for member "${memberId}"`);
+    }
+  }
 }
 
-function assertKeyframe(key: string, keyframe: TimelineKeyframe, members: Record<string, PersistentMember>, pack: MemberPackView): void {
+function assertKeyframe(key: string, keyframe: TimelineKeyframe, members: Record<string, PersistentMember>, pack: TimelinePackView): void {
   if (key !== keyframe.nodeId) throw new Error(`Timeline keyframe record key "${key}" must equal node id "${keyframe.nodeId}"`);
+  if (!pack.hasNode(keyframe.nodeId)) throw new Error(`Unknown timeline node id "${keyframe.nodeId}"`);
   const placements = new Map<string, MemberPlacement>();
   const register = (memberId: string, placement: MemberPlacement, slot: SlotIndex | null) => {
     if (!members[memberId]) throw new Error(`Unknown timeline member id "${memberId}" at node "${key}"`);
@@ -194,11 +207,25 @@ function assertKeyframe(key: string, keyframe: TimelineKeyframe, members: Record
  * Parse only explicit, user-authored timeline data. Object schemas are strict so canonical pack
  * records, resolver output and findings cannot be persisted accidentally.
  */
-export function parseTimelineState(input: unknown, pack: MemberPackView): TimelineState {
+export function parseTimelineState(input: unknown, pack: TimelinePackView): TimelineState {
   const state = timelineStateSchema.parse(input) as unknown as TimelineState;
+  const sequencesBySpecies = new Map<number, Set<number>>();
   for (const [memberId, member] of Object.entries(state.members)) {
     if (memberId !== member.id) throw new Error(`Timeline member record key "${memberId}" must equal member id "${member.id}"`);
     if (!pack.hasSpecies(member.originalSpeciesId)) throw new Error(`Unknown original species ${member.originalSpeciesId} for member "${memberId}"`);
+    const sequences = sequencesBySpecies.get(member.originalSpeciesId) ?? new Set<number>();
+    if (sequences.has(member.speciesSequence)) {
+      throw new Error(`Duplicate species sequence ${member.speciesSequence} for original species ${member.originalSpeciesId}`);
+    }
+    sequences.add(member.speciesSequence);
+    sequencesBySpecies.set(member.originalSpeciesId, sequences);
+    if (!pack.hasNode(member.acquiredAtNodeId)) throw new Error(`Unknown member acquisition node id "${member.acquiredAtNodeId}"`);
+    for (const event of member.lifecycle) {
+      if (!pack.hasNode(event.nodeId)) throw new Error(`Unknown lifecycle node id "${event.nodeId}" for member "${memberId}"`);
+    }
+    if (member.origin.acquisitionId !== null && !pack.hasAcquisition(member.origin.acquisitionId)) {
+      throw new Error(`Unknown member origin acquisition id "${member.origin.acquisitionId}" for member "${memberId}"`);
+    }
   }
   for (const [key, keyframe] of Object.entries(state.keyframes)) {
     if (keyframe.kind !== 'major') throw new Error(`Major keyframe "${key}" must have kind "major"`);

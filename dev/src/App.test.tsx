@@ -38,6 +38,8 @@ function packIndex() {
       (pack.learnsets.find((record) => record.pokemonId === id)?.moves ?? []).some((move) => move.moveId === moveId),
     hasMilestone: (id: string) => milestones.has(id),
     hasAcquisition: (id: string) => acquisitions.has(id),
+    hasNode: (id: string) => id === 'starter-selection' || milestones.has(id),
+    starterNodeId: () => 'starter-selection',
   };
 }
 

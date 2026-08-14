@@ -19,6 +19,8 @@ const pack: PlaythroughPackIndex = {
   isVersionValidMove: (_species, moveId) => VERSION_VALID_MOVES.has(moveId),
   hasMilestone: (id) => MILESTONES.has(id),
   hasAcquisition: (id) => ACQUISITIONS.has(id),
+  hasNode: (id) => new Set(['starter-selection', 'brock-gym', 'misty-gym', 'giovanni-gym']).has(id),
+  starterNodeId: () => 'starter-selection',
 };
 
 const mankey: TeamMember = {
@@ -71,6 +73,33 @@ describe('createStandardPlaythrough — fixed FireRed + Standard, versioned, tim
     const p = createStandardPlaythrough(baseInput(), pack);
     expect((p as unknown as { team: { primary: unknown[]; reserve: unknown[] } }).team.primary).toHaveLength(6);
     expect(JSON.stringify(p)).not.toContain('"team"');
+  });
+
+  it('projects the current keyframe into the temporary legacy team view deterministically', () => {
+    const snapshot = (placement: 'party', partySlot: 0) => ({
+      speciesId: 56, level: 20, abilityId: 72,
+      moves: [{ moveId: 10, status: 'available-now' as const, level: null, milestoneId: null }],
+      heldItemId: null, placement, partySlot, review: { moves: false, heldItem: false },
+    });
+    const member = (id: string, sequence: number) => ({
+      id, originalSpeciesId: 56, speciesSequence: sequence, nickname: null, natureId: null,
+      origin: { type: 'inferred' as const, acquisitionId: null, note: null }, acquiredAtNodeId: 'brock-gym', notes: '', lifecycle: [],
+    });
+    const p = createStandardPlaythrough({
+      ...baseInput(),
+      currentMilestoneId: 'misty-gym',
+      previewMilestoneId: 'brock-gym',
+      timeline: {
+        members: { brock: member('brock', 1), misty: member('misty', 2) },
+        keyframes: {
+          'brock-gym': { nodeId: 'brock-gym', kind: 'major' as const, party: ['brock', null, null, null, null, null], reserve: [], released: [], snapshots: { brock: snapshot('party', 0) } },
+          'misty-gym': { nodeId: 'misty-gym', kind: 'major' as const, party: ['misty', null, null, null, null, null], reserve: [], released: [], snapshots: { misty: snapshot('party', 0) } },
+        },
+        overrides: {}, preferences: { levelMode: 'manual' as const, autoEvolveLevel: false },
+      },
+    }, pack);
+
+    expect(p.team.primary[0]?.id).toBe('misty');
   });
 
   it('keeps current and preview milestone as distinct fields that may differ', () => {
@@ -163,6 +192,43 @@ describe('parsePlaythrough — validates game/type, refs, and rejects embedded c
 });
 
 describe('migratePlaythrough — deterministic, preserves prior value until migrated result validates', () => {
+  function legacyV1(overrides: Record<string, unknown> = {}) {
+    return {
+      schemaVersion: 1,
+      ...baseInput(),
+      game: 'firered' as const,
+      type: 'standard' as const,
+      team: createEmptyTeam(),
+      notes: '',
+      branchChoices: {},
+      checkoffs: { routesCompleted: {}, encountered: {}, captured: {} },
+      ...overrides,
+    };
+  }
+
+  it.each([
+    ['current milestone', legacyV1({ currentMilestoneId: 'brock-gym', previewMilestoneId: 'misty-gym' }), 'brock-gym'],
+    ['preview milestone', legacyV1({ currentMilestoneId: null, previewMilestoneId: 'misty-gym' }), 'misty-gym'],
+    ['pack starter node', legacyV1({ currentMilestoneId: null, previewMilestoneId: null }), 'starter-selection'],
+  ])('uses the %s as the deterministic migration keyframe', (_label, legacy, expectedNodeId) => {
+    const result = migratePlaythrough(legacy, pack);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.playthrough.timeline.keyframes[expectedNodeId]).toBeDefined();
+  });
+
+  it.each([
+    ['populated', 'Sparky', 'Bench notes', 'Sparky', 'Bench notes'],
+    ['null', null, null, null, ''],
+    ['absent', undefined, undefined, null, ''],
+  ])('preserves %s legacy member text semantics', (_label, nickname, notes, expectedNickname, expectedNotes) => {
+    const legacyMember = { ...mankey, id: 'legacy-text', ...(nickname === undefined ? {} : { nickname }), ...(notes === undefined ? {} : { notes }) };
+    const result = migratePlaythrough(legacyV1({ team: { primary: [legacyMember, null, null, null, null, null], reserve: [null, null, null, null, null, null] } }), pack);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.playthrough.timeline.members['legacy-text']).toMatchObject({ nickname: expectedNickname, notes: expectedNotes });
+  });
+
   it('migrates v1 primary and reserve members into one explicit keyframe', () => {
     const legacy = {
       schemaVersion: 1,

@@ -15,6 +15,7 @@ function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
   const pokemonById = new Map(pack.pokemon.map((record) => [record.id, record]));
   const milestones = new Set<string>(MILESTONE_ORDER);
   const acquisitions = new Set(pack.acquisitions.map((record) => record.id));
+  const nodes = new Set(pack.progression.nodes.map((node) => node.id));
   return {
     hasSpecies: (id) => pokemonById.has(id),
     legalAbilityIds: (id) => pokemonById.get(id)?.abilities.map((ability) => ability.id) ?? [],
@@ -22,6 +23,8 @@ function packIndexOf(pack: FireRedPack): PlaythroughPackIndex {
       (pack.learnsets.find((record) => record.pokemonId === id)?.moves ?? []).some((move) => move.moveId === moveId),
     hasMilestone: (id) => milestones.has(id),
     hasAcquisition: (id) => acquisitions.has(id),
+    hasNode: (id) => nodes.has(id),
+    starterNodeId: () => 'starter-selection',
   };
 }
 
