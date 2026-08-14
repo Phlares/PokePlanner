@@ -40,7 +40,7 @@ export function serializePlaythroughExport(playthrough: Playthrough): string {
 }
 
 function normalizedFilenameStem(name: string): string {
-  return name
+  const stem = name
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/gu, '')
     .toLowerCase()
@@ -48,6 +48,7 @@ function normalizedFilenameStem(name: string): string {
     .replace(/^-+|-+$/gu, '')
     .slice(0, 80)
     .replace(/-+$/gu, '');
+  return /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/iu.test(stem) ? `${stem}-plan` : stem;
 }
 
 /** Create a portable, deterministic JSON file without triggering browser navigation or writes. */

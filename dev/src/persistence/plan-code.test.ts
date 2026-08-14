@@ -1,4 +1,4 @@
-import { deflateSync, strToU8 } from 'fflate';
+import { Deflate, deflateSync, strToU8 } from 'fflate';
 import { describe, expect, it } from 'vitest';
 import {
   createStandardPlaythrough,
@@ -90,6 +90,10 @@ function base64Url(bytes: Uint8Array): string {
 
 function codeForJson(value: unknown): string {
   const compressed = deflateSync(strToU8(JSON.stringify(value)));
+  return codeForCompressed(compressed);
+}
+
+function codeForCompressed(compressed: Uint8Array): string {
   return `PP1.${base64Url(compressed)}.${crc32(compressed)}`;
 }
 
@@ -148,6 +152,24 @@ describe('portable plan codes', () => {
     const oversizedCode = codeForJson(oversized);
 
     expect(() => decodePlanCode(oversizedCode, pack)).toThrow(/expanded size limit/i);
+  });
+
+  it('aborts expansion before processing trailing compressed work', () => {
+    const chunks: Uint8Array[] = [];
+    const stream = new Deflate({ level: 9 }, (chunk) => chunks.push(chunk));
+    stream.push(strToU8('a'.repeat(MAX_EXPANDED_BYTES + 65_536)), false);
+    stream.push(strToU8('trailing work that must not be reached'), true);
+    expect(chunks).toHaveLength(2);
+
+    // The first valid non-final chunk already crosses the expanded limit. Corrupting the trailing
+    // chunk makes a full-stream decoder fail with invalid DEFLATE data instead of the size error.
+    const corruptTail = chunks[1].slice();
+    corruptTail.fill(0xff);
+    const compressed = new Uint8Array(chunks[0].length + corruptTail.length);
+    compressed.set(chunks[0]);
+    compressed.set(corruptTail, chunks[0].length);
+
+    expect(() => decodePlanCode(codeForCompressed(compressed), pack)).toThrow(/expanded size limit/i);
   });
 
   it('rejects unsupported plan-code and playthrough schema versions', () => {

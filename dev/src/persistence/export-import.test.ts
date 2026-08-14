@@ -104,6 +104,13 @@ describe('serializePlaythroughExport — stable, pretty, version-carrying JSON',
   it('uses a portable fallback filename when the normalized run name is empty', () => {
     expect(createPlaythroughDownload(makePlaythrough({ name: '🔥' })).filename).toBe('pokeplanner-plan.json');
   });
+
+  it.each(['CON', 'prn', 'Aux', 'NUL', 'com1', 'COM9', 'lpt1', 'Lpt9'])(
+    'avoids the Windows reserved device filename %s case-insensitively',
+    (name) => {
+      expect(createPlaythroughDownload(makePlaythrough({ name })).filename).toBe(`${name.toLowerCase()}-plan.json`);
+    },
+  );
 });
 
 describe('preparePlaythroughImport — parse → migrate → validate, no write', () => {

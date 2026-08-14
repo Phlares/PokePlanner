@@ -1,4 +1,4 @@
-import { deflateSync, inflateSync, strFromU8, strToU8 } from 'fflate';
+import { Inflate, deflateSync, strFromU8, strToU8 } from 'fflate';
 import {
   migratePlaythrough,
   type Playthrough,
@@ -17,6 +17,7 @@ const FORMAT_VERSION = 'PP1';
 const MAX_COMPRESSED_BYTES = 256 * 1024;
 const MAX_EXPANDED_BYTES = 4 * 1024 * 1024;
 const MAX_BASE64URL_LENGTH = Math.ceil(MAX_COMPRESSED_BYTES / 3) * 4;
+const INFLATE_INPUT_CHUNK_BYTES = 64;
 
 export interface DecodedPlanCode {
   playthrough: Playthrough;
@@ -213,14 +214,28 @@ function parseCode(code: string): Uint8Array {
 }
 
 function inflateWithinLimit(compressed: Uint8Array): Uint8Array {
-  let expanded: Uint8Array;
+  const chunks: Uint8Array[] = [];
+  let expandedBytes = 0;
+  const sizeError = new Error(`Plan code exceeds the expanded size limit of ${MAX_EXPANDED_BYTES} bytes`);
+  const inflater = new Inflate((chunk) => {
+    if (chunk.length > MAX_EXPANDED_BYTES - expandedBytes) throw sizeError;
+    chunks.push(chunk);
+    expandedBytes += chunk.length;
+  });
   try {
-    expanded = inflateSync(compressed, { out: new Uint8Array(MAX_EXPANDED_BYTES + 1) });
+    for (let offset = 0; offset < compressed.length; offset += INFLATE_INPUT_CHUNK_BYTES) {
+      const end = Math.min(offset + INFLATE_INPUT_CHUNK_BYTES, compressed.length);
+      inflater.push(compressed.subarray(offset, end), end === compressed.length);
+    }
   } catch (error) {
+    if (error === sizeError) throw sizeError;
     throw new Error(`Plan code could not be decompressed: ${error instanceof Error ? error.message : String(error)}`);
   }
-  if (expanded.length > MAX_EXPANDED_BYTES) {
-    throw new Error(`Plan code exceeds the expanded size limit of ${MAX_EXPANDED_BYTES} bytes`);
+  const expanded = new Uint8Array(expandedBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    expanded.set(chunk, offset);
+    offset += chunk.length;
   }
   return expanded;
 }
