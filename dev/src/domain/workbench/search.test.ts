@@ -215,11 +215,24 @@ describe('selectMilestoneBriefing', () => {
     const briefing = selectMilestoneBriefing('koga-gym', briefingContext());
 
     expect(briefing.requires).toContainEqual({
-      id: 'surf', label: 'Surf', kind: 'capability', searchQuery: { capability: 'surf' },
+      id: 'surf', label: 'Surf', kind: 'capability', inBothHalves: true, searchQuery: { capability: 'surf' },
     });
     expect(briefing.unlocks).toContainEqual({
-      id: 'safari-zone', label: 'Safari Zone', kind: 'location', searchQuery: { nodeId: 'kanto-safari-zone' },
+      id: 'safari-zone', label: 'Safari Zone', kind: 'location', inBothHalves: false, searchQuery: { nodeId: 'kanto-safari-zone' },
     });
+  });
+
+  it('marks a term standing in both halves of the same briefing', () => {
+    // Fuchsia's water wants Surf, and beating Koga is what makes Surf usable: both are true, and a
+    // bare two-row header would read them as a contradiction unless the overlap is stated.
+    const koga = selectMilestoneBriefing('koga-gym', briefingContext());
+
+    expect(koga.requires.find((token) => token.id === 'surf')?.inBothHalves).toBe(true);
+    expect(koga.unlocks.find((token) => token.id === 'surf')?.inBothHalves).toBe(true);
+    expect(koga.unlocks.find((token) => token.id === 'safari-zone')?.inBothHalves).toBe(false);
+    // Viridian City's water wants Surf too, but Brock's badge is not what grants it.
+    expect(selectMilestoneBriefing('brock-gym', briefingContext()).requires)
+      .toEqual([expect.objectContaining({ id: 'surf', inBothHalves: false })]);
   });
 
   it('requires only the field capabilities that gate its own leg of the path', () => {
@@ -242,7 +255,7 @@ describe('selectMilestoneBriefing', () => {
 
   it('names a machine unlock from the acquisition the pack records for it', () => {
     expect(selectMilestoneBriefing('brock-gym', briefingContext()).unlocks).toContainEqual({
-      id: 'tm39-rock-tomb', label: 'TM39 Rock Tomb', kind: 'tm', searchQuery: { move: 'rock-tomb' },
+      id: 'tm39-rock-tomb', label: 'TM39 Rock Tomb', kind: 'tm', inBothHalves: false, searchQuery: { move: 'rock-tomb' },
     });
   });
 
@@ -316,6 +329,15 @@ describe('searchCapability', () => {
       reserveSummary: { counts: { knows: 0, 'can-now': 0, conditional: 0, none: 0 }, memberIds: [] },
     });
   });
+
+  it('hands every empty result its own counts', () => {
+    // Sharing one counts object between empty results lets a single mutating caller poison them all.
+    const first = searchCapability('dive', surfNode(), pack, FIRE_RED_RULES);
+    const second = searchCapability('waterfall-climb', surfNode(), pack, FIRE_RED_RULES);
+
+    expect(first.reserveSummary.counts).toEqual(second.reserveSummary.counts);
+    expect(first.reserveSummary.counts).not.toBe(second.reserveSummary.counts);
+  });
 });
 
 describe('progressionContextAtNode', () => {
@@ -326,6 +348,15 @@ describe('progressionContextAtNode', () => {
       .toEqual(['boulder-badge']);
     // Every gym is behind One Island, and the two badgeless milestones still count for nothing.
     expect(progressionContextAtNode('one-island', pack, FIRE_RED_RULES).badgeCount).toBe(8);
+  });
+
+  it('names the milestone the run is still working toward', () => {
+    // The `starter` milestone's progression event is `starter-selection`, so a target read off the
+    // event ids alone can never leave `starter` behind. The target answers to the bands instead.
+    expect(progressionContextAtNode('cerulean-city', pack, FIRE_RED_RULES).targetMilestoneId).toBe('misty-gym');
+    expect(progressionContextAtNode('kanto-safari-zone', pack, FIRE_RED_RULES).targetMilestoneId).toBe('sabrina-gym');
+    expect(progressionContextAtNode('pallet-town', pack, FIRE_RED_RULES).targetMilestoneId).toBe('starter');
+    expect(progressionContextAtNode('one-island', pack, FIRE_RED_RULES).targetMilestoneId).toBe('champion');
   });
 
   it('counts a progression event complete only once the run is past the node carrying it', () => {

@@ -275,11 +275,31 @@ export interface BriefingToken {
   id: string;
   label: string;
   kind: BriefingTokenKind;
+  /**
+   * True when this same term stands in BOTH halves of its own briefing: the leg's content wants it,
+   * and finishing the leg is what grants it. Koga is the FireRed case — Fuchsia's water wants Surf,
+   * and the Soul Badge is what makes Surf usable. Both facts are true, but two bare rows reading
+   * `REQUIRES SURF` / `UNLOCKS SURF` render as a contradiction, so the relation is stated here for
+   * the header to render coherently rather than left to be re-derived by set arithmetic.
+   */
+  inBothHalves: boolean;
   searchQuery: WorkbenchSearchQuery;
 }
 
+/** A token before the briefing knows whether its term also stands in the other half. */
+type UnplacedToken = Omit<BriefingToken, 'inBothHalves'>;
+
 /** What one planning milestone asks of a run, and what it hands back. */
 export interface MilestoneBriefing {
+  /**
+   * The field capabilities this leg's ENCOUNTERS use — not everything that gates the leg. It is read
+   * from the encounter methods at the leg's nodes, and the pack's method vocabulary (`walk`, `surf`,
+   * the rods, `rock-smash`, `pokeflute`, the gift kinds, `only-one`, `event`) names exactly two
+   * capabilities. `cut`, `fly`, `strength`, `flash` and `waterfall` gate *traversal*, which the pack
+   * records nowhere — 6 unlocks, 5 conditions and 23 prerequisite events across 74 nodes — so they
+   * can never appear here however gated the leg really is. Read this as "what the water and the
+   * rubble on this leg want", never as a complete list of what the leg needs.
+   */
   requires: readonly BriefingToken[];
   unlocks: readonly BriefingToken[];
 }
@@ -294,18 +314,18 @@ function tokenId(label: string): string {
     .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
-function capabilityToken(capability: CapabilityRule, pack: FireRedPack): BriefingToken | null {
+function capabilityToken(capability: CapabilityRule, pack: FireRedPack): UnplacedToken | null {
   const move = pack.moves.find((record) => record.id === capability.moveId);
   if (move === undefined) return null;
   return { id: tokenId(move.name), label: move.name, kind: 'capability', searchQuery: { capability: capability.id } };
 }
 
-function locationToken(node: ProgressionNode): BriefingToken {
+function locationToken(node: ProgressionNode): UnplacedToken {
   return { id: tokenId(node.name), label: node.name, kind: 'location', searchQuery: { nodeId: node.id } };
 }
 
 /** A `tm39` / `hm03` unlock reference resolved against the acquisition the pack records for it. */
-function machineToken(unlock: ProgressionUnlock, pack: FireRedPack): BriefingToken | null {
+function machineToken(unlock: ProgressionUnlock, pack: FireRedPack): UnplacedToken | null {
   if (unlock.kind !== 'tm' && unlock.kind !== 'hm') return null;
   const reference = /^(?:tm|hm)0*(\d+)$/.exec(unlock.refId);
   if (reference === null) return null;
@@ -319,8 +339,8 @@ function machineToken(unlock: ProgressionUnlock, pack: FireRedPack): BriefingTok
 }
 
 /** Drop the terms the workbench has nothing to look up: a token is always a runnable search. */
-function searchableTokens(tokens: readonly (BriefingToken | null)[]): BriefingToken[] {
-  return tokens.filter((token): token is BriefingToken => token !== null);
+function searchableTokens(tokens: readonly (UnplacedToken | null)[]): UnplacedToken[] {
+  return tokens.filter((token): token is UnplacedToken => token !== null);
 }
 
 /**
@@ -329,6 +349,9 @@ function searchableTokens(tokens: readonly (BriefingToken | null)[]): BriefingTo
  * method the ruleset also names as a capability), and an unlock is the capability the ruleset gates
  * on this milestone, whatever machine its own progression event grants, and the golden-path leg that
  * completing it opens next — which is exactly the band the workbench stops calling locked.
+ *
+ * A term can legitimately land in both halves, so the two lists are computed first and the overlap
+ * is stamped onto each token afterwards; see {@link BriefingToken.inBothHalves}.
  */
 export function selectMilestoneBriefing(
   milestoneId: string,
@@ -346,7 +369,7 @@ export function selectMilestoneBriefing(
     for (const method of area.methods) legMethods.add(method.method);
   }
   const capabilities = [...rules.capabilities.values()];
-  const requires = searchableTokens(capabilities
+  const required = searchableTokens(capabilities
     .filter((capability) => legMethods.has(capability.id))
     .map((capability) => capabilityToken(capability, pack)));
 
@@ -354,7 +377,7 @@ export function selectMilestoneBriefing(
     .flatMap((node) => node.events)
     .find((candidate) => candidate.id === milestoneId);
   const nextBand = bands[index + 1];
-  const unlocks = searchableTokens([
+  const unlocked = searchableTokens([
     ...capabilities
       .filter((capability) => capability.availableAtMilestoneId === milestoneId)
       .map((capability) => capabilityToken(capability, pack)),
@@ -364,7 +387,12 @@ export function selectMilestoneBriefing(
       .map(locationToken)),
   ]);
 
-  return { requires, unlocks };
+  const shared = new Set(required.map((token) => token.id)
+    .filter((id) => unlocked.some((token) => token.id === id)));
+  const place = (tokens: readonly UnplacedToken[]): BriefingToken[] => tokens
+    .map((token) => ({ ...token, inBothHalves: shared.has(token.id) }));
+
+  return { requires: place(required), unlocks: place(unlocked) };
 }
 
 /** Aggregate capability evidence for the collapsed reserve box. */
@@ -386,16 +414,21 @@ export interface CapabilitySearchResult {
   candidates: Readonly<Record<number, CapabilityHighlight>>;
 }
 
-const EMPTY_STATE_COUNTS: Readonly<Record<CapabilityState, number>> = {
+/** A fresh tally every time: one shared object would let any caller's mutation poison the rest. */
+const emptyStateCounts = (): Record<CapabilityState, number> => ({
   knows: 0, 'can-now': 0, conditional: 0, none: 0,
-};
+});
 
 /**
  * Where a run stands at one progression node: every progression event strictly before it on the
  * golden path has happened, and nothing at or after it has. A *planning* milestone answers to its
  * band instead of to its node, because the pack anchors an event where it is fought rather than
  * where it is walked past — Giovanni's gym stands in Viridian City, the second node on the spine,
- * and would otherwise hand out the Earth Badge before the first gym. Badges follow from that.
+ * and would otherwise hand out the Earth Badge before the first gym. Badges and the planning target
+ * both follow from the bands too: the target is the first band the run has not yet walked past.
+ * Reading the target off `completedMilestoneIds` instead would never leave the first milestone,
+ * because that set holds progression EVENT ids and FireRed's `starter` milestone is the event
+ * `starter-selection` — an id that can never enter it.
  */
 export function progressionContextAtNode(
   nodeId: string,
@@ -403,22 +436,22 @@ export function progressionContextAtNode(
   rules: GameRules,
 ): ProgressionContext {
   const currentOrder = pack.progression.nodes.find((node) => node.id === nodeId)?.goldenPathOrder ?? -1;
+  const bands = milestoneBands(rules.milestones, pack);
   const completedMilestoneIds = new Set<string>();
   for (const node of pack.progression.nodes) {
     if (node.goldenPathOrder >= currentOrder) continue;
     for (const event of node.events) completedMilestoneIds.add(event.id);
   }
-  for (const band of milestoneBands(rules.milestones, pack)) {
+  for (const band of bands) {
     if (currentOrder <= band.endOrder) completedMilestoneIds.delete(band.milestoneId);
   }
   const badgeIds = new Set(rules.milestones
     .filter((milestone) => milestone.badgeId !== null && completedMilestoneIds.has(milestone.id))
     .map((milestone) => milestone.badgeId!));
-  const target = rules.milestones.find((milestone) => !completedMilestoneIds.has(milestone.id))
-    ?? rules.milestones.at(-1);
+  const target = bands.find((band) => currentOrder <= band.endOrder) ?? bands.at(-1);
   return {
     currentNodeId: nodeId,
-    targetMilestoneId: target?.id ?? '',
+    targetMilestoneId: target?.milestoneId ?? '',
     completedMilestoneIds,
     badgeIds,
     badgeCount: badgeIds.size,
@@ -473,7 +506,7 @@ export function searchCapability(
       capabilityId,
       party: {},
       reserve: {},
-      reserveSummary: { counts: EMPTY_STATE_COUNTS, memberIds: [] },
+      reserveSummary: { counts: emptyStateCounts(), memberIds: [] },
       candidates: {},
     };
   }
@@ -495,7 +528,7 @@ export function searchCapability(
   };
 
   const reserve = membersIn(node.reserve);
-  const counts = { ...EMPTY_STATE_COUNTS };
+  const counts = emptyStateCounts();
   for (const highlight of Object.values(reserve)) counts[highlight.state] += 1;
 
   const candidates: Record<number, CapabilityHighlight> = {};
