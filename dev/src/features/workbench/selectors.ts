@@ -1,9 +1,12 @@
 import type { FireRedPack } from '../../data/game-pack';
 import type { ProgressionNode } from '../../domain/progression';
-import type { GameRules, PlanningMilestone } from '../../domain/rules/game-rules';
+import type { GameRules } from '../../domain/rules/game-rules';
 import { hasActiveSearchQuery, type MoveMatch, type Obtainability, type PokemonType } from '../../domain/search';
-import { searchWorkbench, type WorkbenchMethod } from '../../domain/workbench/search';
+import { milestoneBands, searchWorkbench, type MilestoneBand, type WorkbenchMethod } from '../../domain/workbench/search';
 import type { WorkbenchState } from './controller';
+
+// The milestone geometry the workbench groups by is domain logic; briefings cut the same bands.
+export { milestoneBands, milestoneNodeId, type MilestoneBand } from '../../domain/workbench/search';
 
 /**
  * How reachable a route is from where the run stands. `postgame` and `optional` describe the
@@ -109,60 +112,6 @@ export interface MilestoneResultsInput {
   currentMilestoneId: string | null;
   /** The planning horizon: the previewed milestone when one is set, else the saved one. */
   targetMilestoneId: string | null;
-}
-
-/**
- * Map one persisted milestone or node id onto the progression location that carries it. The starter
- * milestone is configured before the pack's first node, so it borrows that node's location.
- */
-export function milestoneNodeId(
-  milestoneId: string,
-  milestones: readonly PlanningMilestone[],
-  progressionIds: ReadonlySet<string>,
-): string {
-  const configured = milestones.find((milestone) => milestone.id === milestoneId)?.nodeId;
-  if (configured !== undefined && progressionIds.has(configured)) return configured;
-  if (milestoneId === 'starter' && progressionIds.has('pallet-town')) return 'pallet-town';
-  return configured ?? milestoneId;
-}
-
-/** One milestone's slice of the golden path: every order in `[startOrder, endOrder]`. */
-export interface MilestoneBand {
-  milestoneId: string;
-  index: number;
-  name: string;
-  nodeId: string;
-  startOrder: number;
-  endOrder: number;
-}
-
-/**
- * Cut the golden path into one contiguous band per milestone. A band ends at the order of the node
- * carrying its milestone, kept as a running maximum so the spine stays monotone even where the pack
- * anchors a milestone out of geographic order (Giovanni's gym sits in Viridian City, walked early
- * but fought last, and so claims an empty band rather than reordering the spine).
- */
-export function milestoneBands(
-  milestones: readonly PlanningMilestone[],
-  pack: FireRedPack,
-): readonly MilestoneBand[] {
-  const progressionIds = new Set(pack.progression.nodes.map((node) => node.id));
-  const orderByNodeId = new Map(pack.progression.nodes.map((node) => [node.id, node.goldenPathOrder]));
-  let previousEnd = Number.NEGATIVE_INFINITY;
-  return milestones.map((milestone, index) => {
-    const nodeId = milestoneNodeId(milestone.id, milestones, progressionIds);
-    const endOrder = Math.max(orderByNodeId.get(nodeId) ?? previousEnd, previousEnd);
-    const band: MilestoneBand = {
-      milestoneId: milestone.id,
-      index,
-      name: milestone.name,
-      nodeId,
-      startOrder: previousEnd + 1,
-      endOrder,
-    };
-    previousEnd = endOrder;
-    return band;
-  });
 }
 
 /** The band a golden-path order falls in; anything past the last milestone belongs to it. */

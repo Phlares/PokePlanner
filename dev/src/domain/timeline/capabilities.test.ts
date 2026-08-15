@@ -5,6 +5,7 @@ import { copyKeyframe } from './commands';
 import {
   evaluateCapability,
   evaluateResourceAssignments,
+  highlightCapability,
   type CapabilityEvaluationContext,
   type FiniteResourceInventory,
 } from './capabilities';
@@ -128,6 +129,53 @@ describe('evaluateCapability', () => {
     expect(conditional.explanation).toMatch(/not currently available/i);
   });
 
+  it('withholds an unlock while either the badge or the milestone is still outstanding', () => {
+    const knowsSurf = member({ moves: [{ moveId: 57, status: 'available-now', level: null, milestoneId: null }] });
+    const badgeMissing = evaluateCapability(knowsSurf, surfContext({ progressionContext: progressionContext([], ['koga-gym']) }));
+    const milestoneMissing = evaluateCapability(knowsSurf, surfContext({ progressionContext: progressionContext(['soul-badge'], []) }));
+
+    expect(badgeMissing.state).toBe('conditional');
+    expect(milestoneMissing.state).toBe('conditional');
+  });
+
+  it('unlocks a capability the ruleset gates on neither a badge nor a milestone', () => {
+    const ungated = evaluateCapability(
+      member({ moves: [{ moveId: 57, status: 'available-now', level: null, milestoneId: null }] }),
+      surfContext({
+        capability: { ...SURF, requiredBadgeId: null, availableAtMilestoneId: null },
+        progressionContext: progressionContext(),
+      }),
+    );
+
+    expect(ungated.state).toBe('knows');
+  });
+
+  it('holds a member that already knows the move at conditional when it could not learn it otherwise', () => {
+    // Pikachu cannot learn Surf here, but the plan already assigns it: the plan is never overruled.
+    const assigned = evaluateCapability(
+      member({ speciesId: 25, moves: [{ moveId: 57, status: 'available-now', level: null, milestoneId: null }] }),
+      surfContext({ progressionContext: progressionContext() }),
+    );
+
+    expect(assigned.state).toBe('conditional');
+  });
+
+  it('treats unestablished learnability as conditional rather than as no way at all', () => {
+    expect(evaluateCapability(member({ speciesId: 25 }), surfContext({ canLearnMove: () => null })).state).toBe('conditional');
+  });
+
+  it('withholds can-now while no canonical source of the move is available yet', () => {
+    const unavailableSource = evaluateCapability(member(), surfContext({
+      sources: [{ id: 'hm03-safari-zone', available: false }],
+    }));
+
+    expect(unavailableSource.state).toBe('conditional');
+  });
+
+  it('withholds can-now until the capability itself is unlocked', () => {
+    expect(evaluateCapability(member(), surfContext({ progressionContext: progressionContext() })).state).toBe('conditional');
+  });
+
   it.each([
     { status: 'future-level' as const, level: 30, milestoneId: null },
     { status: 'future-milestone' as const, level: null, milestoneId: 'safari-zone' },
@@ -139,6 +187,21 @@ describe('evaluateCapability', () => {
     expect(evaluateCapability(futureMove, surfContext({
       sources: [{ id: 'hm03-safari-zone', available: false }],
     }))).toMatchObject({ state: 'conditional' });
+  });
+});
+
+describe('highlightCapability', () => {
+  it('attributes one shared evaluation to the subject it describes', () => {
+    const knowsSurf = member({ moves: [{ moveId: 57, status: 'available-now', level: null, milestoneId: null }] });
+    const context = surfContext();
+    const partyHighlight = highlightCapability(knowsSurf, 'm1', context);
+
+    expect(partyHighlight.state).toBe('knows');
+    expect(partyHighlight).toEqual({ ...evaluateCapability(knowsSurf, context), speciesId: 131, memberId: 'm1' });
+    // A search candidate is not on the team, so it carries a species and no member.
+    expect(highlightCapability(member({ speciesId: 25 }), null, context)).toMatchObject({
+      state: 'none', speciesId: 25, memberId: null,
+    });
   });
 });
 

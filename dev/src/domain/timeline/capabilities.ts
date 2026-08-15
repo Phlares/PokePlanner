@@ -26,6 +26,17 @@ export interface CapabilityEvaluation {
   explanation: string;
 }
 
+/**
+ * One evaluation attributed to the subject it was made for. This is the single evidence model every
+ * capability surface renders — party slot, reserve box and search result alike — so no component
+ * ever recomputes a state of its own.
+ */
+export interface CapabilityHighlight extends CapabilityEvaluation {
+  speciesId: number;
+  /** The timeline member described, or null for a search candidate that is not on the team. */
+  memberId: string | null;
+}
+
 function sortedUnique(values: readonly string[]): string[] {
   return [...new Set(values)].sort((left, right) => left.localeCompare(right));
 }
@@ -68,6 +79,19 @@ export function evaluateCapability(member: MemberSnapshot, context: CapabilityEv
     return { state: 'conditional', evidenceIds, explanation: `This member could supply ${capability.id}, but its required move or field access is not currently available.` };
   }
   return { state: 'none', evidenceIds, explanation: `This member has no known way to supply ${capability.id}.` };
+}
+
+/**
+ * Attribute one {@link evaluateCapability} result to its subject. Party members, reserve members and
+ * search candidates differ only in the snapshot handed in — a candidate is simply a species with no
+ * planned moves and no member id — so every surface reads the same state from the same evaluator.
+ */
+export function highlightCapability(
+  member: MemberSnapshot,
+  memberId: string | null,
+  context: CapabilityEvaluationContext,
+): CapabilityHighlight {
+  return { ...evaluateCapability(member, context), speciesId: member.speciesId, memberId };
 }
 
 interface ResourceAssignment {

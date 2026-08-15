@@ -148,7 +148,7 @@ function buildObtainability(pack: FireRedPack): Map<number, Obtainability> {
 type LearnMethodEntry = { method: string; acquisitionIds?: string[] };
 
 /** True when the species has at least one FireRed-valid way to learn the move. */
-function isMoveVersionValid(entries: readonly LearnMethodEntry[], acquisitionStatusById: Map<string, string>): boolean {
+export function isMoveVersionValid(entries: readonly LearnMethodEntry[], acquisitionStatusById: Map<string, string>): boolean {
   for (const entry of entries) {
     if (entry.method === 'level-up' || entry.method === 'egg') return true;
     if (entry.method === 'machine' || entry.method === 'tutor') {
