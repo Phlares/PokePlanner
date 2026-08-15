@@ -191,6 +191,58 @@ describe('Workbench', () => {
     expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
   });
 
+  it('reads the team rung from the party the run resolves at its planning target', () => {
+    renderWorkbench({ playthrough: restoredStarterPlaythrough() });
+    const team = screen.getByRole('region', { name: 'Team at Brock' });
+    expect(within(team).getByText('Brock · Target Lv 14')).toBeVisible();
+    expect(within(team).getByRole('button', { name: 'Party slot 1: Bulbasaur, level 5' })).toBeVisible();
+    expect(within(team).getAllByText('Empty')).toHaveLength(5);
+    expect(within(team).getByText('Reserve 0 · Findings 1 · Manual levels')).toBeVisible();
+  });
+
+  it('follows the durable planning target when it moves, in name and in content', () => {
+    renderControlledWorkbench(starterReservedAtMistyPlaythrough());
+    expect(screen.getByRole('region', { name: 'Team at Brock' })).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: /Preview milestone.*Misty/i }));
+
+    const team = screen.getByRole('region', { name: 'Team at Misty' });
+    expect(screen.queryByRole('region', { name: 'Team at Brock' })).toBeNull();
+    expect(within(team).getByText('Misty · Target Lv 21')).toBeVisible();
+    // The starter is boxed at Misty, so the rung reports an empty party and a held reserve.
+    expect(within(team).queryByRole('button', { name: /^Party slot/ })).toBeNull();
+    expect(within(team).getByText(/^Reserve 1 · /)).toBeVisible();
+  });
+
+  it('names the level policy the run is actually using', () => {
+    const base = starterPlaythrough();
+    renderWorkbench({
+      playthrough: parsePlaythrough({
+        ...base,
+        timeline: { ...base.timeline, preferences: { levelMode: 'match', autoEvolveLevel: false } },
+      }, packIndex()),
+    });
+    expect(screen.getByText(/· Auto match target$/)).toBeVisible();
+  });
+
+  it('selects a team-rung member without touching the run', () => {
+    const { onPlaythroughChange } = renderWorkbench({ playthrough: starterPlaythrough() });
+    const slot = screen.getByRole('button', { name: 'Party slot 1: Bulbasaur, level 5' });
+    expect(slot).toHaveAttribute('aria-pressed', 'false');
+
+    fireEvent.click(slot);
+
+    expect(screen.getByRole('button', { name: 'Party slot 1: Bulbasaur, level 5' })).toHaveAttribute('aria-pressed', 'true');
+    expect(onPlaythroughChange).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('moves focus to the timeline from the team rung', () => {
+    renderWorkbench({ playthrough: starterPlaythrough() });
+    fireEvent.click(screen.getByRole('button', { name: 'Open timeline' }));
+    expect(screen.getByRole('region', { name: /team timeline/i })).toHaveFocus();
+  });
+
   it('shows six active party slots and unbounded reserve and released pools', () => {
     renderWorkbench();
     const timeline = screen.getByRole('region', { name: /team timeline/i });
@@ -204,7 +256,8 @@ describe('Workbench', () => {
     renderWorkbench({ playthrough: starterPlaythrough() });
     expect(screen.getByRole('region', { name: /party · 1 of 6 pokémon/i })).toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
-    expect(screen.getByText(starter.name)).toBeVisible();
+    // Scoped to the timeline: the sticky team rung names the same member at the planning target.
+    expect(within(screen.getByRole('region', { name: /team timeline/i })).getByText(starter.name)).toBeVisible();
     expect(screen.getByRole('button', { name: /^Edit /i })).toBeVisible();
     expect(screen.queryByRole('button', { name: /^Restore /i })).toBeNull();
   });

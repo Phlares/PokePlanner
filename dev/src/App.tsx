@@ -1,18 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { loadFireRedPack, type FireRedDigest, type FireRedPack } from './data/game-pack';
 import { MILESTONE_ORDER } from './domain/availability';
-import { type Playthrough, type PlaythroughPackIndex } from './domain/playthrough';
+import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from './domain/playthrough';
 import { FIRE_RED_RULES } from './domain/rules/firered-rules';
-import {
-  createPlaythroughDownload,
-  preparePlaythroughImport,
-  serializePlaythroughExport,
-} from './persistence/export-import';
-import {
-  encodePlanCode,
-  preparePlanCodeImport,
-  type PlanCodeImportPreview,
-} from './persistence/plan-code';
+import { createPlaythroughDownloadHref } from './persistence/export-import';
+import { prepareRunImport } from './persistence/import-source';
 import {
   MemoryPlaythroughRepository,
   type PlaythroughRepository,
@@ -20,6 +12,7 @@ import {
 } from './persistence/repository';
 import { openIndexedDbRepository } from './persistence/indexeddb-repository';
 import { GameSetup } from './features/setup/GameSetup';
+import { RunMenu, type RunSaveStatus } from './features/workbench/RunMenu';
 import { Workbench } from './features/workbench/Workbench';
 import { applyTheme, readStoredTheme, type Theme } from './theme';
 
@@ -104,15 +97,6 @@ export function App({
   const saveQueue = useRef<Promise<void>>(Promise.resolve());
   const repositoryGeneration = useRef(0);
   const [pack, setPack] = useState<FireRedPack | null>(null);
-  const [exportText, setExportText] = useState<string | null>(null);
-  const [exportFilename, setExportFilename] = useState<string | null>(null);
-  const [importText, setImportText] = useState('');
-  const [importError, setImportError] = useState<string | null>(null);
-  const [planCodeExport, setPlanCodeExport] = useState<string | null>(null);
-  const [planCodeExportError, setPlanCodeExportError] = useState<string | null>(null);
-  const [planCodeImport, setPlanCodeImport] = useState('');
-  const [planCodePreview, setPlanCodePreview] = useState<PlanCodeImportPreview | null>(null);
-  const [planCodeError, setPlanCodeError] = useState<string | null>(null);
   const [theme, setTheme] = useState<Theme>(readStoredTheme);
 
   // Keep the document and localStorage in step with the chosen theme; dark is the default.
@@ -212,9 +196,6 @@ export function App({
         if (saveAttempt.current === attempt) {
           setActiveDraft(stored);
           setSaveError(null);
-          setExportText(null);
-          setExportFilename(null);
-          setPlanCodeExport(null);
         }
       } catch (error) {
         if (saveAttempt.current === attempt) {
@@ -233,57 +214,45 @@ export function App({
     void persist(record);
   };
 
-  const handleExport = (): void => {
-    if (activeDraft === null) return;
-    setExportText(serializePlaythroughExport(activeDraft));
-    setExportFilename(createPlaythroughDownload(activeDraft).filename);
+  /**
+   * The one import path for every source. Validation and migration happen here, against the loaded
+   * pack, and nothing is written — the menu previews the result and only a confirmation calls back
+   * into `persist`, so a rejected or cancelled import leaves the stored record untouched.
+   */
+  const prepareImport = (input: string) => {
+    if (boot.status !== 'ready') throw new Error('FireRed data is still loading.');
+    return prepareRunImport(input, boot.pack, pack?.manifest.packVersion);
   };
 
-  const handleImport = (): void => {
-    if (boot.status !== 'ready') return;
-    let imported: Playthrough;
+  const handleRename = (name: string): void => {
+    if (boot.status !== 'ready' || activeDraft === null) return;
+    void persist(parsePlaythrough({ ...activeDraft, name, updatedAt: now() }, boot.pack));
+  };
+
+  const handleDuplicate = (): void => {
+    if (boot.status !== 'ready' || activeDraft === null) return;
+    void persist(parsePlaythrough({
+      ...activeDraft,
+      id: createId(),
+      name: `${activeDraft.name} (copy)`,
+      createdAt: now(),
+      updatedAt: now(),
+    }, boot.pack));
+  };
+
+  const handleDelete = async (): Promise<void> => {
+    if (boot.status !== 'ready' || activeDraft === null) return;
+    const generation = repositoryGeneration.current;
+    saveAttempt.current += 1;
     try {
-      imported = preparePlaythroughImport(importText, boot.pack);
+      await boot.repo.delete(activeDraft.id);
+      const remaining = mostRecent(await boot.repo.list());
+      if (repositoryGeneration.current !== generation) return;
+      setLastDurable(remaining);
+      setActiveDraft(remaining);
+      setSaveError(null);
     } catch (error) {
-      // Validation ran before any write, so the existing record is preserved untouched.
-      setImportError(error instanceof Error ? error.message : 'Import failed validation.');
-      return;
-    }
-    setImportError(null);
-    setImportText('');
-    void persist(imported);
-  };
-
-  const handlePlanCodePreview = (): void => {
-    if (boot.status !== 'ready') return;
-    try {
-      const preview = preparePlanCodeImport(planCodeImport, boot.pack, pack?.manifest.packVersion);
-      setPlanCodePreview(preview);
-      setPlanCodeError(null);
-    } catch (error) {
-      setPlanCodePreview(null);
-      setPlanCodeError(error instanceof Error ? error.message : 'Plan code failed validation.');
-    }
-  };
-
-  const confirmPlanCodeImport = (): void => {
-    if (planCodePreview === null) return;
-    const imported = planCodePreview.playthrough;
-    setPlanCodePreview(null);
-    setPlanCodeImport('');
-    setPlanCodeError(null);
-    void persist(imported);
-  };
-
-  const handlePlanCodeExport = (): void => {
-    if (activeDraft === null) return;
-    try {
-      setPlanCodeExport(encodePlanCode(activeDraft));
-      setPlanCodeExportError(null);
-    } catch (error) {
-      setPlanCodeExport(null);
-      const reason = error instanceof Error ? error.message : 'Plan code could not be exported.';
-      setPlanCodeExportError(`${reason} Shorten notes, or prepare Download JSON to save the complete run.`);
+      setSaveError(error instanceof Error ? error.message : 'The run could not be deleted.');
     }
   };
 
@@ -309,6 +278,79 @@ export function App({
     }
   };
 
+  const temporary = boot.status === 'ready' && boot.temporary;
+  const saveStatus: RunSaveStatus = saveError !== null
+    ? 'failed'
+    : temporary
+      ? 'temporary'
+      : activeDraft === null
+        ? 'none'
+        : activeDraft === lastDurable
+          ? 'saved'
+          : 'unsaved';
+
+  const runMenu = (
+    <RunMenu
+      playthrough={activeDraft}
+      saveStatus={saveStatus}
+      theme={theme}
+      onThemeChange={setTheme}
+      prepareImport={prepareImport}
+      onImport={(imported) => void persist(imported)}
+      onRename={handleRename}
+      onDuplicate={handleDuplicate}
+      onDelete={() => void handleDelete()}
+    />
+  );
+
+  const unsavedDownload = saveError !== null && activeDraft !== null
+    ? createPlaythroughDownloadHref(activeDraft)
+    : null;
+
+  // Recovery surfaces, kept out of the rungs: a temporary session and a failed save both preserve
+  // whatever is on screen and keep an export within one click of the failure itself.
+  const notices = (
+    <>
+      {temporary && (
+        <p role="status" className="app-banner">
+          Changes are not saved to this browser. Download JSON or copy a plan code to keep this run.
+        </p>
+      )}
+      {saveError !== null && activeDraft !== null && unsavedDownload !== null && (
+        <div role="alert" className="app-error">
+          <p>
+            Changes are not saved: {saveError}.{' '}
+            {lastDurable === null
+              ? 'This run has not been saved yet.'
+              : 'The last saved version remains safe.'}
+          </p>
+          <button type="button" className="app-tool-button" onClick={() => void persist(activeDraft)}>
+            Retry save
+          </button>
+          <a className="app-tool-button" href={unsavedDownload.href} download={unsavedDownload.filename}>
+            Export unsaved changes
+          </a>
+        </div>
+      )}
+    </>
+  );
+
+  // With a run open the workbench shell owns the whole viewport, header included; before there is
+  // one, the same run menu rides the setup header so import and theme are never out of reach.
+  if (boot.status === 'ready' && pack !== null && activeDraft !== null) {
+    return (
+      <Workbench
+        pack={pack}
+        playthrough={activeDraft}
+        onPlaythroughChange={handleChange}
+        now={now}
+        createId={createId}
+        runMenu={runMenu}
+        notices={notices}
+      />
+    );
+  }
+
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -316,15 +358,7 @@ export function App({
           <p className="eyebrow">Generation III vertical slice</p>
           <h1>PokéPlanner</h1>
         </div>
-        <button
-          type="button"
-          className="theme-toggle"
-          aria-pressed={theme === 'dark'}
-          aria-label="Dark theme"
-          onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
-        >
-          Dark
-        </button>
+        {boot.status === 'ready' && runMenu}
       </header>
 
       {boot.status === 'loading' && <p role="status">Loading FireRed data…</p>}
@@ -353,145 +387,8 @@ export function App({
 
       {boot.status === 'ready' && (
         <>
-          {boot.temporary && (
-            <p role="status" className="app-banner">
-              Temporary session — changes are not saved to this browser. Export your run to keep it.
-            </p>
-          )}
-
-          <section className="app-tools" aria-label="Run data">
-            {activeDraft !== null && (
-              <div className="app-tool">
-                <button type="button" className="app-tool-button" onClick={handleExport}>
-                  Export run
-                </button>
-                {exportText !== null && (
-                  <>
-                    <a
-                      className="app-tool-button"
-                      href={`data:application/json;charset=utf-8,${encodeURIComponent(exportText)}`}
-                      download={exportFilename ?? 'pokeplanner-plan.json'}
-                    >
-                      Download JSON
-                    </a>
-                    <textarea
-                      className="app-export"
-                      aria-label="Playthrough export JSON"
-                      readOnly
-                      value={exportText}
-                      rows={6}
-                    />
-                  </>
-                )}
-              </div>
-            )}
-            <div className="app-tool">
-              <label className="app-tool-label" htmlFor="app-import">Import run JSON</label>
-              <textarea
-                id="app-import"
-                className="app-import"
-                value={importText}
-                onChange={(event) => setImportText(event.target.value)}
-                rows={3}
-              />
-              <button type="button" className="app-tool-button" onClick={handleImport}>
-                Import run
-              </button>
-              {importError !== null && (
-                <p role="alert" className="app-error">Import failed: {importError}</p>
-              )}
-            </div>
-            {activeDraft !== null && (
-              <div className="app-tool">
-                <button
-                  type="button"
-                  className="app-tool-button"
-                  onClick={handlePlanCodeExport}
-                >
-                  Export plan code
-                </button>
-                {planCodeExportError !== null && (
-                  <>
-                    <p role="alert" className="app-error">Plan code export failed: {planCodeExportError}</p>
-                    <button type="button" className="app-tool-button" onClick={handleExport}>Prepare Download JSON</button>
-                  </>
-                )}
-                {planCodeExport !== null && (
-                  <textarea
-                    className="app-export"
-                    aria-label="Plan code export"
-                    readOnly
-                    value={planCodeExport}
-                    rows={3}
-                  />
-                )}
-              </div>
-            )}
-            <div className="app-tool">
-              <label className="app-tool-label" htmlFor="app-plan-code-import">Import plan code</label>
-              <textarea
-                id="app-plan-code-import"
-                className="app-import"
-                value={planCodeImport}
-                onChange={(event) => {
-                  setPlanCodeImport(event.target.value);
-                  setPlanCodePreview(null);
-                  setPlanCodeError(null);
-                }}
-                rows={3}
-              />
-              <button type="button" className="app-tool-button" onClick={handlePlanCodePreview}>
-                Preview plan code
-              </button>
-              {planCodeError !== null && (
-                <p role="alert" className="app-error">Plan code import failed: {planCodeError}</p>
-              )}
-              {planCodePreview !== null && (
-                <div role="dialog" aria-label="Plan code import preview" className="app-import-preview">
-                  <h2>{planCodePreview.name}</h2>
-                  <p>{planCodePreview.game} · {planCodePreview.memberCount} members · {planCodePreview.milestoneCount} milestones</p>
-                  {planCodePreview.warnings.length > 0 && (
-                    <ul>{planCodePreview.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>
-                  )}
-                  <button type="button" className="app-tool-button" onClick={() => setPlanCodePreview(null)}>
-                    Cancel plan code import
-                  </button>
-                  <button type="button" className="app-tool-button" onClick={confirmPlanCodeImport}>
-                    Confirm plan code import
-                  </button>
-                </div>
-              )}
-            </div>
-          </section>
-
-          {saveError !== null && activeDraft !== null && (
-            <div role="alert" className="app-error">
-              <p>
-                Changes are not saved: {saveError}.{' '}
-                {lastDurable === null
-                  ? 'This run has not been saved yet.'
-                  : 'The last saved version remains safe.'}
-              </p>
-              <button type="button" className="app-tool-button" onClick={() => void persist(activeDraft)}>
-                Retry save
-              </button>
-              <button
-                type="button"
-                className="app-tool-button"
-                onClick={() => setExportText(serializePlaythroughExport(activeDraft))}
-              >
-                Export unsaved changes
-              </button>
-            </div>
-          )}
-
-          {pack !== null && activeDraft === null && (
-            <GameSetup pack={pack} onCreate={handleCreate} createId={createId} now={now} />
-          )}
-
-          {pack !== null && activeDraft !== null && (
-            <Workbench pack={pack} playthrough={activeDraft} onPlaythroughChange={handleChange} now={now} createId={createId} />
-          )}
+          {notices}
+          {pack !== null && <GameSetup pack={pack} onCreate={handleCreate} createId={createId} now={now} />}
         </>
       )}
     </main>

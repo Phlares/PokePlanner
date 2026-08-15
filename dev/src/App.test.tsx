@@ -94,6 +94,34 @@ async function createRun(): Promise<void> {
   await screen.findByRole('region', { name: /team timeline/i });
 }
 
+function openRunMenu(): void {
+  fireEvent.click(screen.getByRole('button', { name: 'Run menu' }));
+}
+
+function openImportDialog(): void {
+  openRunMenu();
+  fireEvent.click(screen.getByRole('menuitem', { name: 'Import JSON file or plan code' }));
+}
+
+function pasteImport(text: string): void {
+  fireEvent.change(screen.getByLabelText('Plan code or share link'), { target: { value: text } });
+  fireEvent.click(screen.getByRole('button', { name: 'Preview import' }));
+}
+
+/** Read back what a download control actually hands the user: the encoded run behind its href. */
+function downloadText(link: HTMLElement): string {
+  const href = link.getAttribute('href') ?? '';
+  return decodeURIComponent(href.slice(href.indexOf(',') + 1));
+}
+
+function downloadedRun(): Playthrough {
+  return JSON.parse(downloadText(screen.getByRole('menuitem', { name: 'Download JSON' })));
+}
+
+function regionLabels(): (string | null)[] {
+  return screen.getAllByRole('region').map((node) => node.getAttribute('aria-label'));
+}
+
 afterEach(cleanup);
 
 describe('App boot and persistence', () => {
@@ -101,6 +129,8 @@ describe('App boot and persistence', () => {
     const { factory } = sharedRepoFactory();
     render(<App {...baseProps({ openRepository: factory })} />);
     expect(await screen.findByText(/set up a run/i)).toBeVisible();
+    // The header is honest about there being nothing to save yet, rather than claiming either state.
+    expect(screen.getByText('No run yet')).toBeVisible();
   });
 
   it('blocks normal setup and retries the original repository when saved records cannot be listed', async () => {
@@ -172,6 +202,8 @@ describe('App boot and persistence', () => {
       const records = await get()!.list();
       expect(records[0].currentMilestoneId).toBe('brock-gym');
     });
+    await waitFor(() => expect(screen.getByText('Saved')).toBeVisible());
+    expect(screen.queryByText('Unsaved changes')).toBeNull();
   });
 
   it('keeps the latest rapid edit durable when save completions arrive in reverse order', async () => {
@@ -201,6 +233,10 @@ describe('App boot and persistence', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /set current milestone.*brock/i }));
     fireEvent.click(screen.getByRole('button', { name: /set current milestone.*misty/i }));
+
+    // Both writes are still in flight, so the header says so rather than claiming a durable save.
+    expect(screen.getByText('Unsaved changes')).toBeVisible();
+    expect(screen.queryByText('Saved')).toBeNull();
 
     await act(async () => {
       mistySave.resolve();
@@ -240,29 +276,80 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: /set current milestone.*brock/i }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/not saved/i);
+    expect(screen.getByText('Save failed')).toBeVisible();
     expect(screen.getByRole('button', { name: /set current milestone.*brock/i })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'Retry save' })).toBeEnabled();
-    expect(screen.getByRole('button', { name: 'Export unsaved changes' })).toBeEnabled();
     expect((await repo!.list())[0].currentMilestoneId).toBe('starter');
 
-    fireEvent.click(screen.getByRole('button', { name: 'Export unsaved changes' }));
-    const output = screen.getByLabelText(/playthrough export/i) as HTMLTextAreaElement;
-    expect(JSON.parse(output.value).currentMilestoneId).toBe('brock-gym');
+    // Export stays immediately available on the failure itself, carrying the unsaved edit.
+    const unsaved = JSON.parse(downloadText(screen.getByRole('link', { name: 'Export unsaved changes' })));
+    expect(unsaved.currentMilestoneId).toBe('brock-gym');
 
     fireEvent.click(screen.getByRole('button', { name: 'Retry save' }));
     await waitFor(() => expect(screen.queryByText(/not saved/i)).toBeNull());
     expect((await repo!.list())[0].currentMilestoneId).toBe('brock-gym');
   });
 
+  it('centres the workbench on the team by placing its rung before the workspace', async () => {
+    const { factory } = sharedRepoFactory();
+    render(<App {...baseProps({ openRepository: factory })} />);
+    await createRun();
+
+    const regions = regionLabels();
+    expect(regions).toContain('Team at Brock');
+    expect(regions).toContain('Workbench results');
+    expect(regions.indexOf('Team at Brock')).toBeLessThan(regions.indexOf('Workbench results'));
+  });
+
+  it('moves run data out of prime space into one menu', async () => {
+    const { factory } = sharedRepoFactory();
+    render(<App {...baseProps({ openRepository: factory })} />);
+    await createRun();
+
+    expect(screen.queryByLabelText('Playthrough export JSON')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Import run JSON')).not.toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Run data' })).toBeNull();
+
+    openRunMenu();
+    expect(screen.getByRole('menuitem', { name: 'Download JSON' })).toBeInTheDocument();
+    expect(screen.getByRole('menuitem', { name: 'Copy plan code' })).toBeInTheDocument();
+  });
+
   it('exports the active run as validated JSON', async () => {
     const { factory } = sharedRepoFactory();
     render(<App {...baseProps({ openRepository: factory })} />);
     await createRun();
-    fireEvent.click(screen.getByRole('button', { name: 'Export run' }));
-    const output = (await screen.findByLabelText(/playthrough export/i)) as HTMLTextAreaElement;
-    expect(output.value).toContain('"schemaVersion": 2');
-    expect(output.value).toContain('"game": "firered"');
-    expect(() => JSON.parse(output.value)).not.toThrow();
+    openRunMenu();
+    const text = downloadText(screen.getByRole('menuitem', { name: 'Download JSON' }));
+    expect(text).toContain('"schemaVersion": 2');
+    expect(text).toContain('"game": "firered"');
+    expect(() => JSON.parse(text)).not.toThrow();
+  });
+
+  it('renames, duplicates and deletes the run from the same menu', async () => {
+    const { factory, get } = sharedRepoFactory();
+    render(<App {...baseProps({ openRepository: factory })} />);
+    await createRun();
+
+    openRunMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Rename run' }));
+    fireEvent.change(screen.getByLabelText('Run name'), { target: { value: 'Renamed run' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save name' }));
+    await waitFor(async () => expect((await get()!.list())[0].name).toBe('Renamed run'));
+
+    openRunMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Duplicate run' }));
+    await waitFor(async () => expect(await get()!.list()).toHaveLength(2));
+    const copy = (await get()!.list()).find((record) => record.name === 'Renamed run (copy)');
+    expect(copy).toBeDefined();
+    expect(copy!.id).not.toBe((await get()!.list()).find((record) => record.name === 'Renamed run')!.id);
+
+    openRunMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Delete run' }));
+    expect(await get()!.list()).toHaveLength(2);
+    fireEvent.click(screen.getByRole('button', { name: 'Delete permanently' }));
+    await waitFor(async () => expect(await get()!.list()).toHaveLength(1));
+    expect((await get()!.list())[0].name).toBe('Renamed run');
   });
 
   it('preserves the existing record when an import fails validation', async () => {
@@ -271,8 +358,8 @@ describe('App boot and persistence', () => {
     await createRun();
     const before = await get()!.list();
 
-    fireEvent.change(screen.getByLabelText('Import run JSON'), { target: { value: '{ not valid json' } });
-    fireEvent.click(screen.getByRole('button', { name: /import run/i }));
+    openImportDialog();
+    pasteImport('{ not valid json');
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/import/i);
     // The workbench and stored record are untouched — no overwrite on failure.
@@ -292,20 +379,15 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
     expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Export run' }));
-    const exported = JSON.parse(
-      ((await screen.findByLabelText('Playthrough export JSON')) as HTMLTextAreaElement).value,
-    );
-    fireEvent.change(screen.getByLabelText('Import run JSON'), {
-      target: {
-        value: JSON.stringify({
-          ...exported,
-          id: 'imported-run',
-          name: 'Imported run',
-          previewMilestoneId: 'brock-gym',
-        }),
-      },
-    });
+    openRunMenu();
+    const exported = downloadedRun();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Import JSON file or plan code' }));
+    pasteImport(JSON.stringify({
+      ...exported,
+      id: 'imported-run',
+      name: 'Imported run',
+      previewMilestoneId: 'brock-gym',
+    }));
     fireEvent.click(screen.getByRole('button', { name: 'Import run' }));
 
     // The import replaces the durable target under a still-mounted workbench.
@@ -330,10 +412,11 @@ describe('App boot and persistence', () => {
     render(<App {...baseProps({ openRepository: failingFactory })} />);
     // A new run still works, held only in memory, with a visible temporary-session banner.
     await createRun();
-    expect(screen.getByText(/temporary session/i)).toBeVisible();
-    fireEvent.click(screen.getByRole('button', { name: 'Export run' }));
-    const output = (await screen.findByLabelText(/playthrough export/i)) as HTMLTextAreaElement;
-    expect(output.value).toContain('"game": "firered"');
+    expect(screen.getByText(/not saved to this browser/i)).toBeVisible();
+    expect(screen.getByText('Temporary session')).toBeVisible();
+    openRunMenu();
+    expect(downloadText(screen.getByRole('menuitem', { name: 'Download JSON' }))).toContain('"game": "firered"');
+    expect(screen.getByRole('menuitem', { name: 'Copy plan code' })).toBeInTheDocument();
   });
 
   it('never writes FireRed canonical data to storage', async () => {
@@ -387,8 +470,9 @@ describe('App boot and persistence', () => {
     expect(mankeyOneId).not.toBe(mankeyTwoId);
     expect(created.saved.timeline.members[mankeyOneId].speciesSequence).toBe(1);
     expect(created.saved.timeline.members[mankeyTwoId].speciesSequence).toBe(2);
-    expect(screen.getByText('Mankey #1')).toBeVisible();
-    expect(screen.getByText('Mankey #2')).toBeVisible();
+    const timeline = () => within(screen.getByRole('region', { name: /team timeline/i }));
+    expect(timeline().getByText('Mankey #1')).toBeVisible();
+    expect(timeline().getByText('Mankey #2')).toBeVisible();
 
     // Box the second level-5 Mankey at Brock through its editor.
     fireEvent.click(screen.getByRole('button', { name: 'Edit Mankey #2' }));
@@ -433,10 +517,10 @@ describe('App boot and persistence', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
     fireEvent.click(screen.getByRole('button', { name: /^Route 1 .*Auto-filled/i }));
-    expect(screen.queryByText(/^Mankey #/)).toBeNull();
+    expect(timeline().queryByText(/^Mankey #/)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: /^Route 22 .*Explicit/i }));
-    expect(screen.getByText('Mankey #1')).toBeVisible();
-    expect(screen.getByText('Mankey #2')).toBeVisible();
+    expect(timeline().getByText('Mankey #1')).toBeVisible();
+    expect(timeline().getByText('Mankey #2')).toBeVisible();
 
     fireEvent.click(screen.getByRole('button', { name: 'Major Events' }));
     fireEvent.click(screen.getByRole('button', { name: /Misty.*Explicit/i }));
@@ -481,17 +565,17 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: /Viridian Forest.*Auto-filled/i }));
     expect(screen.getByText('Auto-filled', { selector: '.timeline-state-label' })).toBeVisible();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Export run' }));
-    expect(await screen.findByRole('link', { name: 'Download JSON' })).toHaveAttribute('download', 'timeline-acceptance.json');
-    fireEvent.click(screen.getByRole('button', { name: 'Export plan code' }));
-    const planCode = (await screen.findByLabelText('Plan code export')) as HTMLTextAreaElement;
-    expect(planCode.value).toMatch(/^PP1\./);
+    openRunMenu();
+    expect(screen.getByRole('menuitem', { name: 'Download JSON' })).toHaveAttribute('download', 'timeline-acceptance.json');
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Copy plan code' }));
+    const planCode = ((await screen.findByLabelText('Plan code')) as HTMLInputElement).value;
+    expect(planCode).toMatch(/^PP1\./);
     const exportedState = (await active.get()!.list())[0];
 
     // Preview, cancel, and invalid input are non-mutating even with a live run and repository.
-    fireEvent.change(screen.getByLabelText('Import plan code'), { target: { value: 'PP1.not-valid' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Preview plan code' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(/plan code import failed/i);
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Import JSON file or plan code' }));
+    pasteImport('PP1.not-valid');
+    expect(await screen.findByRole('alert')).toHaveTextContent(/import failed/i);
     expect(await active.get()!.list()).toEqual([exportedState]);
     expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
     const differentPlanCode = encodePlanCode({
@@ -499,27 +583,28 @@ describe('App boot and persistence', () => {
       id: 'different-valid-preview',
       name: 'Different valid preview',
     });
-    fireEvent.change(screen.getByLabelText('Import plan code'), { target: { value: differentPlanCode } });
-    fireEvent.click(screen.getByRole('button', { name: 'Preview plan code' }));
-    expect(await screen.findByRole('dialog', { name: 'Plan code import preview' })).toHaveTextContent('Different valid preview');
+    pasteImport(differentPlanCode);
+    expect(await screen.findByRole('dialog', { name: 'Import FireRed Run?' })).toHaveTextContent('Different valid preview');
     expect(await active.get()!.list()).toEqual([exportedState]);
-    expect(JSON.parse((screen.getByLabelText('Playthrough export JSON') as HTMLTextAreaElement).value).name).toBe('Timeline acceptance');
-    fireEvent.click(screen.getByRole('button', { name: 'Cancel plan code import' }));
-    expect(screen.queryByRole('dialog', { name: 'Plan code import preview' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel import' }));
+    expect(screen.queryByRole('dialog', { name: 'Import FireRed Run?' })).toBeNull();
     expect(await active.get()!.list()).toEqual([exportedState]);
+    // The cancelled preview never became the exported run.
+    openRunMenu();
+    expect(downloadedRun().name).toBe('Timeline acceptance');
 
     first.unmount();
 
     const clean = sharedRepoFactory();
     render(<App {...baseProps({ openRepository: clean.factory })} />);
     await screen.findByText(/set up a run/i);
-    fireEvent.change(screen.getByLabelText('Import plan code'), { target: { value: planCode.value } });
-    fireEvent.click(screen.getByRole('button', { name: 'Preview plan code' }));
-    expect(await screen.findByRole('dialog', { name: 'Plan code import preview' })).toHaveTextContent(
+    openImportDialog();
+    pasteImport(`https://pokeplanner.example/plan#plan=${planCode}`);
+    expect(await screen.findByRole('dialog', { name: 'Import FireRed Run?' })).toHaveTextContent(
       'Timeline acceptance',
     );
     expect(await clean.get()!.list()).toHaveLength(0);
-    fireEvent.click(screen.getByRole('button', { name: 'Confirm plan code import' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Import run' }));
     await waitFor(async () => expect((await clean.get()!.list())[0]).toEqual(exportedState));
     expect(await screen.findByRole('region', { name: /team timeline/i })).toBeVisible();
   }, 30_000);
@@ -536,18 +621,20 @@ describe('App boot and persistence', () => {
 
     render(<App {...props} />);
     await screen.findByRole('region', { name: /team timeline/i });
-    fireEvent.click(screen.getByRole('button', { name: 'Export plan code' }));
+    openRunMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Copy plan code' }));
 
     const exportError = await screen.findByRole('alert');
     expect(exportError).toHaveTextContent(/export.*too large|expanded size/i);
     expect(exportError).toHaveTextContent(/shorten notes/i);
     expect(exportError).toHaveTextContent(/download json/i);
-    fireEvent.click(screen.getByRole('button', { name: 'Prepare Download JSON' }));
-    expect(await screen.findByRole('link', { name: 'Download JSON' })).toHaveAttribute('download', 'firered-run.json');
-    const prepared = JSON.parse((screen.getByLabelText('Playthrough export JSON') as HTMLTextAreaElement).value);
-    expect(prepared).toEqual(oversized);
-    expect(screen.queryByLabelText('Plan code export')).toBeNull();
+    // The JSON route stays reachable in the same menu and still carries the whole run.
+    expect(screen.getByRole('menuitem', { name: 'Download JSON' })).toHaveAttribute('download', 'firered-run.json');
+    expect(downloadedRun()).toEqual(oversized);
+    expect(screen.queryByLabelText('Plan code')).toBeNull();
     expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
     expect(await active.get()!.list()).toEqual([oversized]);
-  }, 90_000);
+    // A four-megabyte run is deliberately expensive: it is the only way to cross the plan code's
+    // *expanded* ceiling, and the budget has to survive the rest of the file running alongside it.
+  }, 180_000);
 });

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
 import { hasActiveSearchQuery } from '../../domain/search';
 import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
-import type { ProgressionContext } from '../../domain/rules/game-rules';
+import type { LevelMode, ProgressionContext } from '../../domain/rules/game-rules';
 import { evaluateCapability } from '../../domain/timeline/capabilities';
 import { acquireMember, moveToReserve, placeInParty, releaseMember, restoreMember } from '../../domain/timeline/commands';
 import type { TimelineKeyframe, TimelineState } from '../../domain/timeline/model';
@@ -15,6 +15,7 @@ import {
 } from '../../domain/timeline/resolver';
 import { validateResolvedNode, type TimelineFinding } from '../../domain/timeline/validation';
 import { FireRedSearch } from '../search/FireRedSearch';
+import { memberDisplayName } from '../timeline/MemberPool';
 import {
   explicitOverrideFrom,
   TeamTimeline,
@@ -24,6 +25,8 @@ import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
 import { EncounterTable } from './EncounterTable';
 import { PokemonInspector, type MemberDraft } from './PokemonInspector';
 import { ProgressionRail } from './ProgressionRail';
+import { TeamStrip, type TeamStripSlot } from './TeamStrip';
+import { WorkbenchShell } from './WorkbenchShell';
 import {
   createWorkbenchState,
   reduceWorkbench,
@@ -162,6 +165,14 @@ interface EditorSelection {
   returnFocusTo: HTMLElement | null;
 }
 
+/** How the run generates levels forward, worded for the team rung. */
+const LEVEL_POLICY_LABEL: Record<LevelMode, string> = {
+  manual: 'Manual levels',
+  under: 'Auto Lv −5',
+  match: 'Auto match target',
+  over: 'Auto Lv +5',
+};
+
 export interface WorkbenchProps {
   pack: FireRedPack;
   playthrough: Playthrough;
@@ -170,6 +181,10 @@ export interface WorkbenchProps {
   now?: () => number;
   /** Injected identity source shared with setup so every acquired member is durable and distinct. */
   createId?: () => string;
+  /** Header run-data controls, owned by the application boundary that holds the repository. */
+  runMenu?: ReactNode;
+  /** Persistent recovery notices from the same boundary; the shell places them under the header. */
+  notices?: ReactNode;
 }
 
 /**
@@ -187,8 +202,11 @@ export function Workbench({
   onPlaythroughChange,
   now = Date.now,
   createId = () => crypto.randomUUID(),
+  runMenu,
+  notices,
 }: WorkbenchProps) {
   const index = useMemo(() => packIndexOf(pack), [pack]);
+  const timelineRegion = useRef<HTMLElement>(null);
   const [controller, dispatch] = useReducer(reduceWorkbench, {
     currentProgressId: playthrough.currentMilestoneId,
     planningTargetId: playthrough.previewMilestoneId,
@@ -307,6 +325,30 @@ export function Workbench({
 
   const speciesNames = useMemo(() => new Map(pack.pokemon.map((record) => [record.id, record.name])), [pack]);
 
+  // The team rung reads the party the run resolves to at its planning target — the same milestone
+  // every other surface plans against — so the rung and the workspace can never disagree.
+  const targetMilestone = FIRE_RED_RULES.milestones
+    .find((milestone) => milestone.id === (playthrough.previewMilestoneId ?? playthrough.currentMilestoneId))
+    ?? FIRE_RED_RULES.milestones[0];
+  const targetDisplay = majorNodes.find((node) => node.id === targetMilestone.id) ?? majorNodes[0];
+  const speciesCounts = useMemo(() => {
+    const counts = new Map<number, number>();
+    Object.values(playthrough.timeline.members).forEach((member) => {
+      counts.set(member.originalSpeciesId, (counts.get(member.originalSpeciesId) ?? 0) + 1);
+    });
+    return counts;
+  }, [playthrough.timeline.members]);
+  const teamSlots: readonly TeamStripSlot[] = (targetDisplay?.resolved.party ?? []).map((memberId) => {
+    const member = memberId === null ? undefined : playthrough.timeline.members[memberId];
+    const snapshot = memberId === null ? undefined : targetDisplay!.resolved.snapshots[memberId];
+    if (member === undefined || snapshot === undefined) return { memberId: null, name: null, level: null };
+    return {
+      memberId,
+      name: memberDisplayName(member, snapshot, (id) => speciesNames.get(id) ?? `Species #${id}`, speciesCounts),
+      level: snapshot.level,
+    };
+  });
+
   const editorNode = editorSelection === null
     ? null
     : [...majorNodes, ...detailedNodes].find((node) => node.id === editorSelection.nodeId) ?? null;
@@ -399,9 +441,9 @@ export function Workbench({
     dispatch({ type: 'candidate-selected', pokemonId });
   };
 
-  return (
+  const workspace = (
     <div className="workbench">
-      <section className="workbench-timeline" aria-label="Team timeline">
+      <section className="workbench-timeline" aria-label="Team timeline" ref={timelineRegion} tabIndex={-1}>
         <TeamTimeline
           timeline={playthrough.timeline}
           majorNodes={majorNodes}
@@ -483,13 +525,6 @@ export function Workbench({
       )}
 
       <section className="workbench-rail" aria-label="Progression">
-        <FireRedSearch
-          pack={pack}
-          query={controller.query}
-          onQueryChange={(query) => dispatch({ type: 'query-changed', query })}
-          onSelectPokemon={selectSearchResult}
-          selectedPokemonId={selectedPokemonId}
-        />
         {/* An active query focuses the left column on its matches; the rail returns when it is cleared. */}
         {!searchActive && (
           <ProgressionRail
@@ -532,25 +567,58 @@ export function Workbench({
         ))}
       </section>
 
-      <section className="workbench-inspector" aria-label="Inspector">
-        <h3 className="workbench-region-heading">Inspector</h3>
-        {selectedPokemonId === null ? (
-          <p className="workbench-placeholder">Select a Pokémon from the encounter table.</p>
-        ) : (
-          <PokemonInspector
-            pokemonId={selectedPokemonId}
-            pack={pack}
-            context={availabilityContext}
-            onAddMember={addDraftToPreviewParty}
-            addMemberLabel={(() => {
-              const species = pack.pokemon.find((record) => record.id === selectedPokemonId);
-              const target = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === playthrough.previewMilestoneId);
-              return species && target ? `Add ${species.name} to ${target.name} party` : undefined;
-            })()}
-          />
-        )}
-      </section>
-
     </div>
+  );
+
+  const inspector = selectedPokemonId === null ? (
+    <p className="workbench-placeholder">Select a Pokémon from the encounter table.</p>
+  ) : (
+    <PokemonInspector
+      pokemonId={selectedPokemonId}
+      pack={pack}
+      context={availabilityContext}
+      onAddMember={addDraftToPreviewParty}
+      addMemberLabel={(() => {
+        const species = pack.pokemon.find((record) => record.id === selectedPokemonId);
+        const target = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === playthrough.previewMilestoneId);
+        return species && target ? `Add ${species.name} to ${target.name} party` : undefined;
+      })()}
+    />
+  );
+
+  return (
+    <WorkbenchShell
+      runName={playthrough.name}
+      runMenu={runMenu}
+      notices={notices}
+      teamLabel={`Team at ${targetMilestone.name}`}
+      team={(
+        <TeamStrip
+          targetName={targetMilestone.name}
+          targetLevel={targetMilestone.targetLevel}
+          slots={teamSlots}
+          reserveCount={targetDisplay?.resolved.reserve.length ?? 0}
+          findingCount={targetDisplay === undefined ? 0 : (findingsByNode[targetDisplay.id]?.length ?? 0)}
+          levelPolicyLabel={LEVEL_POLICY_LABEL[playthrough.timeline.preferences.levelMode]}
+          selectedMemberId={controller.selectedMemberId}
+          onSelectMember={(memberId) => dispatch({ type: 'member-selected', memberId })}
+          onOpenTimeline={() => {
+            timelineRegion.current?.focus();
+            timelineRegion.current?.scrollIntoView?.({ block: 'start' });
+          }}
+        />
+      )}
+      search={(
+        <FireRedSearch
+          pack={pack}
+          query={controller.query}
+          onQueryChange={(query) => dispatch({ type: 'query-changed', query })}
+          onSelectPokemon={selectSearchResult}
+          selectedPokemonId={selectedPokemonId}
+        />
+      )}
+      results={workspace}
+      inspector={inspector}
+    />
   );
 }

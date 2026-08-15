@@ -51,12 +51,27 @@ function normalizedFilenameStem(name: string): string {
   return /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/iu.test(stem) ? `${stem}-plan` : stem;
 }
 
+function downloadFilename(playthrough: Playthrough): string {
+  return `${normalizedFilenameStem(playthrough.name) || 'pokeplanner-plan'}.json`;
+}
+
 /** Create a portable, deterministic JSON file without triggering browser navigation or writes. */
 export function createPlaythroughDownload(playthrough: Playthrough): { filename: string; blob: Blob } {
-  const filenameStem = normalizedFilenameStem(playthrough.name) || 'pokeplanner-plan';
   return {
-    filename: `${filenameStem}.json`,
+    filename: downloadFilename(playthrough),
     blob: new Blob([serializePlaythroughExport(playthrough)], { type: 'application/json;charset=utf-8' }),
+  };
+}
+
+/**
+ * The same export addressed as an anchor target. A `data:` URL keeps the download self-contained —
+ * no object-URL lifetime to manage and nothing revoked out from under a link the user has not
+ * clicked yet — so an export stays immediately available for as long as the control is on screen.
+ */
+export function createPlaythroughDownloadHref(playthrough: Playthrough): { filename: string; href: string } {
+  return {
+    filename: downloadFilename(playthrough),
+    href: `data:application/json;charset=utf-8,${encodeURIComponent(serializePlaythroughExport(playthrough))}`,
   };
 }
 
