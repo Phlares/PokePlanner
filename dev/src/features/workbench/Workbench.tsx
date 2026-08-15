@@ -30,6 +30,7 @@ import {
   sameWorkbenchValidity,
   type WorkbenchValidity,
 } from './controller';
+import { milestoneNodeId } from './selectors';
 
 /** Local id-resolution surface so emitted playthrough changes are re-validated before they leave. */
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex & TimelineResolverPackView {
@@ -64,16 +65,9 @@ function resolvedFromFrame(frame: TimelineKeyframe): ResolvedTimelineNode {
   };
 }
 
-/**
- * Map one persisted milestone or node id onto the progression location that carries it. The starter
- * milestone is configured before the pack's first node, so it borrows that node's location.
- */
-function progressionNodeIdFor(nodeId: string, progressionIds: ReadonlySet<string>): string {
-  const configured = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === nodeId)?.nodeId;
-  if (configured && progressionIds.has(configured)) return configured;
-  if (nodeId === 'starter' && progressionIds.has('pallet-town')) return 'pallet-town';
-  return configured ?? nodeId;
-}
+/** Bind the shared milestone→node mapping to this shell's ruleset. */
+const progressionNodeIdFor = (nodeId: string, progressionIds: ReadonlySet<string>): string =>
+  milestoneNodeId(nodeId, FIRE_RED_RULES.milestones, progressionIds);
 
 /** Rewrite a timeline onto progression locations so route interpolation can order every frame. */
 function resolvableTimeline(timeline: TimelineState, progressionIds: ReadonlySet<string>): TimelineState {

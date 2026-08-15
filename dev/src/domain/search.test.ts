@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { loadFireRedPack, type FireRedPack } from '../data/game-pack';
-import { searchFireRed, type SearchResult } from './search';
+import { hasActiveSearchQuery, searchFireRed, type SearchQuery, type SearchResult } from './search';
 
 const PACK_DIR = resolve(process.cwd(), 'public/data/firered');
 const digest = (bytes: Uint8Array): Promise<string> =>
@@ -25,6 +25,31 @@ beforeAll(async () => {
 const ids = (results: SearchResult[]): number[] => results.map((result) => result.pokemonId);
 const byId = (results: SearchResult[], id: number): SearchResult | undefined =>
   results.find((result) => result.pokemonId === id);
+
+describe('hasActiveSearchQuery', () => {
+  it('treats an empty or whitespace-only query as inactive', () => {
+    expect(hasActiveSearchQuery({})).toBe(false);
+    expect(hasActiveSearchQuery({ name: '', ability: '   ' })).toBe(false);
+    // A spread that carries a cleared filter through as `undefined` is still no search.
+    expect(hasActiveSearchQuery({ name: undefined, move: undefined })).toBe(false);
+  });
+
+  it('treats any non-blank declared filter as active', () => {
+    expect(hasActiveSearchQuery({ name: 'Mankey' })).toBe(true);
+    expect(hasActiveSearchQuery({ type: 'fighting' })).toBe(true);
+    expect(hasActiveSearchQuery({ ability: 'vital-spirit' })).toBe(true);
+    expect(hasActiveSearchQuery({ move: 'karate-chop' })).toBe(true);
+  });
+
+  it('treats a filter added by an extending query as active', () => {
+    // Workbench-only filters (capability, …) extend SearchQuery; the predicate must not be
+    // pinned to the pack-level field list or every extension silently reads as "no search".
+    const active: SearchQuery & { capability?: string } = { capability: 'surf' };
+    const blank: SearchQuery & { capability?: string } = { capability: '  ' };
+    expect(hasActiveSearchQuery(active)).toBe(true);
+    expect(hasActiveSearchQuery(blank)).toBe(false);
+  });
+});
 
 describe('searchFireRed — single filters', () => {
   it('filters by name substring (case-insensitive)', () => {

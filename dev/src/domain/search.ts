@@ -15,10 +15,13 @@ export interface SearchQuery {
   move?: string;
 }
 
-/** True when at least one supported filter has a non-whitespace value. */
+/**
+ * True when at least one filter has a non-whitespace value. Read structurally rather than from a
+ * fixed field list so a query type that extends {@link SearchQuery} (the workbench adds its own
+ * filters) is judged on the filters it actually carries.
+ */
 export function hasActiveSearchQuery(query: SearchQuery): boolean {
-  return [query.name, query.type, query.ability, query.move]
-    .some((value) => value !== undefined && value.trim() !== '');
+  return Object.values(query).some((value) => typeof value === 'string' && value.trim() !== '');
 }
 
 export type ObtainabilityStatus =

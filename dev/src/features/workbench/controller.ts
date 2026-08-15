@@ -1,4 +1,4 @@
-import type { SearchQuery } from '../../domain/search';
+import type { WorkbenchSearchQuery } from '../../domain/workbench/search';
 
 export type WorkbenchMode = 'routes' | 'pokemon';
 export type WorkbenchDetail =
@@ -10,7 +10,8 @@ export type WorkbenchSheet = 'closed' | 'inspector' | 'comparison';
 export interface WorkbenchState {
   mode: WorkbenchMode;
   milestoneFilter: boolean;
-  query: SearchQuery;
+  /** Every filter the toolbar can emit; the controller is their single owner. */
+  query: WorkbenchSearchQuery;
   openMilestoneIds: ReadonlySet<string>;
   lastRouteId: string | null;
   candidatePokemonId: number | null;
@@ -36,7 +37,7 @@ export interface WorkbenchValidity {
 export type WorkbenchAction =
   | { type: 'mode-changed'; mode: WorkbenchMode }
   | { type: 'milestone-filter-changed'; enabled: boolean }
-  | { type: 'query-changed'; query: SearchQuery }
+  | { type: 'query-changed'; query: WorkbenchSearchQuery }
   | { type: 'milestone-toggled'; milestoneId: string }
   | { type: 'route-selected'; nodeId: string }
   | { type: 'candidate-selected'; pokemonId: number }

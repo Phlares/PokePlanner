@@ -71,6 +71,23 @@ function progressionAcquisitionNodeId(
   return null;
 }
 
+/**
+ * Where one canonical acquisition happens: the ruleset's own placement first, then the progression
+ * event that grants it, then the node its milestone sits on. Null means neither the pack nor the
+ * rules can place it (a transfer-only species has no in-game location to name).
+ */
+export function acquisitionNodeId(
+  record: AcquisitionRecord,
+  progression: RouteProgression,
+  rules: GameRules,
+): string | null {
+  return rules.acquisitionNodeId(record.id)
+    ?? progressionAcquisitionNodeId(record.id, progression)
+    ?? rules.milestones.find((milestone) => milestone.id === record.milestoneId)?.nodeId
+    ?? progression.nodes.find((node) => node.events.some((event) => event.id === record.milestoneId))?.id
+    ?? null;
+}
+
 /** Resolve one canonical acquisition against a selected route node without inventing timing. */
 export function evaluateAcquisitionAtNode(
   record: AcquisitionRecord,
@@ -78,11 +95,7 @@ export function evaluateAcquisitionAtNode(
   progression: RouteProgression,
   rules: GameRules,
 ): AcquisitionAtNode {
-  const nodeId = rules.acquisitionNodeId(record.id)
-    ?? progressionAcquisitionNodeId(record.id, progression)
-    ?? rules.milestones.find((milestone) => milestone.id === record.milestoneId)?.nodeId
-    ?? progression.nodes.find((node) => node.events.some((event) => event.id === record.milestoneId))?.id
-    ?? null;
+  const nodeId = acquisitionNodeId(record, progression, rules);
   if (nodeId === null) return { nodeId: null, available: null, evidenceIds: [record.id] };
 
   const source = progression.nodes.find((node) => node.id === nodeId);
