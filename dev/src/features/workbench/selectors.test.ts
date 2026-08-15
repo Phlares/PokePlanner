@@ -90,10 +90,31 @@ describe('selectMilestoneResults — section order', () => {
     expect(result.sections.filter((section) => section.kind === 'no-match-summary')).toHaveLength(1);
     expect(result.sections.at(-1)).toEqual({
       kind: 'no-match-summary',
-      hiddenMilestoneIds: ['starter'],
-      hiddenMilestoneIndexes: [0],
+      hiddenMilestones: [{ id: 'starter', index: 0 }],
       expanded: false,
     });
+
+    // Caterpie is in the Brock band only, so Misty is hidden too — a hidden milestone whose
+    // chronological index is neither zero nor its position in the hidden list.
+    const sparse = selectMilestoneResults(input({ query: { name: 'Caterpie' }, target: 'misty-gym' }));
+    expect(sparse.sections.at(-1)).toEqual({
+      kind: 'no-match-summary',
+      hiddenMilestones: [{ id: 'starter', index: 0 }, { id: 'misty-gym', index: 2 }],
+      expanded: false,
+    });
+  });
+
+  it('never reports a structurally empty milestone band as unmatched', () => {
+    // Giovanni's gym is anchored at Viridian City (order 2) but fought after Blaine (order 40), so
+    // its band spans [41, 40] and can hold no node at all. An empty band is not a milestone that
+    // "has no matches" — it must not be eligible, and must never reach the summary row.
+    const result = selectMilestoneResults(input({ query: { type: 'normal' }, milestoneFilter: false }));
+    const summary = result.sections.find((section) => section.kind === 'no-match-summary');
+    expect(summary).toBeDefined();
+    if (summary?.kind !== 'no-match-summary') return;
+    expect(summary.hiddenMilestones).toContainEqual({ id: 'starter', index: 0 });
+    expect(summary.hiddenMilestones.map((milestone) => milestone.id)).not.toContain('giovanni-gym');
+    expect(groups(result).map((section) => section.milestoneId)).not.toContain('giovanni-gym');
   });
 
   it('teases the matches beyond the milestone scope in chronological order', () => {
@@ -118,6 +139,23 @@ describe('selectMilestoneResults — section order', () => {
     const indexes = groups(result).map((section) => section.milestoneIndex);
     expect(indexes.length).toBeGreaterThan(1);
     expect(Math.max(...indexes)).toBeGreaterThan(1);
+  });
+
+  it('never teases future matches while browsing', () => {
+    // With no query every species "matches", so a teaser would announce most of the dex as waiting
+    // ahead. The teaser is search-result furniture: spec §10 binds it to an active search, and
+    // §9's browse enumeration has no such row.
+    const result = selectMilestoneResults(input({ target: 'brock-gym' }));
+    expect(result.sections.some((section) => section.kind === 'future-teaser')).toBe(false);
+    expect(result.sections.map((section) => section.kind)).toEqual(['matching-milestone', 'matching-milestone']);
+  });
+
+  it('shows every eligible milestone as its own group while browsing', () => {
+    // Browsing the whole game: one group per milestone that owns any golden-path order, newest
+    // first, with neither a teaser nor a summary. Giovanni's empty band is absent, not "unmatched".
+    const result = selectMilestoneResults(input({ milestoneFilter: false }));
+    expect(result.sections.every((section) => section.kind === 'matching-milestone')).toBe(true);
+    expect(groups(result).map((section) => section.milestoneIndex)).toEqual([9, 7, 6, 5, 4, 3, 2, 1, 0]);
   });
 
   it('omits the summary when every eligible milestone matches', () => {
@@ -200,14 +238,27 @@ describe('selectMilestoneResults — route rows', () => {
     expect(access.get('cerulean-cave')).toBe('postgame');
   });
 
-  it('surfaces the capability and story gates a route sits behind', () => {
+  it('gates a route on a capability only when the capability is the sole way in', () => {
+    // Tentacool is at Cerulean City on the surf slots and nowhere else there: no Surf, no Tentacool.
+    const surfOnly = selectMilestoneResults(input({ query: { name: 'Tentacool' }, target: 'misty-gym' }));
+    const cerulean = groupFor(surfOnly, 'misty-gym').routes.find((route) => route.nodeId === 'cerulean-city');
+    expect(cerulean?.matches.map((match) => match.methods)).toEqual([['surf']]);
+    expect(cerulean?.gates).toEqual([{ kind: 'capability', id: 'surf' }]);
+  });
+
+  it('does not gate a route on a capability that only shortcuts a reachable match', () => {
+    // Every Water-type at Viridian City is also on a rod slot, Psyduck on both. A player holding a
+    // Super Rod and no Surf is not blocked here, so Surf is not a gate.
     const water = selectMilestoneResults(input({ query: { type: 'water' }, target: 'brock-gym' }));
     const viridian = groupFor(water, 'brock-gym').routes.find((route) => route.nodeId === 'viridian-city');
-    // Viridian City's water is reachable only by rod or by Surf; only Surf is a rules capability.
-    expect(viridian?.gates).toEqual([{ kind: 'capability', id: 'surf' }]);
+    expect(viridian?.matches.some((match) => match.methods.includes('surf'))).toBe(true);
+    expect(viridian?.gates).toEqual([]);
+  });
 
+  it('surfaces the story gates the pack puts on the node itself', () => {
     const all = selectMilestoneResults(input({ query: { type: 'normal' }, milestoneFilter: false }));
     const cave = allRoutes(all).find((route) => route.nodeId === 'cerulean-cave');
+    expect(cave?.matches.length).toBeGreaterThan(0);
     expect(cave?.gates).toEqual([
       { kind: 'story', id: 'champion' },
       { kind: 'story', id: 'network-machine-restored' },

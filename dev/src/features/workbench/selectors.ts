@@ -73,12 +73,17 @@ export type MatchingMilestoneSection = MilestoneResultGroup & {
   expanded: boolean;
 };
 
+/** One eligible milestone the active search hid, named and chronologically placed. */
+export interface HiddenMilestone {
+  id: string;
+  /** 0-based chronological index in `GameRules.milestones`, so the row can be labelled as a range. */
+  index: number;
+}
+
 /** One collapsed row standing in for every eligible milestone that matched nothing. */
 export interface NoMatchSummarySection {
   kind: 'no-match-summary';
-  hiddenMilestoneIds: readonly string[];
-  /** The same milestones by chronological index, so the row can be labelled as a range. */
-  hiddenMilestoneIndexes: readonly number[];
+  hiddenMilestones: readonly HiddenMilestone[];
   expanded: boolean;
 }
 
@@ -176,15 +181,20 @@ function routeAccess(
   targetIndex: number,
   currentOrder: number,
 ): RouteAccess {
-  if (node.branch === 'postgame') return 'postgame';
+  // An absent branch is the golden path, the same normalization the pack's own consumers apply.
+  const branch = node.branch ?? 'main';
+  if (branch === 'postgame') return 'postgame';
   if (band.index > targetIndex) return 'locked';
-  if (node.branch === 'optional' || node.branch === 'alternate') return 'optional';
+  if (branch !== 'main') return 'optional';
   return node.goldenPathOrder <= currentOrder ? 'current' : 'future';
 }
 
 /**
- * The gates standing between the run and this route's matches: the field capabilities its matching
- * encounter methods demand, and the story events the pack makes the node itself wait on.
+ * The gates standing between the run and this route's matches: the field capabilities without which
+ * a match cannot be obtained here at all, and the story events the pack makes the node itself wait
+ * on. A capability that merely offers a second way to a match already reachable another way is not
+ * a gate — Viridian City's water is on the rods as well as on Surf, so a rod holder is not blocked.
+ * A match is therefore capability-locked only when *every* method that yields it is a capability.
  */
 function routeGates(
   node: ProgressionNode,
@@ -193,9 +203,8 @@ function routeGates(
 ): RouteGate[] {
   const capabilityIds = new Set<string>();
   for (const match of matches) {
-    for (const method of match.methods) {
-      if (rules.capabilities.has(method)) capabilityIds.add(method);
-    }
+    if (!match.methods.every((method) => rules.capabilities.has(method))) continue;
+    for (const method of match.methods) capabilityIds.add(method);
   }
   return [
     ...[...capabilityIds].sort().map((id): RouteGate => ({ kind: 'capability', id })),
@@ -279,7 +288,9 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
   }
 
   const searchActive = hasActiveSearchQuery(state.query);
-  const eligible = bands.filter((band) => band.startOrder <= scopeOrder);
+  // A band that holds no golden-path order at all is not a milestone the run can be shown routes
+  // for, matched or otherwise; it is absent from the list rather than reported as having no matches.
+  const eligible = bands.filter((band) => band.startOrder <= band.endOrder && band.startOrder <= scopeOrder);
   const groups: MilestoneResultGroup[] = eligible.map((band) => {
     const routes = (nodeIdsByMilestone.get(band.milestoneId) ?? [])
       .map((nodeId): RouteResult => {
@@ -309,7 +320,9 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
   });
 
   const sections: WorkbenchResultSection[] = [];
-  if (futurePokemonIds.size > 0) {
+  // The teaser and the summary are search-result furniture (spec §10). Browsing has no "matches" to
+  // count and no milestone to explain away, so neither row is emitted without an active query.
+  if (searchActive && futurePokemonIds.size > 0) {
     sections.push({
       kind: 'future-teaser',
       matchCount: futurePokemonIds.size,
@@ -324,12 +337,14 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
       expanded: searchActive || state.openMilestoneIds.has(group.milestoneId),
     });
   }
+  // No `searchActive` guard here, deliberately: with no query every eligible band matches, because
+  // a band is only eligible when it holds golden-path orders and every such band on the spine holds
+  // species. The browse-mode test pins that outcome, so a guard would be an unkillable clause.
   const hidden = groups.filter((group) => group.matchCount === 0);
   if (hidden.length > 0) {
     sections.push({
       kind: 'no-match-summary',
-      hiddenMilestoneIds: hidden.map((group) => group.milestoneId),
-      hiddenMilestoneIndexes: hidden.map((group) => group.milestoneIndex),
+      hiddenMilestones: hidden.map((group) => ({ id: group.milestoneId, index: group.milestoneIndex })),
       expanded: false,
     });
   }

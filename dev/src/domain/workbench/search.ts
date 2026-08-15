@@ -8,6 +8,12 @@ import { searchFireRed, type SearchQuery, type SearchResult } from '../search';
  * The workbench's search query. It extends the pack-level {@link SearchQuery} rather than widening
  * it, so workbench-only filters never reach the immutable pack boundary; `hasActiveSearchQuery`
  * reads queries structurally and therefore judges the extensions too.
+ *
+ * EVERY FILTER ADDED HERE MUST BE AN OPTIONAL `string`. `hasActiveSearchQuery` decides that a query
+ * is active by finding a non-blank string value and ignores values of any other type, so a filter
+ * declared as `string[]`, `Set`, `number` or `boolean` would read as "no search" no matter what the
+ * user typed — silently putting the whole workbench back into browse mode. Model a multi-value
+ * filter as a delimited string, or extend the predicate first.
  */
 export interface WorkbenchSearchQuery extends SearchQuery {}
 
