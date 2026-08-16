@@ -177,6 +177,55 @@ describe('MilestoneResults', () => {
     expect(handlers.onToggleSection).toHaveBeenCalledTimes(3);
   });
 
+  it('gives a matching group no fold control while the search owns the fold', () => {
+    const handlers = renderResults({
+      sections: [
+        { kind: 'future-teaser', matchCount: 2, milestoneIds: ['x'], expanded: false },
+        group(),
+        {
+          kind: 'no-match-summary',
+          hiddenMilestones: [{ id: 'starter', index: 0, name: 'Starter' }],
+          expanded: false,
+        },
+      ],
+      totalPokemon: 3,
+      totalRoutes: 2,
+    }, { searchActive: true });
+
+    // The title still names the group, but as a heading: a fold the user cannot change is not
+    // offered as a control that would report a state and then do nothing.
+    const heading = screen.getByRole('heading', { name: 'Milestone 1 · 1 match' });
+    expect(heading.textContent).toBe('Milestone 1 · 1 match');
+    expect(within(heading).queryByRole('button')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Milestone 1 · 1 match' })).toBeNull();
+
+    // What the search expanded is still on show, and its milestone markers still work.
+    expect(screen.getByRole('button', { name: 'Route 22' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Preview milestone: Milestone 1' })).toBeVisible();
+
+    // The two furniture rows keep their own folds throughout.
+    fireEvent.click(screen.getByRole('button', { name: '2 matches after Milestone 10' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Starter hidden · no matches' }));
+    expect(handlers.onToggleSection).toHaveBeenNthCalledWith(1, 'future-teaser');
+    expect(handlers.onToggleSection).toHaveBeenNthCalledWith(2, 'no-match-summary');
+  });
+
+  it('offers the fold as a real control while browsing', () => {
+    const handlers = renderResults({
+      sections: [group()],
+      totalPokemon: 1,
+      totalRoutes: 1,
+    }, { searchActive: false });
+
+    const toggle = screen.getByRole('button', { name: 'Milestone 1 · 1 match' });
+    expect(toggle.textContent).toBe('Milestone 1 · 1 match');
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('heading', { name: 'Milestone 1 · 1 match' })).toBeVisible();
+
+    fireEvent.click(toggle);
+    expect(handlers.onToggleSection).toHaveBeenCalledWith('milestone-1');
+  });
+
   it('offers the hidden milestones as an escape hatch once the summary is open', () => {
     const hidden = {
       kind: 'no-match-summary' as const,

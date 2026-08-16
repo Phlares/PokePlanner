@@ -2,6 +2,7 @@ import { useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
+import { hasActiveSearchQuery } from '../../domain/search';
 import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
 import type { LevelMode } from '../../domain/rules/game-rules';
 import { evaluateCapability, type CapabilityState } from '../../domain/timeline/capabilities';
@@ -554,6 +555,7 @@ export function Workbench({
           previewMilestoneId={playthrough.previewMilestoneId}
           selectedNodeId={selectedNodeId}
           selectedPokemonId={selectedPokemonId}
+          searchActive={hasActiveSearchQuery(controller.query)}
           capabilityStates={capabilityStates}
           onToggleSection={(sectionId) => dispatch({ type: 'section-toggled', sectionId })}
           onSelectRoute={selectRoute}

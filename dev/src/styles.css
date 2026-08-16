@@ -421,7 +421,9 @@ button:disabled {
   padding: var(--space-2) 0;
 }
 
-.results-group-heading { margin: 0; font-size: var(--text-base); }
+/* The title is a fold while browsing and a plain heading under a search, so the weight lives here
+   rather than on the button that is only sometimes there. */
+.results-group-heading { margin: 0; font-size: var(--text-base); font-weight: 600; }
 
 .results-group-toggle {
   border: 0;

@@ -528,10 +528,32 @@ describe('Workbench', () => {
 
     // Mankey's own group is expanded without asking, and everything it does not reach is folded
     // away into the one summary row.
-    expect(screen.getByRole('button', { name: /^Brock · 1 match$/ })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('heading', { name: 'Brock · 1 match' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Select Mankey at Route 22' })).toBeVisible();
     expect(screen.queryByRole('button', { name: 'Viridian Forest' })).toBeNull();
     expect(screen.getByRole('button', { name: /hidden · no matches$/ })).toBeVisible();
+  });
+
+  it('folds a group open and shut while browsing, and withdraws the fold once a search owns it', () => {
+    renderWorkbench();
+    const brock = () => screen.getByRole('button', { name: /^Brock · \d+ matches$/ });
+    expect(brock()).toHaveAttribute('aria-expanded', 'false');
+
+    fireEvent.click(brock());
+    expect(brock()).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: 'Route 22' })).toBeVisible();
+
+    fireEvent.click(brock());
+    expect(brock()).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull();
+
+    // The search expands matching groups itself, so the fold stops being the user's to give and
+    // the title becomes a heading rather than a control that reports a state and does nothing.
+    typeSearch('Mankey');
+    const heading = screen.getByRole('heading', { name: 'Brock · 1 match' });
+    expect(heading.textContent).toBe('Brock · 1 match');
+    expect(screen.queryByRole('button', { name: 'Brock · 1 match' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Route 22' })).toBeVisible();
   });
 
   it('answers a query that matches nothing with one folded row, not an empty column', () => {

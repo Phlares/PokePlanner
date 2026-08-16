@@ -102,6 +102,11 @@ export interface MilestoneResultsProps {
   selectedNodeId: string | null;
   selectedPokemonId: number | null;
   /**
+   * Whether a query is filtering the sections. An active search expands every matching group itself
+   * (spec §10), so the fold is not the user's to give while one runs — see {@link MilestoneResults}.
+   */
+  searchActive?: boolean;
+  /**
    * Species id → capability verdict while a capability search runs, empty otherwise. It arrives
    * resolved because party, reserve and candidates answer to one evaluator; a species missing from
    * it has no verdict, which is not the same as a negative one.
@@ -119,10 +124,12 @@ export interface MilestoneResultsProps {
  * and the one folded row standing for every eligible milestone that matched nothing (spec §10).
  *
  * It renders the grouping it is handed and derives nothing: the order, the folds, the counts and the
- * route classification all arrive resolved from `selectMilestoneResults`. Every fold is a real
- * button carrying `aria-expanded` over the list it controls, and every state a row reports — access,
- * gates, exact match, capability verdict — is present as text, so nothing here needs hover or colour
- * to be read.
+ * route classification all arrive resolved from `selectMilestoneResults`. Every fold it offers is a
+ * real button carrying `aria-expanded` over the list it controls — and it offers a matching group's
+ * fold only while browsing, because an active search expands those groups itself and a control that
+ * cannot change anything must not be presented as one. Every state a row reports — access, gates,
+ * exact match, capability verdict — is present as text, so nothing here needs hover or colour to be
+ * read.
  */
 export function MilestoneResults({
   results,
@@ -131,6 +138,7 @@ export function MilestoneResults({
   previewMilestoneId,
   selectedNodeId,
   selectedPokemonId,
+  searchActive = false,
   capabilityStates,
   onToggleSection,
   onSelectRoute,
@@ -192,29 +200,37 @@ export function MilestoneResults({
     </li>
   );
 
-  const renderGroup = (section: MatchingMilestoneSection) => (
-    <li key={section.milestoneId} className="results-group" data-expanded={section.expanded ? 'true' : undefined}>
-      <div className="results-group-head">
-        <h3 className="results-group-heading">
-          <button
-            type="button"
-            className="results-group-toggle"
-            aria-expanded={section.expanded}
-            aria-controls={panelId(section.milestoneId)}
-            onClick={() => onToggleSection(section.milestoneId)}
-          >
-            {section.name} · {matchLabel(section.matchCount)}
-          </button>
-        </h3>
-        <MilestoneMarkers milestoneId={section.milestoneId} name={section.name} {...markers} />
-      </div>
-      {section.expanded && (
-        <ul className="results-routes" id={panelId(section.milestoneId)}>
-          {section.routes.map(renderRoute)}
-        </ul>
-      )}
-    </li>
-  );
+  const renderGroup = (section: MatchingMilestoneSection) => {
+    const title = `${section.name} · ${matchLabel(section.matchCount)}`;
+    return (
+      <li key={section.milestoneId} className="results-group" data-expanded={section.expanded ? 'true' : undefined}>
+        <div className="results-group-head">
+          {/* While a search runs the group is expanded by the search itself, so there is no fold to
+              offer: the title is a plain heading rather than a control that would report a state and
+              then change nothing. Browsing, the same title is the fold it has always been. */}
+          <h3 className="results-group-heading">
+            {searchActive ? title : (
+              <button
+                type="button"
+                className="results-group-toggle"
+                aria-expanded={section.expanded}
+                aria-controls={panelId(section.milestoneId)}
+                onClick={() => onToggleSection(section.milestoneId)}
+              >
+                {title}
+              </button>
+            )}
+          </h3>
+          <MilestoneMarkers milestoneId={section.milestoneId} name={section.name} {...markers} />
+        </div>
+        {section.expanded && (
+          <ul className="results-routes" id={panelId(section.milestoneId)}>
+            {section.routes.map(renderRoute)}
+          </ul>
+        )}
+      </li>
+    );
+  };
 
   const renderSummary = (section: NoMatchSummarySection) => (
     <li key={section.kind} className="results-summary">
