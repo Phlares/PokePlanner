@@ -529,6 +529,8 @@ button:disabled {
 
 .results-match-methods,
 .results-match-exact,
+.results-match-obtain,
+.results-match-move,
 .results-match-capability {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -536,8 +538,15 @@ button:disabled {
 }
 
 .results-match-exact,
+.results-match-obtain,
 .results-match-capability { border: var(--rule); padding: 0 var(--space-1); }
 .results-match-capability[data-state='knows'] { border-color: var(--gray-500); color: var(--ink); }
+
+/* An encounter outside ordinary play is set apart as well as worded, never by the wording alone. */
+.results-match-obtain { border-style: dashed; }
+
+.results-match-move { display: inline-flex; gap: var(--space-1); }
+.results-match-move[data-legal='false'] .results-match-validity { text-decoration: line-through; }
 
 .results-hidden { margin-bottom: var(--space-2); }
 

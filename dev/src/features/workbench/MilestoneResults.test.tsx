@@ -98,6 +98,11 @@ function renderResults(
   return handlers;
 }
 
+/** The `li` one matching species owns, addressed through the select button that names it. */
+function matchRow(name: string, routeName = 'Route 22'): HTMLElement {
+  return screen.getByRole('button', { name: `Select ${name} at ${routeName}` }).closest('li') as HTMLElement;
+}
+
 afterEach(cleanup);
 
 describe('MilestoneResults', () => {
@@ -123,6 +128,50 @@ describe('MilestoneResults', () => {
 
     expect(screen.getByRole('button', { name: 'Sabrina hidden · no matches' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Milestones 7–7 hidden · no matches' })).toBeNull();
+  });
+
+  it('counts a gapped hidden set rather than claiming a range across the groups on screen', () => {
+    renderResults({
+      sections: [
+        group({ milestoneId: 'brock-gym', milestoneIndex: 1, name: 'Brock' }),
+        {
+          kind: 'no-match-summary',
+          hiddenMilestones: [
+            { id: 'starter', index: 0, name: 'Starter' },
+            { id: 'misty-gym', index: 2, name: 'Misty' },
+          ],
+          expanded: false,
+        },
+      ],
+      totalPokemon: 1,
+      totalRoutes: 1,
+    });
+
+    const summary = screen.getByRole('button', { name: /hidden · no matches$/ });
+    expect(summary.textContent).toBe('2 milestones hidden · no matches');
+    // Milestone 2 is the group rendered right above the row; a range would claim it is hidden.
+    expect(screen.getByRole('heading', { name: 'Brock · 1 match' })).toBeVisible();
+    expect(screen.queryByRole('button', { name: 'Milestones 1–3 hidden · no matches' })).toBeNull();
+  });
+
+  it('keeps the range when the hidden milestones run without a gap', () => {
+    renderResults({
+      sections: [{
+        kind: 'no-match-summary',
+        hiddenMilestones: [
+          { id: 'starter', index: 0, name: 'Starter' },
+          { id: 'brock-gym', index: 1, name: 'Brock' },
+          { id: 'misty-gym', index: 2, name: 'Misty' },
+        ],
+        expanded: false,
+      }],
+      totalPokemon: 0,
+      totalRoutes: 0,
+    });
+
+    const summary = screen.getByRole('button', { name: /hidden · no matches$/ });
+    expect(summary.textContent).toBe('Milestones 1–3 hidden · no matches');
+    expect(screen.queryByRole('button', { name: '3 milestones hidden · no matches' })).toBeNull();
   });
 
   it('teases several future matches as a plural count', () => {
@@ -237,7 +286,7 @@ describe('MilestoneResults', () => {
     };
     const handlers = renderResults({ sections: [hidden], totalPokemon: 0, totalRoutes: 0 });
 
-    expect(screen.getByRole('button', { name: 'Milestones 1–3 hidden · no matches' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: '2 milestones hidden · no matches' })).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByText('Starter')).toBeVisible();
     expect(screen.getByText('Misty')).toBeVisible();
 
@@ -363,6 +412,129 @@ describe('MilestoneResults', () => {
     const partial = screen.getByRole('button', { name: 'Select Primeape at Route 22' }).closest('li') as HTMLElement;
     expect(partial).not.toHaveAttribute('data-exact');
     expect(within(partial).queryByText('Exact match')).toBeNull();
+  });
+
+  it('states an encounter that is not ordinarily obtainable as text, not colour alone', () => {
+    renderResults({
+      sections: [group({
+        routes: [route({
+          matches: [
+            match({
+              pokemonId: 23,
+              slug: 'ekans',
+              name: 'Ekans',
+              obtainability: { status: 'version-exclusive', flagged: true },
+            }),
+            match({
+              pokemonId: 152,
+              slug: 'chikorita',
+              name: 'Chikorita',
+              obtainability: { status: 'transfer-only', flagged: true },
+            }),
+            match({ pokemonId: 56 }),
+          ],
+          matchCount: 3,
+        })],
+      })],
+      totalPokemon: 3,
+      totalRoutes: 1,
+    });
+
+    const exclusive = within(matchRow('Ekans')).getByText('Version exclusive');
+    expect(exclusive.textContent).toBe('Version exclusive');
+    expect(exclusive).toHaveAttribute('data-status', 'version-exclusive');
+
+    const transfer = within(matchRow('Chikorita')).getByText('Transfer only');
+    expect(transfer.textContent).toBe('Transfer only');
+    expect(transfer).toHaveAttribute('data-status', 'transfer-only');
+
+    // A standard encounter is the ordinary case and states nothing about obtainability.
+    expect(matchRow('Mankey').querySelector('[data-status]')).toBeNull();
+  });
+
+  it('reports learn-method evidence while a move filter is active', () => {
+    renderResults({
+      sections: [group({
+        routes: [route({
+          matches: [
+            match({
+              pokemonId: 54,
+              slug: 'psyduck',
+              name: 'Psyduck',
+              moveMatch: { moveSlug: 'surf', methods: ['machine'], versionValid: true },
+            }),
+            match({
+              pokemonId: 131,
+              slug: 'lapras',
+              name: 'Lapras',
+              moveMatch: { moveSlug: 'surf', methods: ['level-up', 'machine'], versionValid: false },
+            }),
+            match({ pokemonId: 56 }),
+          ],
+          matchCount: 3,
+        })],
+      })],
+      totalPokemon: 3,
+      totalRoutes: 1,
+    });
+
+    const psyduck = matchRow('Psyduck');
+    expect(within(psyduck).getByText('Machine').textContent).toBe('Machine');
+    expect(within(psyduck).getByText('Version legal').textContent).toBe('Version legal');
+
+    const lapras = matchRow('Lapras');
+    expect(within(lapras).getByText('Level Up, Machine').textContent).toBe('Level Up, Machine');
+    expect(within(lapras).getByText('Transfer only').textContent).toBe('Transfer only');
+
+    // Nothing asked this row about a move, so it reports no move evidence.
+    expect(matchRow('Mankey').querySelector('[data-legal]')).toBeNull();
+  });
+
+  it('names a fold panel only while that panel is on the page', () => {
+    renderResults({
+      sections: [
+        group({ milestoneId: 'brock-gym', milestoneIndex: 1, name: 'Brock', expanded: false }),
+        group({ milestoneId: 'misty-gym', milestoneIndex: 2, name: 'Misty', expanded: true }),
+        {
+          kind: 'no-match-summary',
+          hiddenMilestones: [
+            { id: 'starter', index: 0, name: 'Starter' },
+            { id: 'surge-gym', index: 3, name: 'Lt. Surge' },
+          ],
+          expanded: false,
+        },
+      ],
+      totalPokemon: 1,
+      totalRoutes: 1,
+    });
+
+    // Collapsed: the panel does not exist, so nothing points at it.
+    expect(screen.getByRole('button', { name: 'Brock · 1 match' })).not.toHaveAttribute('aria-controls');
+    expect(screen.getByRole('button', { name: '2 milestones hidden · no matches' })).not.toHaveAttribute('aria-controls');
+
+    // Expanded: the reference resolves to the list it opens.
+    const openGroup = screen.getByRole('button', { name: 'Misty · 1 match' }).getAttribute('aria-controls');
+    expect(openGroup).not.toBeNull();
+    expect(document.getElementById(openGroup!)).not.toBeNull();
+  });
+
+  it('names the summary panel once the summary is open', () => {
+    renderResults({
+      sections: [{
+        kind: 'no-match-summary',
+        hiddenMilestones: [
+          { id: 'starter', index: 0, name: 'Starter' },
+          { id: 'misty-gym', index: 2, name: 'Misty' },
+        ],
+        expanded: true,
+      }],
+      totalPokemon: 0,
+      totalRoutes: 0,
+    });
+
+    const panel = screen.getByRole('button', { name: '2 milestones hidden · no matches' }).getAttribute('aria-controls');
+    expect(panel).not.toBeNull();
+    expect(document.getElementById(panel!)).not.toBeNull();
   });
 
   it('reads each match its capability state from the one shared verdict', () => {

@@ -351,9 +351,11 @@ export function Workbench({
     [pack, targetMilestone.id],
   );
 
-  // A capability search states one verdict per species wherever that species appears. The party and
-  // the reserve answer from their own snapshots and every other species answers as a bare candidate;
-  // the three sets are disjoint by species, so this is a plain union with nothing to arbitrate.
+  // A capability search states one verdict per species wherever that species appears. Candidates are
+  // disjoint from the team, but the party and the reserve are not disjoint from each other: two
+  // members of one species answer from their own snapshots and only one answer can be shown against
+  // the species. Precedence is party, then reserve, then candidate — the plan the run is actually
+  // fielding is the one being asked about — so the first answer for a species stands.
   const capabilityId = controller.query.capability?.trim() ?? '';
   const capabilityStates = useMemo(() => {
     const states = new Map<number, CapabilityState>();
@@ -364,12 +366,11 @@ export function Workbench({
       pack,
       FIRE_RED_RULES,
     );
-    const highlights = [
-      ...Object.values(search.party),
-      ...Object.values(search.reserve),
-      ...Object.values(search.candidates),
-    ];
-    for (const highlight of highlights) states.set(highlight.speciesId, highlight.state);
+    for (const group of [search.party, search.reserve, search.candidates]) {
+      for (const highlight of Object.values(group)) {
+        if (!states.has(highlight.speciesId)) states.set(highlight.speciesId, highlight.state);
+      }
+    }
     return states;
   }, [capabilityId, pack, targetDisplay]);
 

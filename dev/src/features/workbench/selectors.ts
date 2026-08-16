@@ -65,7 +65,8 @@ export interface MilestoneResultGroup {
 
 /** One subdued row standing in for everything the milestone scope hides ahead of the target. */
 export interface FutureTeaserSection {
-  kind: 'future-teaser';
+  /** The controller's own reserved id, so the section names its fold with the value it carries. */
+  kind: typeof FUTURE_TEASER_SECTION_ID;
   matchCount: number;
   milestoneIds: readonly string[];
   expanded: boolean;
@@ -86,7 +87,8 @@ export interface HiddenMilestone {
 
 /** One collapsed row standing in for every eligible milestone that matched nothing. */
 export interface NoMatchSummarySection {
-  kind: 'no-match-summary';
+  /** The controller's own reserved id, so the section names its fold with the value it carries. */
+  kind: typeof NO_MATCH_SUMMARY_SECTION_ID;
   hiddenMilestones: readonly HiddenMilestone[];
   expanded: boolean;
 }

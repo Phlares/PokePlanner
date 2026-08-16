@@ -11,6 +11,7 @@ import {
 } from '../../domain/playthrough';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
+import { milestoneBands } from './selectors';
 
 const pack = loadFireRedPackFixture();
 
@@ -97,6 +98,54 @@ function speciesPlaythrough(speciesId: number, moveIds: readonly number[]): Play
               heldItemId: null, placement: 'party', partySlot: 0, review: { moves: false, heldItem: false },
             },
           },
+        },
+      },
+      overrides: {},
+      preferences: { levelMode: 'manual', autoEvolveLevel: false },
+    },
+  }, packIndex());
+}
+
+/** Two members of one species at one node: one in the party, one boxed, with different move sets. */
+function doubledSpeciesPlaythrough(
+  speciesId: number,
+  partyMoveIds: readonly number[],
+  previewMilestoneId: string,
+): Playthrough {
+  const pokemon = pack.pokemon.find((record) => record.id === speciesId)!;
+  const abilityId = pokemon.abilities.find((ability) => ability.slot === 1)!.id;
+  const snapshot = (moveIds: readonly number[], placement: 'party' | 'reserve') => ({
+    speciesId,
+    level: 30,
+    abilityId,
+    moves: moveIds.map((moveId) => ({ moveId, status: 'available-now' as const, level: null, milestoneId: null })),
+    heldItemId: null,
+    placement,
+    partySlot: placement === 'party' ? 0 : null,
+    review: { moves: false, heldItem: false },
+  });
+  const member = (id: string, speciesSequence: number) => ({
+    id,
+    originalSpeciesId: speciesId,
+    speciesSequence,
+    nickname: null,
+    natureId: null,
+    origin: { type: 'inferred' as const, acquisitionId: null, note: null },
+    acquiredAtNodeId: 'starter',
+    notes: '',
+    lifecycle: [],
+  });
+  return parsePlaythrough({
+    ...emptyPlaythrough(),
+    currentMilestoneId: 'starter',
+    previewMilestoneId,
+    timeline: {
+      members: { active: member('active', 1), boxed: member('boxed', 2) },
+      keyframes: {
+        starter: {
+          nodeId: 'starter', kind: 'major',
+          party: ['active', null, null, null, null, null], reserve: ['boxed'], released: [],
+          snapshots: { active: snapshot(partyMoveIds, 'party'), boxed: snapshot([], 'reserve') },
         },
       },
       overrides: {},
@@ -563,7 +612,14 @@ describe('Workbench', () => {
     // Chikorita is transfer-only: a real species the pack places nowhere on the spine.
     typeSearch('Chikorita');
 
-    expect(screen.getByRole('button', { name: 'Milestones 1–10 hidden · no matches' })).toBeVisible();
+    // The pack holds one milestone with no golden-path order of its own, so it is not a row the
+    // surface ever shows and the hidden set has a gap. The row states its size, not a span that
+    // would count a milestone the surface never listed.
+    const eligible = milestoneBands(FIRE_RED_RULES.milestones, pack)
+      .filter((band) => band.startOrder <= band.endOrder).length;
+    expect(eligible).toBeLessThan(FIRE_RED_RULES.milestones.length);
+    const summary = screen.getByRole('button', { name: /hidden · no matches$/ });
+    expect(summary.textContent).toBe(`${eligible} milestones hidden · no matches`);
     expect(screen.queryByRole('button', { name: /^Brock · \d+ match/ })).toBeNull();
   });
 
@@ -657,6 +713,38 @@ describe('Workbench', () => {
     const early = cutState();
     expect(within(early).getByText('conditional')).toBeVisible();
     expect(within(early).queryByText('knows')).toBeNull();
+  });
+
+  it('reads the editor panel the same learnability the results read, evolutions included', () => {
+    // Magikarp's only path to Surf runs through Gyarados, which it has not reached. A flat learnset
+    // lookup answers `none`; the pack's learnability answers `conditional`, and the editor panel and
+    // the result row must give the same verdict for the same species at the same node.
+    renderWorkbench({ playthrough: speciesPlaythrough(129, []) });
+    fireEvent.click(screen.getByRole('button', { name: 'Search for Surf' }));
+
+    const row = screen.getByRole('button', { name: 'Select Magikarp at Route 22' }).closest('li') as HTMLElement;
+    expect(within(row).getByText('Can learn with condition')).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Edit Magikarp' }));
+    const evidence = screen.getByRole('region', { name: /capability evidence for Magikarp/i });
+    const surf = within(evidence).getByText('surf').closest('li') as HTMLElement;
+    expect(within(surf).getByText('conditional')).toBeVisible();
+    expect(within(surf).queryByText('none')).toBeNull();
+  });
+
+  it('answers a doubled species with the party member, not the boxed one', () => {
+    // Surf is unlocked by Sabrina's leg, so two Psyducks read differently: the party member knows
+    // the move, the boxed one only could learn it. One species owns one row, and the party wins it.
+    renderWorkbench({ playthrough: doubledSpeciesPlaythrough(54, [57], 'sabrina-gym') });
+    fireEvent.click(screen.getByRole('button', { name: 'Search for Surf' }));
+
+    const psyduck = screen.getByRole('button', { name: 'Select Psyduck at Viridian City' }).closest('li') as HTMLElement;
+    expect(within(psyduck).getByText('Knows').textContent).toBe('Knows');
+    expect(within(psyduck).queryByText('Can learn now')).toBeNull();
+
+    // A species nobody on the team owns still reads its own candidate verdict, on the same route.
+    const poliwag = screen.getByRole('button', { name: 'Select Poliwag at Viridian City' }).closest('li') as HTMLElement;
+    expect(within(poliwag).getByText('Can learn now').textContent).toBe('Can learn now');
   });
 
   it('reads a capability search back onto the matching species', () => {

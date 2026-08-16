@@ -1,7 +1,10 @@
 import { useId } from 'react';
+import type { ObtainabilityStatus } from '../../domain/search';
 import type { CapabilityState } from '../../domain/timeline/capabilities';
 import { titleCase } from '../text';
+import { FUTURE_TEASER_SECTION_ID, NO_MATCH_SUMMARY_SECTION_ID } from './controller';
 import type {
+  FutureTeaserSection,
   GroupedWorkbenchResults,
   HiddenMilestone,
   MatchingMilestoneSection,
@@ -27,6 +30,18 @@ const CAPABILITY_LABEL: Partial<Record<CapabilityState, string>> = {
   conditional: 'Can learn with condition',
 };
 
+/**
+ * Every way of being obtainable that is not ordinary play (spec §11). `standard` is absent on
+ * purpose: it is the case the rest of the row already describes, and the four listed here are
+ * exactly the statuses `Obtainability.flagged` marks, so one map is both the label and the rule.
+ */
+const OBTAIN_LABEL: Partial<Record<ObtainabilityStatus, string>> = {
+  postgame: 'Postgame',
+  'version-exclusive': 'Version exclusive',
+  'event-only': 'Event only',
+  'transfer-only': 'Transfer only',
+};
+
 function matchLabel(count: number): string {
   return `${count} ${count === 1 ? 'match' : 'matches'}`;
 }
@@ -40,11 +55,18 @@ function gateLabel(gate: RouteGate): string {
  * is what the rest of the workbench calls it. Several are given as chronological positions, because
  * listing every name is the enumeration this row exists to replace. Positions read 1-based; the
  * indexes behind them are the ruleset's own 0-based order.
+ *
+ * A range is only honest while the hidden set is unbroken. Matching milestones are rendered as their
+ * own groups between the hidden ones, so the usual set has gaps: there the row states how many are
+ * hidden rather than a span that would claim the groups on screen.
  */
 function hiddenRangeLabel(hidden: readonly HiddenMilestone[]): string {
   if (hidden.length === 1) return hidden[0].name;
   const positions = hidden.map((milestone) => milestone.index + 1);
-  return `Milestones ${Math.min(...positions)}–${Math.max(...positions)}`;
+  const first = Math.min(...positions);
+  const last = Math.max(...positions);
+  if (last - first + 1 !== hidden.length) return `${hidden.length} milestones`;
+  return `Milestones ${first}–${last}`;
 }
 
 interface MilestoneMarkerProps {
@@ -153,6 +175,7 @@ export function MilestoneResults({
   const renderMatch = (route: RouteResult, match: RouteResult['matches'][number]) => {
     const capability = capabilityStates?.get(match.pokemonId);
     const capabilityLabel = capability === undefined ? undefined : CAPABILITY_LABEL[capability];
+    const obtainLabel = OBTAIN_LABEL[match.obtainability.status];
     return (
       <li key={match.pokemonId} className="results-match" data-exact={match.exactMatch ? 'true' : undefined}>
         <button
@@ -166,6 +189,17 @@ export function MilestoneResults({
           <span className="results-match-methods">{match.methods.map(titleCase).join(', ')}</span>
         </button>
         {match.exactMatch && <span className="results-match-exact">Exact match</span>}
+        {obtainLabel !== undefined && (
+          <span className="results-match-obtain" data-status={match.obtainability.status}>{obtainLabel}</span>
+        )}
+        {match.moveMatch !== undefined && (
+          <span className="results-match-move" data-legal={match.moveMatch.versionValid ? 'true' : 'false'}>
+            <span className="results-match-learn">{match.moveMatch.methods.map(titleCase).join(', ')}</span>
+            <span className="results-match-validity">
+              {match.moveMatch.versionValid ? 'Version legal' : 'Transfer only'}
+            </span>
+          </span>
+        )}
         {capabilityLabel !== undefined && (
           <span className="results-match-capability" data-state={capability}>{capabilityLabel}</span>
         )}
@@ -214,7 +248,7 @@ export function MilestoneResults({
                 type="button"
                 className="results-group-toggle"
                 aria-expanded={section.expanded}
-                aria-controls={panelId(section.milestoneId)}
+                aria-controls={section.expanded ? panelId(section.milestoneId) : undefined}
                 onClick={() => onToggleSection(section.milestoneId)}
               >
                 {title}
@@ -238,7 +272,7 @@ export function MilestoneResults({
         type="button"
         className="results-summary-toggle"
         aria-expanded={section.expanded}
-        aria-controls={panelId(section.kind)}
+        aria-controls={section.expanded ? panelId(section.kind) : undefined}
         onClick={() => onToggleSection(section.kind)}
       >
         {hiddenRangeLabel(section.hiddenMilestones)} hidden · no matches
@@ -256,24 +290,28 @@ export function MilestoneResults({
     </li>
   );
 
+  const renderTeaser = (section: FutureTeaserSection) => (
+    <li key={section.kind} className="results-teaser">
+      <button
+        type="button"
+        className="results-teaser-toggle"
+        aria-expanded={section.expanded}
+        onClick={() => onToggleSection(section.kind)}
+      >
+        {matchLabel(section.matchCount)} after {targetName}
+      </button>
+    </li>
+  );
+
   return (
     <nav className="results" aria-label="Milestone groups">
       <ol className="results-sections">
         {results.sections.map((section) => {
-          if (section.kind === 'matching-milestone') return renderGroup(section);
-          if (section.kind === 'no-match-summary') return renderSummary(section);
-          return (
-            <li key={section.kind} className="results-teaser">
-              <button
-                type="button"
-                className="results-teaser-toggle"
-                aria-expanded={section.expanded}
-                onClick={() => onToggleSection(section.kind)}
-              >
-                {matchLabel(section.matchCount)} after {targetName}
-              </button>
-            </li>
-          );
+          // Each reserved row is recognised through the controller's own constant, so renaming one
+          // is a type error here rather than a fold that silently stops working.
+          if (section.kind === FUTURE_TEASER_SECTION_ID) return renderTeaser(section);
+          if (section.kind === NO_MATCH_SUMMARY_SECTION_ID) return renderSummary(section);
+          return renderGroup(section);
         })}
       </ol>
     </nav>
