@@ -280,6 +280,35 @@ describe('searchCapability', () => {
     expect(result.candidates[MANKEY]).toBeUndefined();
   });
 
+  it('leaves the species already on the team out of the candidate list', () => {
+    // A candidate is a species with no plan behind it. Lapras is in the party knowing Surf and
+    // Psyduck is in reserve able to learn it now; listing either as a bare candidate would show the
+    // same Pokémon in two contradictory states at once.
+    const result = searchCapability('surf', surfNode(), pack, FIRE_RED_RULES);
+
+    expect(result.party.m1.speciesId).toBe(LAPRAS);
+    expect(result.reserve.m2.speciesId).toBe(PSYDUCK);
+    expect(result.candidates[LAPRAS]).toBeUndefined();
+    expect(result.candidates[PSYDUCK]).toBeUndefined();
+    // Only the team is withheld: an unowned species with the same path is still a candidate.
+    expect(result.candidates[MAGIKARP]).toBeDefined();
+  });
+
+  it('offers a species the run released back as a candidate', () => {
+    // Only the party and the reserve are the team. A released Pokémon is gone, so it is a candidate
+    // again rather than a member whose state the surfaces would have to agree on.
+    const node = surfNode();
+    const result = searchCapability('surf', {
+      ...node,
+      party: [null, null, null, null, null, null],
+      reserve: [],
+      released: ['m1'],
+    }, pack, FIRE_RED_RULES);
+
+    expect(result.party).toEqual({});
+    expect(result.candidates[LAPRAS]).toBeDefined();
+  });
+
   it('carries the subject and the shared evaluator evidence onto every highlight', () => {
     const result = searchCapability('surf', surfNode(), pack, FIRE_RED_RULES);
 

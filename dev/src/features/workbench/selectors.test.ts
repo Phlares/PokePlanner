@@ -3,9 +3,15 @@ import type { FireRedPack } from '../../data/game-pack';
 import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
 import type { WorkbenchSearchQuery } from '../../domain/workbench/search';
 import { loadFireRedPackFixture } from '../../test/firered-pack';
-import { createWorkbenchState, type WorkbenchState } from './controller';
+import {
+  createWorkbenchState,
+  FUTURE_TEASER_SECTION_ID,
+  NO_MATCH_SUMMARY_SECTION_ID,
+  type WorkbenchState,
+} from './controller';
 import {
   milestoneNodeId,
+  revealsFutureNodes,
   selectMilestoneResults,
   type GroupedWorkbenchResults,
   type MatchingMilestoneSection,
@@ -21,20 +27,31 @@ beforeAll(() => {
 interface Scenario {
   query?: WorkbenchSearchQuery;
   milestoneFilter?: boolean;
-  openMilestoneIds?: string[];
+  openSectionIds?: string[];
   current?: string | null;
   target?: string | null;
 }
 
+function stateOf(scenario: Scenario): WorkbenchState {
+  return {
+    ...createWorkbenchState({
+      currentProgressId: scenario.current ?? null,
+      planningTargetId: scenario.target ?? null,
+    }),
+    query: scenario.query ?? {},
+    milestoneFilter: scenario.milestoneFilter ?? true,
+    openSectionIds: new Set(scenario.openSectionIds ?? []),
+  };
+}
+
+/** The pack's own name for a milestone, so an assertion survives a renamed or reordered ruleset. */
+const milestoneName = (id: string): string =>
+  FIRE_RED_RULES.milestones.find((milestone) => milestone.id === id)!.name;
+
 function input(scenario: Scenario): MilestoneResultsInput {
   const current = scenario.current ?? null;
   const target = scenario.target ?? null;
-  const state: WorkbenchState = {
-    ...createWorkbenchState({ currentProgressId: current, planningTargetId: target }),
-    query: scenario.query ?? {},
-    milestoneFilter: scenario.milestoneFilter ?? true,
-    openMilestoneIds: new Set(scenario.openMilestoneIds ?? []),
-  };
+  const state = stateOf(scenario);
   return {
     pack,
     rules: FIRE_RED_RULES,
@@ -90,7 +107,7 @@ describe('selectMilestoneResults — section order', () => {
     expect(result.sections.filter((section) => section.kind === 'no-match-summary')).toHaveLength(1);
     expect(result.sections.at(-1)).toEqual({
       kind: 'no-match-summary',
-      hiddenMilestones: [{ id: 'starter', index: 0 }],
+      hiddenMilestones: [{ id: 'starter', index: 0, name: milestoneName('starter') }],
       expanded: false,
     });
 
@@ -99,9 +116,14 @@ describe('selectMilestoneResults — section order', () => {
     const sparse = selectMilestoneResults(input({ query: { name: 'Caterpie' }, target: 'misty-gym' }));
     expect(sparse.sections.at(-1)).toEqual({
       kind: 'no-match-summary',
-      hiddenMilestones: [{ id: 'starter', index: 0 }, { id: 'misty-gym', index: 2 }],
+      hiddenMilestones: [
+        { id: 'starter', index: 0, name: milestoneName('starter') },
+        { id: 'misty-gym', index: 2, name: milestoneName('misty-gym') },
+      ],
       expanded: false,
     });
+    // The names are the ruleset's own, not the ids: nothing here reads back the key it looked up.
+    expect(milestoneName('misty-gym')).toBe('Misty');
   });
 
   it('never reports a structurally empty milestone band as unmatched', () => {
@@ -112,7 +134,7 @@ describe('selectMilestoneResults — section order', () => {
     const summary = result.sections.find((section) => section.kind === 'no-match-summary');
     expect(summary).toBeDefined();
     if (summary?.kind !== 'no-match-summary') return;
-    expect(summary.hiddenMilestones).toContainEqual({ id: 'starter', index: 0 });
+    expect(summary.hiddenMilestones).toContainEqual({ id: 'starter', index: 0, name: milestoneName('starter') });
     expect(summary.hiddenMilestones.map((milestone) => milestone.id)).not.toContain('giovanni-gym');
     expect(groups(result).map((section) => section.milestoneId)).not.toContain('giovanni-gym');
   });
@@ -175,10 +197,58 @@ describe('selectMilestoneResults — section order', () => {
   });
 
   it('expands only the folds the controller holds open when no search is active', () => {
-    const result = selectMilestoneResults(input({ target: 'brock-gym', openMilestoneIds: ['brock-gym'] }));
+    const result = selectMilestoneResults(input({ target: 'brock-gym', openSectionIds: ['brock-gym'] }));
     expect(groups(result).map((section) => [section.milestoneId, section.expanded])).toEqual([
       ['brock-gym', true], ['starter', false],
     ]);
+  });
+
+  it('reveals the groups the teaser stands for when the controller opens it', () => {
+    const scoped = selectMilestoneResults(input({ query: { type: 'normal' }, target: 'brock-gym' }));
+    const opened = selectMilestoneResults(input({
+      query: { type: 'normal' }, target: 'brock-gym', openSectionIds: [FUTURE_TEASER_SECTION_ID],
+    }));
+
+    const closedTeaser = scoped.sections[0];
+    const openTeaser = opened.sections[0];
+    expect(closedTeaser).toMatchObject({ kind: 'future-teaser', expanded: false });
+    expect(openTeaser).toMatchObject({ kind: 'future-teaser', expanded: true });
+    // The row still counts everything the milestone scope hides, whatever it now also shows.
+    if (closedTeaser.kind !== 'future-teaser' || openTeaser.kind !== 'future-teaser') return;
+    expect(openTeaser.matchCount).toBe(closedTeaser.matchCount);
+
+    expect(groups(scoped).map((section) => section.milestoneId)).not.toContain('misty-gym');
+    expect(groups(opened).map((section) => section.milestoneId)).toContain('misty-gym');
+    // Revealing does not move the plan: everything past the target still reads as locked.
+    expect(new Set(groupFor(opened, 'misty-gym').routes.map((route) => route.access))).toEqual(new Set(['locked']));
+    expect(groupFor(opened, 'brock-gym').routes.map((route) => route.access)).not.toContain('locked');
+  });
+
+  it('opens the no-match summary only for the fold the controller names', () => {
+    const closed = selectMilestoneResults(input({ query: { type: 'normal' }, target: 'misty-gym' }));
+    expect(closed.sections.at(-1)).toMatchObject({ kind: 'no-match-summary', expanded: false });
+
+    const opened = selectMilestoneResults(input({
+      query: { type: 'normal' }, target: 'misty-gym', openSectionIds: [NO_MATCH_SUMMARY_SECTION_ID],
+    }));
+    expect(opened.sections.at(-1)).toMatchObject({ kind: 'no-match-summary', expanded: true });
+
+    // The two reserved folds are independent: opening the teaser leaves the summary closed.
+    const teased = selectMilestoneResults(input({
+      query: { type: 'normal' }, target: 'misty-gym', openSectionIds: [FUTURE_TEASER_SECTION_ID],
+    }));
+    expect(teased.sections.at(-1)).toMatchObject({ kind: 'no-match-summary', expanded: false });
+    expect(teased.sections[0]).toMatchObject({ kind: 'future-teaser', expanded: true });
+  });
+});
+
+describe('revealsFutureNodes', () => {
+  it('is true exactly when the surface shows nodes past the planning target', () => {
+    expect(revealsFutureNodes(stateOf({}))).toBe(false);
+    expect(revealsFutureNodes(stateOf({ milestoneFilter: false }))).toBe(true);
+    expect(revealsFutureNodes(stateOf({ openSectionIds: [FUTURE_TEASER_SECTION_ID] }))).toBe(true);
+    // Any other open fold is a milestone at or before the target; it reveals nothing new.
+    expect(revealsFutureNodes(stateOf({ openSectionIds: [NO_MATCH_SUMMARY_SECTION_ID, 'brock-gym'] }))).toBe(false);
   });
 });
 

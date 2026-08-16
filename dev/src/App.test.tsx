@@ -98,6 +98,11 @@ function openRunMenu(): void {
   fireEvent.click(screen.getByRole('button', { name: 'Run menu' }));
 }
 
+/** Lift the milestone scope, which is how the results surface reveals milestones past the target. */
+function revealFutureMilestones(): void {
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Filter by milestone' }));
+}
+
 function openImportDialog(): void {
   openRunMenu();
   fireEvent.click(screen.getByRole('menuitem', { name: 'Import JSON file or plan code' }));
@@ -238,6 +243,7 @@ describe('App boot and persistence', () => {
     await waitFor(() => expect(putCount).toBe(1));
 
     fireEvent.click(screen.getByRole('button', { name: /set current milestone.*brock/i }));
+    revealFutureMilestones();
     fireEvent.click(screen.getByRole('button', { name: /set current milestone.*misty/i }));
 
     // Both writes are still in flight, so the header says so rather than claiming a durable save.
@@ -482,9 +488,12 @@ describe('App boot and persistence', () => {
     render(<App {...baseProps({ openRepository: factory })} />);
     await createRun();
 
-    // Plan against Misty so Cerulean City is inside the target's scope, then select it.
+    // Plan against Misty so Cerulean City is inside the target's scope, then select it. Misty is
+    // past the run's own target, so the scope is lifted to reach it and put back once it is set.
+    revealFutureMilestones();
     fireEvent.click(screen.getByRole('button', { name: /preview milestone.*misty/i }));
     await waitFor(async () => expect((await get()!.list())[0].previewMilestoneId).toBe('misty-gym'));
+    revealFutureMilestones();
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
     expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
 
@@ -562,7 +571,7 @@ describe('App boot and persistence', () => {
 
     // Capture two separate identities through the App inspector, at the same acquisition sequence.
     fireEvent.change(screen.getByRole('searchbox', { name: /search firered/i }), { target: { value: 'Mankey' } });
-    fireEvent.click(await screen.findByRole('button', { name: 'Select Mankey' }));
+    fireEvent.click(await screen.findByRole('button', { name: /^Select Mankey at / }));
     fireEvent.click(screen.getByRole('button', { name: 'Add Mankey to Brock party' }));
     fireEvent.click(screen.getByRole('button', { name: 'Add Mankey to Brock party' }));
     const created = await waitFor(async () => {

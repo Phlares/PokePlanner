@@ -2,10 +2,9 @@ import { useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from
 import type { FireRedPack } from '../../data/game-pack';
 import { MILESTONE_ORDER } from '../../domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from '../../domain/playthrough';
-import { hasActiveSearchQuery } from '../../domain/search';
 import { FIRE_RED_RULES } from '../../domain/rules/firered-rules';
-import type { LevelMode, ProgressionContext } from '../../domain/rules/game-rules';
-import { evaluateCapability } from '../../domain/timeline/capabilities';
+import type { LevelMode } from '../../domain/rules/game-rules';
+import { evaluateCapability, type CapabilityState } from '../../domain/timeline/capabilities';
 import { acquireMember, moveToReserve, placeInParty, releaseMember, restoreMember } from '../../domain/timeline/commands';
 import type { TimelineKeyframe, TimelineState } from '../../domain/timeline/model';
 import {
@@ -14,7 +13,13 @@ import {
   type TimelineResolverPackView,
 } from '../../domain/timeline/resolver';
 import { validateResolvedNode, type TimelineFinding } from '../../domain/timeline/validation';
-import { FireRedSearch } from '../search/FireRedSearch';
+import {
+  capabilitySources,
+  packLearnability,
+  progressionContextAtNode,
+  searchCapability,
+  selectMilestoneBriefing,
+} from '../../domain/workbench/search';
 import { memberDisplayName } from '../timeline/MemberPool';
 import {
   explicitOverrideFrom,
@@ -23,17 +28,18 @@ import {
 } from '../timeline/TeamTimeline';
 import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
 import { EncounterTable } from './EncounterTable';
+import { MilestoneResults } from './MilestoneResults';
 import { PokemonInspector, type MemberDraft } from './PokemonInspector';
-import { ProgressionRail } from './ProgressionRail';
 import { TeamStrip, type TeamStripSlot } from './TeamStrip';
 import { WorkbenchShell } from './WorkbenchShell';
+import { WorkbenchToolbar } from './WorkbenchToolbar';
 import {
   createWorkbenchState,
   reduceWorkbench,
   sameWorkbenchValidity,
   type WorkbenchValidity,
 } from './controller';
-import { milestoneNodeId } from './selectors';
+import { milestoneNodeId, revealsFutureNodes, selectMilestoneResults } from './selectors';
 
 /** Local id-resolution surface so emitted playthrough changes are re-validated before they leave. */
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex & TimelineResolverPackView {
@@ -97,44 +103,23 @@ function progressionNodeId(display: TimelineDisplayNode, pack: FireRedPack): str
   return display.resolved.nodeId;
 }
 
-function progressionContextAt(display: TimelineDisplayNode, pack: FireRedPack): ProgressionContext {
-  const currentNodeId = progressionNodeId(display, pack);
-  const currentOrder = pack.progression.nodes.find((node) => node.id === currentNodeId)?.goldenPathOrder ?? -1;
-  const completedMilestoneIds = new Set<string>();
-  for (const node of pack.progression.nodes) {
-    if (node.goldenPathOrder >= currentOrder) continue;
-    node.events.forEach((event) => completedMilestoneIds.add(event.id));
-  }
-  const selectedMilestone = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === display.id);
-  const targetMilestone = selectedMilestone
-    ?? FIRE_RED_RULES.milestones.find((milestone) => !completedMilestoneIds.has(milestone.id))
-    ?? FIRE_RED_RULES.milestones.at(-1)!;
-  const badgeIds = new Set(FIRE_RED_RULES.milestones
-    .filter((milestone) => milestone.badgeId !== null && completedMilestoneIds.has(milestone.id))
-    .map((milestone) => milestone.badgeId!));
-  return {
-    currentNodeId,
-    targetMilestoneId: targetMilestone.id,
-    completedMilestoneIds,
-    badgeIds,
-    badgeCount: badgeIds.size,
-    branchChoices: {},
-  };
-}
-
-/** Derive which ephemeral selections the durable run still admits; the sole input to sanitization. */
+/**
+ * Derive which ephemeral selections the durable run still admits; the sole input to sanitization.
+ * `scoped` is the milestone horizon the results surface is currently cut to, read from the one
+ * predicate that decides it, so a route can never be listed and then dropped for being out of scope.
+ */
 function workbenchValidity(
   playthrough: Playthrough,
   pack: FireRedPack,
   index: PlaythroughPackIndex & TimelineResolverPackView,
-  milestoneFilter: boolean,
+  scoped: boolean,
 ): WorkbenchValidity {
   const progressionIds = new Set(pack.progression.nodes.map((node) => node.id));
   const targetId = playthrough.previewMilestoneId ?? playthrough.currentMilestoneId;
   const targetNodeId = targetId === null ? null : progressionNodeIdFor(targetId, progressionIds);
   const targetOrder = pack.progression.nodes.find((node) => node.id === targetNodeId)?.goldenPathOrder;
   const nodeIds = new Set(pack.progression.nodes
-    .filter((node) => !milestoneFilter || targetOrder === undefined || node.goldenPathOrder <= targetOrder)
+    .filter((node) => !scoped || targetOrder === undefined || node.goldenPathOrder <= targetOrder)
     .map((node) => node.id));
   const resolvedTarget = targetNodeId === null
     ? null
@@ -188,13 +173,14 @@ export interface WorkbenchProps {
 }
 
 /**
- * The FireRed timeline workbench shell: search and the progression rail, a route-detail region, the
- * inspector, and the full-width milestone team timeline. Every ephemeral navigation choice — mode,
- * query, folds, last route, candidate, selected member, detail and sheet — lives in the controller
- * reducer, so no second copy is kept here; the member editor's node and return-focus target are the
- * one exception, and are released whenever the controller drops the selected member. The durable run
- * belongs to App: changes are re-validated before they are emitted upward and only take effect when
- * they come back as a prop, which is also what reconciles ephemeral selections against it.
+ * The FireRed timeline workbench shell: the search rung, the milestone result groups, a route-detail
+ * region, the inspector, and the full-width milestone team timeline. Every ephemeral navigation
+ * choice — mode, query, folds, last route, candidate, selected member, detail and sheet — lives in
+ * the controller reducer, so no second copy is kept here; the member editor's node and return-focus
+ * target are the one exception, and are released whenever the controller drops the selected member.
+ * The durable run belongs to App: changes are re-validated before they are emitted upward and only
+ * take effect when they come back as a prop, which is also what reconciles ephemeral selections
+ * against it.
  */
 export function Workbench({
   pack,
@@ -218,9 +204,10 @@ export function Workbench({
   // The durable run arrives as a prop from any source — a milestone control here, an imported run in
   // App — so ephemeral selections are reconciled against what the run currently admits rather than
   // by whichever caller changed it.
+  const scoped = !revealsFutureNodes(controller);
   const validity = useMemo(
-    () => workbenchValidity(playthrough, pack, index, controller.milestoneFilter),
-    [controller.milestoneFilter, index, pack, playthrough],
+    () => workbenchValidity(playthrough, pack, index, scoped),
+    [index, pack, playthrough, scoped],
   );
   const [sanitizedAgainst, setSanitizedAgainst] = useState(validity);
   if (!sameWorkbenchValidity(sanitizedAgainst, validity)) {
@@ -247,7 +234,6 @@ export function Workbench({
 
   const selectedNodeId = controller.detail.kind === 'route' ? controller.detail.nodeId : null;
   const selectedPokemonId = controller.candidatePokemonId;
-  const searchActive = hasActiveSearchQuery(controller.query);
 
   const selectedNode = selectedNodeId === null
     ? null
@@ -308,7 +294,7 @@ export function Workbench({
         {
           members: timelineForRoutes.members,
           progression: pack.progression,
-          progressionContext: progressionContextAt(display, pack),
+          progressionContext: progressionContextAtNode(nodeId, pack, FIRE_RED_RULES),
           rules: FIRE_RED_RULES,
           pack: {
             pokemon: pack.pokemon,
@@ -349,6 +335,43 @@ export function Workbench({
     };
   });
 
+  // One grouping drives the whole primary surface: the sections, their folds, the route rows and
+  // the totals the toolbar announces all come out of this single derivation of the controller state.
+  const results = useMemo(() => selectMilestoneResults({
+    pack,
+    rules: FIRE_RED_RULES,
+    state: controller,
+    currentMilestoneId: playthrough.currentMilestoneId,
+    targetMilestoneId: playthrough.previewMilestoneId ?? playthrough.currentMilestoneId,
+  }), [controller, pack, playthrough.currentMilestoneId, playthrough.previewMilestoneId]);
+
+  const briefing = useMemo(
+    () => selectMilestoneBriefing(targetMilestone.id, { pack, rules: FIRE_RED_RULES }),
+    [pack, targetMilestone.id],
+  );
+
+  // A capability search states one verdict per species wherever that species appears. The party and
+  // the reserve answer from their own snapshots and every other species answers as a bare candidate;
+  // the three sets are disjoint by species, so this is a plain union with nothing to arbitrate.
+  const capabilityId = controller.query.capability?.trim() ?? '';
+  const capabilityStates = useMemo(() => {
+    const states = new Map<number, CapabilityState>();
+    if (capabilityId === '' || targetDisplay === undefined) return states;
+    const search = searchCapability(
+      capabilityId,
+      { ...targetDisplay.resolved, nodeId: progressionNodeId(targetDisplay, pack) },
+      pack,
+      FIRE_RED_RULES,
+    );
+    const highlights = [
+      ...Object.values(search.party),
+      ...Object.values(search.reserve),
+      ...Object.values(search.candidates),
+    ];
+    for (const highlight of highlights) states.set(highlight.speciesId, highlight.state);
+    return states;
+  }, [capabilityId, pack, targetDisplay]);
+
   const editorNode = editorSelection === null
     ? null
     : [...majorNodes, ...detailedNodes].find((node) => node.id === editorSelection.nodeId) ?? null;
@@ -379,27 +402,26 @@ export function Workbench({
   const editorAbilities = pack.pokemon.find((record) => record.id === editorSnapshot?.speciesId)?.abilities ?? [];
   const editorMoveIds = new Set(pack.learnsets
     .find((record) => record.pokemonId === editorSnapshot?.speciesId)?.moves.map((move) => move.moveId) ?? []);
+  // The editor panel reads the same capability rules the workbench search does — where the run
+  // stands, which canonical sources are in hand, and what a species can learn including through the
+  // evolutions it has not reached yet — so one member can never read `none` here and `conditional`
+  // in the results.
   const editorCapabilityEvidence = editorNode === null || editorSnapshot === null
     ? []
-    : [...FIRE_RED_RULES.capabilities.values()].map((capability) => {
-      const context = progressionContextAt(editorNode, pack);
-      const sources = pack.acquisitions
-        .filter((record) => 'moveId' in record.subject && record.subject.moveId === capability.moveId)
-        .map((record) => ({
-          id: record.id,
-          available: record.status === 'standard'
-            && (record.milestoneId === null || context.completedMilestoneIds.has(record.milestoneId)),
-        }));
-      const result = evaluateCapability(editorSnapshot, {
-        capability,
-        progressionContext: context,
-        canLearnMove: (speciesId, moveId) => (
-          pack.learnsets.find((record) => record.pokemonId === speciesId)?.moves.some((move) => move.moveId === moveId) ?? false
-        ),
-        sources,
-      });
-      return { id: capability.id, ...result };
-    });
+    : (() => {
+      const nodeId = progressionNodeId(editorNode, pack);
+      const progressionContext = progressionContextAtNode(nodeId, pack, FIRE_RED_RULES);
+      const canLearnMove = packLearnability(pack);
+      return [...FIRE_RED_RULES.capabilities.values()].map((capability) => ({
+        id: capability.id,
+        ...evaluateCapability(editorSnapshot, {
+          capability,
+          progressionContext,
+          canLearnMove,
+          sources: capabilitySources(capability, nodeId, pack, FIRE_RED_RULES),
+        }),
+      }));
+    })();
 
   const selectRoute = (nodeId: string): void => {
     dispatch({ type: 'route-selected', nodeId });
@@ -437,7 +459,7 @@ export function Workbench({
     emit({ timeline: placeInParty(acquired, targetNodeId, memberId, slot as 0 | 1 | 2 | 3 | 4 | 5, index) });
   };
 
-  const selectSearchResult = (pokemonId: number): void => {
+  const selectCandidate = (pokemonId: number): void => {
     dispatch({ type: 'candidate-selected', pokemonId });
   };
 
@@ -524,33 +546,26 @@ export function Workbench({
         />
       )}
 
-      <section className="workbench-rail" aria-label="Progression">
-        {/* Browsing the spine and searching it are different jobs: an active query answers itself in
-            the search rung, so the spine stands down and says how to get it back rather than
-            leaving a bordered column empty. */}
-        {searchActive && (
-          <p className="workbench-placeholder">
-            Matches for the active search are listed in the search rung above. Clear the search to browse the
-            progression spine again.
-          </p>
-        )}
-        {!searchActive && (
-          <ProgressionRail
-            nodes={pack.progression.nodes}
-            selectedNodeId={selectedNodeId}
-            currentMilestoneId={playthrough.currentMilestoneId}
-            previewMilestoneId={playthrough.previewMilestoneId}
-            onSelectNode={selectRoute}
-            onSelectEvent={() => undefined}
-            onSetCurrentMilestone={(milestoneId) => emit({ currentMilestoneId: milestoneId })}
-            onSetPreviewMilestone={(milestoneId) => emit({ previewMilestoneId: milestoneId })}
-          />
-        )}
-      </section>
+      <div className="workbench-results">
+        <MilestoneResults
+          results={results}
+          targetName={targetMilestone.name}
+          currentMilestoneId={playthrough.currentMilestoneId}
+          previewMilestoneId={playthrough.previewMilestoneId}
+          selectedNodeId={selectedNodeId}
+          selectedPokemonId={selectedPokemonId}
+          capabilityStates={capabilityStates}
+          onToggleSection={(sectionId) => dispatch({ type: 'section-toggled', sectionId })}
+          onSelectRoute={selectRoute}
+          onSelectPokemon={selectCandidate}
+          onSetCurrentMilestone={(milestoneId) => emit({ currentMilestoneId: milestoneId })}
+          onSetPreviewMilestone={(milestoneId) => emit({ previewMilestoneId: milestoneId })}
+        />
+      </div>
 
       <section className="workbench-table" aria-label="Route detail">
         {selectedNode === null && (
-          <p className="workbench-placeholder">Choose a node from the progression spine.</p>
+          <p className="workbench-placeholder">Choose a route from a milestone group.</p>
         )}
         {selectedNode !== null && selectedAreas.length === 0 && (
           <>
@@ -617,12 +632,16 @@ export function Workbench({
         />
       )}
       search={(
-        <FireRedSearch
+        <WorkbenchToolbar
           pack={pack}
           query={controller.query}
-          onQueryChange={(query) => dispatch({ type: 'query-changed', query })}
-          onSelectPokemon={selectSearchResult}
-          selectedPokemonId={selectedPokemonId}
+          mode={controller.mode}
+          milestoneFilter={controller.milestoneFilter}
+          targetName={targetMilestone.name}
+          briefing={briefing}
+          totalPokemon={results.totalPokemon}
+          totalRoutes={results.totalRoutes}
+          onAction={dispatch}
         />
       )}
       results={workspace}

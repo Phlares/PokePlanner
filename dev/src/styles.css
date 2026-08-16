@@ -206,25 +206,25 @@ button:disabled {
   font-weight: 600;
 }
 
-/* --- Workbench workspace: the timeline over the progression spine and route detail --- */
+/* --- Workbench workspace: the timeline over the milestone groups and route detail --- */
 .workbench {
   display: grid;
   grid-template-columns: minmax(15rem, 21rem) minmax(0, 1fr);
   grid-template-areas:
     'timeline timeline'
-    'rail table';
+    'results table';
   border: var(--rule);
   background: var(--panel);
 }
 
 .workbench-timeline { grid-area: timeline; border-bottom: var(--rule-strong); min-width: 0; }
-.workbench-rail { grid-area: rail; border-right: var(--rule); }
+.workbench-results { grid-area: results; border-right: var(--rule); }
 .workbench-table { grid-area: table; overflow-x: auto; }
 .workbench-manifest { grid-area: manifest; border-top: var(--rule-strong); }
 
 .workbench-timeline:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
 
-.workbench-rail,
+.workbench-results,
 .workbench-table,
 .workbench-manifest { padding: var(--space-4); min-width: 0; }
 
@@ -235,19 +235,16 @@ button:disabled {
 
 .workbench-placeholder { color: var(--ink-soft); }
 
-/* --- FireRed search: scoped filters + intersected results in the rail --- */
-.search {
-  display: block;
-  margin-bottom: var(--space-4);
-  padding-bottom: var(--space-3);
-  border-bottom: var(--rule);
-}
+/* --- FireRed search: the scoped filter fields, owned by the toolbar rung --- */
+.search { display: block; min-width: 0; }
 
 .search-fields {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
 }
+
+.search-fields > .search-field { flex: 1 1 8rem; }
 
 .search-field {
   display: flex;
@@ -271,34 +268,202 @@ button:disabled {
   padding: var(--space-2) var(--space-3);
 }
 
-.search-hint {
-  margin: var(--space-3) 0 0;
-  color: var(--ink-soft);
+/* --- Workbench toolbar: filters, view, milestone scope, totals and the target briefing --- */
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.toolbar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.toolbar-modes {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.toolbar-modes .eyebrow { margin: 0; }
+
+.toolbar-mode,
+.toolbar-clear {
+  border: var(--rule-strong);
+  border-radius: 0;
+  background: var(--panel);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.toolbar-mode[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+}
+
+.toolbar-clear:disabled { color: var(--ink-faint); border-color: var(--rule-color); cursor: default; }
+
+.toolbar-scope {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
   font-size: var(--text-sm);
 }
 
-/* When a query is active the rail is hidden, so the match count leads the left column. */
-.search-results-heading {
-  margin: var(--space-3) 0 var(--space-2);
+.toolbar-totals {
+  margin: 0;
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   letter-spacing: 0.04em;
-  color: var(--ink);
+  color: var(--ink-soft);
 }
 
-.search-results {
+.toolbar-briefing {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  border-top: var(--rule);
+  padding-top: var(--space-2);
+}
+
+.toolbar-briefing-half {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.toolbar-briefing-half .eyebrow { margin: 0; }
+
+.toolbar-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: var(--rule);
 }
 
-.search-result {
-  border-bottom: var(--rule);
+.toolbar-token {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.toolbar-token-select {
+  border: var(--rule);
+  border-radius: 0;
+  background: var(--panel);
+  padding: 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.toolbar-token-select:hover { border-color: var(--gray-500); text-decoration: underline; }
+.toolbar-token[data-kind='location'] .toolbar-token-select { border-style: dashed; }
+.toolbar-token-note { font-size: var(--text-xs); color: var(--ink-faint); }
+
+/* --- Milestone results: the future teaser, the matching groups and the no-match summary --- */
+.results { display: block; min-width: 0; }
+
+.results-sections,
+.results-routes,
+.results-matches,
+.results-hidden {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.results-teaser,
+.results-summary,
+.results-group { border-top: var(--rule); }
+
+.results-sections > li:first-child { border-top: 0; }
+
+.results-teaser-toggle,
+.results-summary-toggle {
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: var(--space-2) 0;
+  text-align: left;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.results-teaser-toggle::after,
+.results-summary-toggle::after,
+.results-group-toggle::after { content: ' −'; font-family: var(--font-mono); }
+
+.results-teaser-toggle[aria-expanded='false']::after,
+.results-summary-toggle[aria-expanded='false']::after,
+.results-group-toggle[aria-expanded='false']::after { content: ' +'; }
+
+.results-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
   padding: var(--space-2) 0;
 }
 
-.search-result-select {
+.results-group-heading { margin: 0; font-size: var(--text-base); }
+
+.results-group-toggle {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.results-milestone-markers { display: flex; gap: var(--space-1); }
+
+.results-milestone-current,
+.results-milestone-preview {
+  border: var(--rule);
+  border-radius: 0;
+  background: var(--panel);
+  padding: 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.results-milestone-current[aria-pressed='true'],
+.results-milestone-preview[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.results-route {
+  border-top: var(--rule);
+  padding: var(--space-2) 0 var(--space-2) var(--space-3);
+}
+
+.results-route[data-access='locked'],
+.results-route[data-access='postgame'] { color: var(--ink-soft); }
+.results-route[data-access='locked'] .results-route-name,
+.results-route[data-access='postgame'] .results-route-name { font-style: italic; }
+
+.results-route-select {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -308,47 +473,81 @@ button:disabled {
   background: none;
   padding: 0;
   text-align: left;
+  color: inherit;
   cursor: pointer;
 }
 
-.search-result-select:hover .search-result-name { text-decoration: underline; }
+.results-route-select:hover .results-route-name { text-decoration: underline; }
+.results-route-select[aria-pressed='true'] .results-route-name { font-weight: 600; text-decoration: underline; }
 
-.search-result-select[aria-pressed='true'] {
-  background: none;
-  color: inherit;
-}
-
-.search-result-select[aria-pressed='true'] .search-result-name {
-  font-weight: 600;
-  text-decoration: underline;
-}
-
-.search-result-dex { color: var(--ink-faint); font-size: var(--text-xs); }
-
-.search-result-meta,
-.search-result-move {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
-  margin-top: var(--space-1);
+.results-route-access,
+.results-route-meta,
+.results-route-gates {
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--ink-soft);
 }
 
-.search-result-obtain {
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.results-route-meta,
+.results-route-gates { margin: var(--space-1) 0 0; }
+
+.results-matches { margin-top: var(--space-1); }
+
+.results-match {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  padding-left: var(--space-3);
 }
 
-.search-result-obtain:not([data-status='standard']) { color: var(--ink); }
+.results-match-select {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
 
-.search-result-methods { font-family: var(--font-mono); }
+.results-match-select:hover .results-match-name { text-decoration: underline; }
+.results-match-select[aria-pressed='true'] .results-match-name { font-weight: 600; text-decoration: underline; }
 
-.search-result-validity {
+/* An exact name match is underscored as well as worded, so the emphasis is not carried by weight
+   alone in a monochrome ledger. */
+.results-match[data-exact='true'] .results-match-name {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.results-match-methods,
+.results-match-exact,
+.results-match-capability {
   font-family: var(--font-mono);
-  border: var(--rule);
-  padding: 0 var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.results-match-exact,
+.results-match-capability { border: var(--rule); padding: 0 var(--space-1); }
+.results-match-capability[data-state='knows'] { border-color: var(--gray-500); color: var(--ink); }
+
+.results-hidden { margin-bottom: var(--space-2); }
+
+.results-hidden-milestone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-top: var(--rule);
+  padding: var(--space-1) 0 var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
 }
 
 /* --- Progression rail: the chronological spine --- */
@@ -1235,14 +1434,16 @@ button:disabled {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       'timeline'
-      'rail'
+      'results'
       'table';
   }
 
-  .workbench-rail { border-right: 0; }
+  .workbench-results { border-right: 0; }
 
-  .workbench-rail,
+  .workbench-results,
   .workbench-table { border-bottom: var(--rule); }
+
+  .toolbar { grid-template-columns: minmax(0, 1fr); }
 
   .shell-workspace { grid-template-columns: minmax(0, 1fr); }
   .shell-inspector { border-left: 0; border-top: var(--rule-strong); }

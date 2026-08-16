@@ -3,7 +3,7 @@ import type { ProgressionNode } from '../../domain/progression';
 import type { GameRules } from '../../domain/rules/game-rules';
 import { hasActiveSearchQuery, type MoveMatch, type Obtainability, type PokemonType } from '../../domain/search';
 import { milestoneBands, searchWorkbench, type MilestoneBand, type WorkbenchMethod } from '../../domain/workbench/search';
-import type { WorkbenchState } from './controller';
+import { FUTURE_TEASER_SECTION_ID, NO_MATCH_SUMMARY_SECTION_ID, type WorkbenchState } from './controller';
 
 // The milestone geometry the workbench groups by is domain logic; briefings cut the same bands.
 export { milestoneBands, milestoneNodeId, type MilestoneBand } from '../../domain/workbench/search';
@@ -81,6 +81,7 @@ export interface HiddenMilestone {
   id: string;
   /** 0-based chronological index in `GameRules.milestones`, so the row can be labelled as a range. */
   index: number;
+  name: string;
 }
 
 /** One collapsed row standing in for every eligible milestone that matched nothing. */
@@ -112,6 +113,16 @@ export interface MilestoneResultsInput {
   currentMilestoneId: string | null;
   /** The planning horizon: the previewed milestone when one is set, else the saved one. */
   targetMilestoneId: string | null;
+}
+
+/**
+ * Whether the surface is showing — and must therefore accept a selection of — nodes past the
+ * planning target. Turning the milestone filter off and opening the future teaser reveal the same
+ * nodes by the same rule, so the scope the results are cut to and the scope selections are
+ * validated against are read from this one predicate rather than restated on either side.
+ */
+export function revealsFutureNodes(state: WorkbenchState): boolean {
+  return !state.milestoneFilter || state.openSectionIds.has(FUTURE_TEASER_SECTION_ID);
 }
 
 /** The band a golden-path order falls in; anything past the last milestone belongs to it. */
@@ -194,6 +205,9 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
   // The node's own order, not the band's end: this is the same horizon the controller validates
   // route selections against, so nothing is ever listed that a selection would immediately drop.
   const scopeOrder = state.milestoneFilter ? orderOf(targetBand) : Number.POSITIVE_INFINITY;
+  // Opening the teaser reveals what it counts without changing what it counts, so the two horizons
+  // are kept apart: the scope decides what is teased, the reveal decides what is grouped.
+  const revealOrder = revealsFutureNodes(state) ? Number.POSITIVE_INFINITY : scopeOrder;
 
   const rowsByNodeId = new Map<string, RouteMatch[]>();
   const nodeIdsByMilestone = new Map<string, string[]>();
@@ -212,7 +226,7 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
       if (node.goldenPathOrder > scopeOrder) {
         futurePokemonIds.add(match.pokemonId);
         futureMilestoneIds.add(band.milestoneId);
-        continue;
+        if (node.goldenPathOrder > revealOrder) continue;
       }
       const rows = rowsByNodeId.get(node.id);
       if (rows === undefined) {
@@ -239,7 +253,7 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
   const searchActive = hasActiveSearchQuery(state.query);
   // A band that holds no golden-path order at all is not a milestone the run can be shown routes
   // for, matched or otherwise; it is absent from the list rather than reported as having no matches.
-  const eligible = bands.filter((band) => band.startOrder <= band.endOrder && band.startOrder <= scopeOrder);
+  const eligible = bands.filter((band) => band.startOrder <= band.endOrder && band.startOrder <= revealOrder);
   const groups: MilestoneResultGroup[] = eligible.map((band) => {
     const routes = (nodeIdsByMilestone.get(band.milestoneId) ?? [])
       .map((nodeId): RouteResult => {
@@ -276,14 +290,14 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
       kind: 'future-teaser',
       matchCount: futurePokemonIds.size,
       milestoneIds: bands.filter((band) => futureMilestoneIds.has(band.milestoneId)).map((band) => band.milestoneId),
-      expanded: false,
+      expanded: state.openSectionIds.has(FUTURE_TEASER_SECTION_ID),
     });
   }
   for (const group of groups.filter((candidate) => candidate.matchCount > 0).reverse()) {
     sections.push({
       ...group,
       kind: 'matching-milestone',
-      expanded: searchActive || state.openMilestoneIds.has(group.milestoneId),
+      expanded: searchActive || state.openSectionIds.has(group.milestoneId),
     });
   }
   // No `searchActive` guard here, deliberately: with no query every eligible band matches, because
@@ -293,8 +307,12 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
   if (hidden.length > 0) {
     sections.push({
       kind: 'no-match-summary',
-      hiddenMilestones: hidden.map((group) => ({ id: group.milestoneId, index: group.milestoneIndex })),
-      expanded: false,
+      hiddenMilestones: hidden.map((group) => ({
+        id: group.milestoneId,
+        index: group.milestoneIndex,
+        name: group.name,
+      })),
+      expanded: state.openSectionIds.has(NO_MATCH_SUMMARY_SECTION_ID),
     });
   }
 

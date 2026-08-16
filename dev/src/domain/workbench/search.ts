@@ -188,7 +188,7 @@ function versionValidLearners(pack: FireRedPack, moveId: number): Set<number> {
  * does — that is a real path to the capability, but one the plan has to grow into — and `false`
  * where the pack knows of none. {@link evaluateCapability} turns the null into `conditional`.
  */
-function packLearnability(pack: FireRedPack): (speciesId: number, moveId: number) => boolean | null {
+export function packLearnability(pack: FireRedPack): (speciesId: number, moveId: number) => boolean | null {
   const evolutionsFrom = new Map<number, number[]>();
   for (const edge of pack.evolutions) {
     if (edge.status === 'unavailable') continue;
@@ -460,7 +460,7 @@ export function progressionContextAtNode(
 }
 
 /** Every canonical way the pack teaches a capability's move, timed against where the run stands. */
-function capabilitySources(
+export function capabilitySources(
   capability: CapabilityRule,
   nodeId: string,
   pack: FireRedPack,
@@ -531,15 +531,22 @@ export function searchCapability(
   const counts = emptyStateCounts();
   for (const highlight of Object.values(reserve)) counts[highlight.state] += 1;
 
+  // A candidate is a species with no plan behind it. Anything already on the team has one, and its
+  // own snapshot is the truth about it, so it is answered for as a member and never again as a bare
+  // species — otherwise one Pokémon would carry two states at once.
+  const party = membersIn(node.party);
+  const teamSpeciesIds = new Set([...Object.values(party), ...Object.values(reserve)]
+    .map((highlight) => highlight.speciesId));
   const candidates: Record<number, CapabilityHighlight> = {};
   for (const record of pack.pokemon) {
+    if (teamSpeciesIds.has(record.id)) continue;
     const highlight = highlightCapability(candidateSnapshot(record.id), null, context);
     if (highlight.state !== 'none') candidates[record.id] = highlight;
   }
 
   return {
     capabilityId,
-    party: membersIn(node.party),
+    party,
     reserve,
     reserveSummary: {
       counts,

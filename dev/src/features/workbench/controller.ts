@@ -7,12 +7,30 @@ export type WorkbenchDetail =
   | { kind: 'empty' };
 export type WorkbenchSheet = 'closed' | 'inspector' | 'comparison';
 
+/**
+ * The two result sections that stand for something other than a milestone. Their ids are their own
+ * discriminants, so a section always names its fold with the value it already carries and no second
+ * identity scheme exists. A milestone whose id collided with one of these would share its fold; no
+ * ruleset names a milestone after a result row, and the reserved words are not milestone-shaped.
+ */
+export const FUTURE_TEASER_SECTION_ID = 'future-teaser';
+export const NO_MATCH_SUMMARY_SECTION_ID = 'no-match-summary';
+
+const RESERVED_SECTION_IDS: ReadonlySet<string> = new Set([
+  FUTURE_TEASER_SECTION_ID,
+  NO_MATCH_SUMMARY_SECTION_ID,
+]);
+
 export interface WorkbenchState {
   mode: WorkbenchMode;
   milestoneFilter: boolean;
   /** Every filter the toolbar can emit; the controller is their single owner. */
   query: WorkbenchSearchQuery;
-  openMilestoneIds: ReadonlySet<string>;
+  /**
+   * Every result section standing open, keyed by section identity: a milestone id, or one of the
+   * two reserved ids above. Three sections that fold identically are stored one way.
+   */
+  openSectionIds: ReadonlySet<string>;
   lastRouteId: string | null;
   candidatePokemonId: number | null;
   selectedMemberId: string | null;
@@ -38,7 +56,7 @@ export type WorkbenchAction =
   | { type: 'mode-changed'; mode: WorkbenchMode }
   | { type: 'milestone-filter-changed'; enabled: boolean }
   | { type: 'query-changed'; query: WorkbenchSearchQuery }
-  | { type: 'milestone-toggled'; milestoneId: string }
+  | { type: 'section-toggled'; sectionId: string }
   | { type: 'route-selected'; nodeId: string }
   | { type: 'candidate-selected'; pokemonId: number }
   | { type: 'candidate-location-selected'; nodeId: string }
@@ -53,7 +71,7 @@ export function createWorkbenchState(source: WorkbenchStateSource): WorkbenchSta
     mode: 'routes',
     milestoneFilter: true,
     query: {},
-    openMilestoneIds: initialMilestoneId === null ? new Set() : new Set([initialMilestoneId]),
+    openSectionIds: initialMilestoneId === null ? new Set() : new Set([initialMilestoneId]),
     lastRouteId: null,
     candidatePokemonId: null,
     selectedMemberId: null,
@@ -97,13 +115,16 @@ export function sanitizeWorkbenchState(
     && (validity.memberIds === undefined || validity.memberIds.has(state.selectedMemberId))
     ? state.selectedMemberId
     : null;
-  const openMilestoneIds = validity.milestoneIds === undefined
-    ? new Set(state.openMilestoneIds)
-    : new Set([...state.openMilestoneIds].filter((id) => validity.milestoneIds!.has(id)));
+  // The reserved sections belong to the results surface, not to the run, so no milestone set can
+  // judge them; every other fold is a milestone the run must still admit.
+  const openSectionIds = validity.milestoneIds === undefined
+    ? new Set(state.openSectionIds)
+    : new Set([...state.openSectionIds]
+      .filter((id) => RESERVED_SECTION_IDS.has(id) || validity.milestoneIds!.has(id)));
   const targetMilestoneId = validity.planningTargetId ?? validity.currentProgressId;
   if (targetMilestoneId !== undefined && targetMilestoneId !== null
     && (validity.milestoneIds === undefined || validity.milestoneIds.has(targetMilestoneId))) {
-    openMilestoneIds.add(targetMilestoneId);
+    openSectionIds.add(targetMilestoneId);
   }
 
   let mode = state.mode;
@@ -126,7 +147,7 @@ export function sanitizeWorkbenchState(
   return {
     ...state,
     mode,
-    openMilestoneIds,
+    openSectionIds,
     lastRouteId,
     candidatePokemonId,
     selectedMemberId,
@@ -156,11 +177,11 @@ export function reduceWorkbench(state: WorkbenchState, action: WorkbenchAction):
       return { ...state, milestoneFilter: action.enabled };
     case 'query-changed':
       return { ...state, query: { ...action.query } };
-    case 'milestone-toggled': {
-      const next = new Set(state.openMilestoneIds);
-      if (next.has(action.milestoneId)) next.delete(action.milestoneId);
-      else next.add(action.milestoneId);
-      return { ...state, openMilestoneIds: next };
+    case 'section-toggled': {
+      const next = new Set(state.openSectionIds);
+      if (next.has(action.sectionId)) next.delete(action.sectionId);
+      else next.add(action.sectionId);
+      return { ...state, openSectionIds: next };
     }
     case 'route-selected':
       return {

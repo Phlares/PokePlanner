@@ -1,0 +1,265 @@
+import { useId } from 'react';
+import type { CapabilityState } from '../../domain/timeline/capabilities';
+import { titleCase } from '../text';
+import type {
+  GroupedWorkbenchResults,
+  HiddenMilestone,
+  MatchingMilestoneSection,
+  NoMatchSummarySection,
+  RouteAccess,
+  RouteGate,
+  RouteResult,
+} from './selectors';
+
+/** Where a route stands relative to the run, said in words so no state rests on colour alone. */
+const ACCESS_LABEL: Record<RouteAccess, string> = {
+  current: 'Reached',
+  future: 'Ahead',
+  locked: 'Locked',
+  optional: 'Optional',
+  postgame: 'Postgame',
+};
+
+/** The three capability verdicts worth showing; `none` has nothing to say (spec §18). */
+const CAPABILITY_LABEL: Partial<Record<CapabilityState, string>> = {
+  knows: 'Knows',
+  'can-now': 'Can learn now',
+  conditional: 'Can learn with condition',
+};
+
+function matchLabel(count: number): string {
+  return `${count} ${count === 1 ? 'match' : 'matches'}`;
+}
+
+function gateLabel(gate: RouteGate): string {
+  return titleCase(gate.id);
+}
+
+/**
+ * What the folded row stands for. One hidden milestone is named — the row has the space and the name
+ * is what the rest of the workbench calls it. Several are given as chronological positions, because
+ * listing every name is the enumeration this row exists to replace. Positions read 1-based; the
+ * indexes behind them are the ruleset's own 0-based order.
+ */
+function hiddenRangeLabel(hidden: readonly HiddenMilestone[]): string {
+  if (hidden.length === 1) return hidden[0].name;
+  const positions = hidden.map((milestone) => milestone.index + 1);
+  return `Milestones ${Math.min(...positions)}–${Math.max(...positions)}`;
+}
+
+interface MilestoneMarkerProps {
+  milestoneId: string;
+  name: string;
+  currentMilestoneId: string | null;
+  previewMilestoneId: string | null;
+  onSetCurrentMilestone: (milestoneId: string) => void;
+  onSetPreviewMilestone: (milestoneId: string) => void;
+}
+
+/**
+ * The two durable markers a milestone row carries: where the plan points, and how far the run has
+ * actually walked. Both are stated on every milestone the surface shows — matched or hidden — so
+ * opening the no-match summary is a real escape hatch and not just an explanation.
+ */
+function MilestoneMarkers({
+  milestoneId,
+  name,
+  currentMilestoneId,
+  previewMilestoneId,
+  onSetCurrentMilestone,
+  onSetPreviewMilestone,
+}: MilestoneMarkerProps) {
+  return (
+    <div className="results-milestone-markers">
+      <button
+        type="button"
+        className="results-milestone-current"
+        aria-label={`Set current milestone: ${name}`}
+        aria-pressed={currentMilestoneId === milestoneId}
+        onClick={() => onSetCurrentMilestone(milestoneId)}
+      >
+        Set current
+      </button>
+      <button
+        type="button"
+        className="results-milestone-preview"
+        aria-label={`Preview milestone: ${name}`}
+        aria-pressed={previewMilestoneId === milestoneId}
+        onClick={() => onSetPreviewMilestone(milestoneId)}
+      >
+        Preview
+      </button>
+    </div>
+  );
+}
+
+export interface MilestoneResultsProps {
+  results: GroupedWorkbenchResults;
+  /** The planning target's name; the teaser states what the scope hides against it. */
+  targetName: string;
+  currentMilestoneId: string | null;
+  previewMilestoneId: string | null;
+  selectedNodeId: string | null;
+  selectedPokemonId: number | null;
+  /**
+   * Species id → capability verdict while a capability search runs, empty otherwise. It arrives
+   * resolved because party, reserve and candidates answer to one evaluator; a species missing from
+   * it has no verdict, which is not the same as a negative one.
+   */
+  capabilityStates?: ReadonlyMap<number, CapabilityState>;
+  onToggleSection: (sectionId: string) => void;
+  onSelectRoute: (nodeId: string) => void;
+  onSelectPokemon: (pokemonId: number) => void;
+  onSetCurrentMilestone: (milestoneId: string) => void;
+  onSetPreviewMilestone: (milestoneId: string) => void;
+}
+
+/**
+ * The primary result surface: the future-match teaser, the matching milestone groups newest first,
+ * and the one folded row standing for every eligible milestone that matched nothing (spec §10).
+ *
+ * It renders the grouping it is handed and derives nothing: the order, the folds, the counts and the
+ * route classification all arrive resolved from `selectMilestoneResults`. Every fold is a real
+ * button carrying `aria-expanded` over the list it controls, and every state a row reports — access,
+ * gates, exact match, capability verdict — is present as text, so nothing here needs hover or colour
+ * to be read.
+ */
+export function MilestoneResults({
+  results,
+  targetName,
+  currentMilestoneId,
+  previewMilestoneId,
+  selectedNodeId,
+  selectedPokemonId,
+  capabilityStates,
+  onToggleSection,
+  onSelectRoute,
+  onSelectPokemon,
+  onSetCurrentMilestone,
+  onSetPreviewMilestone,
+}: MilestoneResultsProps) {
+  const baseId = useId();
+  const panelId = (sectionId: string): string => `${baseId}-${sectionId}`;
+  const markers = { currentMilestoneId, previewMilestoneId, onSetCurrentMilestone, onSetPreviewMilestone };
+
+  const renderMatch = (route: RouteResult, match: RouteResult['matches'][number]) => {
+    const capability = capabilityStates?.get(match.pokemonId);
+    const capabilityLabel = capability === undefined ? undefined : CAPABILITY_LABEL[capability];
+    return (
+      <li key={match.pokemonId} className="results-match" data-exact={match.exactMatch ? 'true' : undefined}>
+        <button
+          type="button"
+          className="results-match-select"
+          aria-label={`Select ${match.name} at ${route.name}`}
+          aria-pressed={selectedPokemonId === match.pokemonId}
+          onClick={() => onSelectPokemon(match.pokemonId)}
+        >
+          <span className="results-match-name">{match.name}</span>
+          <span className="results-match-methods">{match.methods.map(titleCase).join(', ')}</span>
+        </button>
+        {match.exactMatch && <span className="results-match-exact">Exact match</span>}
+        {capabilityLabel !== undefined && (
+          <span className="results-match-capability" data-state={capability}>{capabilityLabel}</span>
+        )}
+      </li>
+    );
+  };
+
+  const renderRoute = (route: RouteResult) => (
+    <li key={route.nodeId} className="results-route" data-access={route.access}>
+      <div className="results-route-head">
+        <button
+          type="button"
+          className="results-route-select"
+          aria-label={route.name}
+          aria-pressed={selectedNodeId === route.nodeId}
+          onClick={() => onSelectRoute(route.nodeId)}
+        >
+          <span className="results-route-name">{route.name}</span>
+          <span className="results-route-access">{ACCESS_LABEL[route.access]}</span>
+        </button>
+        <p className="results-route-meta">
+          {matchLabel(route.matchCount)}
+          {route.levelRange !== null && ` · Lv ${route.levelRange.min}–${route.levelRange.max}`}
+        </p>
+        {route.gates.length > 0 && (
+          <p className="results-route-gates">Needs {route.gates.map(gateLabel).join(' · ')}</p>
+        )}
+      </div>
+      <ul className="results-matches">
+        {route.matches.map((match) => renderMatch(route, match))}
+      </ul>
+    </li>
+  );
+
+  const renderGroup = (section: MatchingMilestoneSection) => (
+    <li key={section.milestoneId} className="results-group" data-expanded={section.expanded ? 'true' : undefined}>
+      <div className="results-group-head">
+        <h3 className="results-group-heading">
+          <button
+            type="button"
+            className="results-group-toggle"
+            aria-expanded={section.expanded}
+            aria-controls={panelId(section.milestoneId)}
+            onClick={() => onToggleSection(section.milestoneId)}
+          >
+            {section.name} · {matchLabel(section.matchCount)}
+          </button>
+        </h3>
+        <MilestoneMarkers milestoneId={section.milestoneId} name={section.name} {...markers} />
+      </div>
+      {section.expanded && (
+        <ul className="results-routes" id={panelId(section.milestoneId)}>
+          {section.routes.map(renderRoute)}
+        </ul>
+      )}
+    </li>
+  );
+
+  const renderSummary = (section: NoMatchSummarySection) => (
+    <li key={section.kind} className="results-summary">
+      <button
+        type="button"
+        className="results-summary-toggle"
+        aria-expanded={section.expanded}
+        aria-controls={panelId(section.kind)}
+        onClick={() => onToggleSection(section.kind)}
+      >
+        {hiddenRangeLabel(section.hiddenMilestones)} hidden · no matches
+      </button>
+      {section.expanded && (
+        <ul className="results-hidden" id={panelId(section.kind)}>
+          {section.hiddenMilestones.map((milestone) => (
+            <li key={milestone.id} className="results-hidden-milestone">
+              <span className="results-hidden-name">{milestone.name}</span>
+              <MilestoneMarkers milestoneId={milestone.id} name={milestone.name} {...markers} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+
+  return (
+    <nav className="results" aria-label="Milestone groups">
+      <ol className="results-sections">
+        {results.sections.map((section) => {
+          if (section.kind === 'matching-milestone') return renderGroup(section);
+          if (section.kind === 'no-match-summary') return renderSummary(section);
+          return (
+            <li key={section.kind} className="results-teaser">
+              <button
+                type="button"
+                className="results-teaser-toggle"
+                aria-expanded={section.expanded}
+                onClick={() => onToggleSection(section.kind)}
+              >
+                {matchLabel(section.matchCount)} after {targetName}
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}

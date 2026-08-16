@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   createWorkbenchState,
+  FUTURE_TEASER_SECTION_ID,
+  NO_MATCH_SUMMARY_SECTION_ID,
   reduceWorkbench,
   sameWorkbenchValidity,
   sanitizeWorkbenchState,
@@ -57,9 +59,52 @@ describe('workbench controller', () => {
       planningTargetId: 'brock-gym',
     });
 
-    expect(state.openMilestoneIds).toEqual(new Set(['brock-gym']));
+    expect(state.openSectionIds).toEqual(new Set(['brock-gym']));
     expect(state.lastRouteId).toBeNull();
     expect(state.detail).toEqual({ kind: 'empty' });
+  });
+
+  it('folds a milestone section and the two reserved sections through one action', () => {
+    const teased = reduceWorkbench(initial, { type: 'section-toggled', sectionId: FUTURE_TEASER_SECTION_ID });
+    expect([...teased.openSectionIds].sort()).toEqual(['brock-gym', FUTURE_TEASER_SECTION_ID].sort());
+
+    const summarized = reduceWorkbench(teased, { type: 'section-toggled', sectionId: NO_MATCH_SUMMARY_SECTION_ID });
+    expect(summarized.openSectionIds.has(NO_MATCH_SUMMARY_SECTION_ID)).toBe(true);
+
+    // Toggling is symmetric, and closes only the section named: the other two stay open.
+    const closed = reduceWorkbench(summarized, { type: 'section-toggled', sectionId: FUTURE_TEASER_SECTION_ID });
+    expect(closed.openSectionIds.has(FUTURE_TEASER_SECTION_ID)).toBe(false);
+    expect(closed.openSectionIds.has(NO_MATCH_SUMMARY_SECTION_ID)).toBe(true);
+    expect(closed.openSectionIds.has('brock-gym')).toBe(true);
+
+    // A milestone section that was never open opens, and the seeded one closes.
+    const remixed = reduceWorkbench(
+      reduceWorkbench(closed, { type: 'section-toggled', sectionId: 'misty-gym' }),
+      { type: 'section-toggled', sectionId: 'brock-gym' },
+    );
+    expect(remixed.openSectionIds.has('misty-gym')).toBe(true);
+    expect(remixed.openSectionIds.has('brock-gym')).toBe(false);
+  });
+
+  it('keeps the reserved section folds while filtering milestone folds against the run', () => {
+    const open: WorkbenchState = {
+      ...initial,
+      openSectionIds: new Set([
+        FUTURE_TEASER_SECTION_ID,
+        NO_MATCH_SUMMARY_SECTION_ID,
+        'brock-gym',
+        'retired-gym',
+      ]),
+    };
+
+    const state = sanitizeWorkbenchState(open, {
+      nodeIds: new Set(['pallet-town']),
+      milestoneIds: new Set(['brock-gym', 'misty-gym']),
+    });
+
+    expect([...state.openSectionIds].sort()).toEqual([
+      FUTURE_TEASER_SECTION_ID, NO_MATCH_SUMMARY_SECTION_ID, 'brock-gym',
+    ].sort());
   });
 
   it('sanitizes route, candidate and member selections against fresh domain ids', () => {
@@ -124,7 +169,7 @@ describe('workbench controller', () => {
       milestoneIds: new Set(['brock-gym', 'misty-gym']),
     });
 
-    expect(state.openMilestoneIds).toContain('misty-gym');
+    expect(state.openSectionIds).toContain('misty-gym');
     expect(state.detail).toEqual({ kind: 'empty' });
   });
 });

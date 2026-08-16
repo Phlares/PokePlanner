@@ -158,6 +158,20 @@ function renderControlledWorkbench(initial: Playthrough = emptyPlaythrough()) {
   return render(<ControlledWorkbench />);
 }
 
+/** Unfold one milestone group by its head, whatever match count the pack gives it today. */
+function openMilestoneGroup(name: string): void {
+  fireEvent.click(screen.getByRole('button', { name: new RegExp(`^${name} · \\d+ match`) }));
+}
+
+/** Turn the milestone scope off, which is how the surface reveals milestones past the target. */
+function revealFutureMilestones(): void {
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Filter by milestone' }));
+}
+
+const typeSearch = (value: string): void => {
+  fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value } });
+};
+
 function siblingBranchesOutside(boundary: HTMLElement): HTMLElement[] {
   const branches = new Set<HTMLElement>();
   let branch: HTMLElement = boundary;
@@ -185,7 +199,7 @@ afterEach(cleanup);
 describe('Workbench', () => {
   it('renders the three workbench regions and the timeline entry point', () => {
     renderWorkbench();
-    expect(screen.getByRole('region', { name: /progression/i })).toBeVisible();
+    expect(screen.getByRole('navigation', { name: /milestone groups/i })).toBeVisible();
     expect(screen.getByRole('region', { name: /route detail/i })).toBeVisible();
     expect(screen.getByRole('region', { name: /inspector/i })).toBeVisible();
     expect(screen.getByRole('region', { name: /team timeline/i })).toBeVisible();
@@ -204,6 +218,9 @@ describe('Workbench', () => {
     renderControlledWorkbench(starterReservedAtMistyPlaythrough());
     expect(screen.getByRole('region', { name: 'Team at Brock' })).toBeVisible();
 
+    // Misty is past the planning target, so its group is out of scope until the filter is lifted.
+    expect(screen.queryByRole('button', { name: /Preview milestone.*Misty/i })).toBeNull();
+    revealFutureMilestones();
     fireEvent.click(screen.getByRole('button', { name: /Preview milestone.*Misty/i }));
 
     const team = screen.getByRole('region', { name: 'Team at Misty' });
@@ -329,7 +346,7 @@ describe('Workbench', () => {
     const editTrigger = screen.getByRole('button', { name: 'Edit Bulbasaur' });
     editTrigger.focus();
     fireEvent.click(editTrigger);
-    const progression = document.querySelector<HTMLElement>('.workbench-rail')!;
+    const progression = document.querySelector<HTMLElement>('.workbench-results')!;
     expect(progression).toHaveAttribute('inert');
     fireEvent.click(screen.getByRole('button', { name: 'Release Bulbasaur' }));
     let confirmation = screen.getByRole('alertdialog', { name: 'Release Bulbasaur?' });
@@ -377,14 +394,14 @@ describe('Workbench', () => {
     const originalEdit = screen.getByRole('button', { name: 'Edit Bulbasaur' });
     originalEdit.focus();
     fireEvent.click(originalEdit);
-    expect(document.querySelector<HTMLElement>('.workbench-rail')).toHaveAttribute('inert');
+    expect(document.querySelector<HTMLElement>('.workbench-results')).toHaveAttribute('inert');
     fireEvent.click(screen.getByRole('button', { name: 'Move Bulbasaur to reserve' }));
 
     const reserve = await screen.findByRole('region', { name: /Reserve .* 1 Pok/i });
     const reserveEdit = within(reserve).getByRole('button', { name: 'Edit Bulbasaur' });
     await waitFor(() => expect(reserveEdit).toHaveFocus());
     expect(document.activeElement).toBe(reserveEdit);
-    expect(document.querySelector<HTMLElement>('.workbench-rail')).not.toHaveAttribute('inert');
+    expect(document.querySelector<HTMLElement>('.workbench-results')).not.toHaveAttribute('inert');
     expect(originalEdit).not.toBeInTheDocument();
   });
 
@@ -415,6 +432,9 @@ describe('Workbench', () => {
 
   it('selects a route into the table region without touching saved state', () => {
     const { onPlaythroughChange } = renderWorkbench();
+    // A collapsed group keeps its routes out of reach until it is opened.
+    expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull();
+    openMilestoneGroup('Brock');
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
     const table = screen.getByRole('region', { name: /route detail/i });
     expect(within(table).getByText(/Route 22/i)).toBeVisible();
@@ -441,6 +461,7 @@ describe('Workbench', () => {
 
   it('closes member context when a target change resolves that member to reserve', () => {
     renderControlledWorkbench(starterReservedAtMistyPlaythrough());
+    revealFutureMilestones();
     const previewMisty = screen.getByRole('button', { name: /Preview milestone.*Misty/i });
     fireEvent.click(screen.getByRole('button', { name: 'Edit Bulbasaur' }));
     expect(screen.getByRole('dialog', { name: /Edit Bulbasaur at Brock/i })).toBeVisible();
@@ -452,7 +473,8 @@ describe('Workbench', () => {
 
   it('returns focus to the editor trigger when a target change closes the member editor', async () => {
     renderControlledWorkbench(starterReservedAtMistyPlaythrough());
-    // The rail goes inert behind the editor, so its control is captured before the modal opens.
+    revealFutureMilestones();
+    // The results go inert behind the editor, so the control is captured before the modal opens.
     const previewMisty = screen.getByRole('button', { name: /Preview milestone.*Misty/i });
     const trigger = screen.getByRole('button', { name: 'Edit Bulbasaur' });
     trigger.focus();
@@ -467,16 +489,20 @@ describe('Workbench', () => {
 
   it('sanitizes a future route after the planning target moves earlier', () => {
     renderControlledWorkbench();
+    openMilestoneGroup('Misty');
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
     expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
 
     fireEvent.click(screen.getByRole('button', { name: /Preview milestone.*Brock/i }));
 
     expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
+    // The route is out of scope now, so the surface stops offering it too.
+    expect(screen.queryByRole('button', { name: 'Cerulean City' })).toBeNull();
   });
 
   it('scopes selections to the starter location when the durable run switches to that target', () => {
     const { onPlaythroughChange, rerender } = renderWorkbench();
+    openMilestoneGroup('Misty');
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
     expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
 
@@ -492,62 +518,139 @@ describe('Workbench', () => {
     expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
   });
 
-  it('hides the progression rail and shows only the matches when a search query is active', async () => {
+  it('narrows the groups to the matches and expands them when a query is active', () => {
     renderWorkbench();
-    // The rail is present before any query.
-    expect(screen.getByRole('button', { name: 'Route 22' })).toBeVisible();
-    fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value: 'Mankey' } });
-    // Once the query resolves, the result is shown and the progression rail is gone.
-    expect(await screen.findByRole('button', { name: /select Mankey/i })).toBeVisible();
-    await waitFor(() => expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull());
+    // Browsing: every milestone is a fold, and no match row is on show until one is opened.
+    expect(screen.getByRole('button', { name: /^Brock · \d+ matches/ })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('button', { name: /^Select Mankey/ })).toBeNull();
+
+    typeSearch('Mankey');
+
+    // Mankey's own group is expanded without asking, and everything it does not reach is folded
+    // away into the one summary row.
+    expect(screen.getByRole('button', { name: /^Brock · 1 match$/ })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: 'Select Mankey at Route 22' })).toBeVisible();
+    expect(screen.queryByRole('button', { name: 'Viridian Forest' })).toBeNull();
+    expect(screen.getByRole('button', { name: /hidden · no matches$/ })).toBeVisible();
   });
 
-  it('explains the progression column instead of blanking it under an active query', async () => {
+  it('answers a query that matches nothing with one folded row, not an empty column', () => {
     renderWorkbench();
-    const progression = () => screen.getByRole('region', { name: /progression/i });
-    expect(within(progression()).getByRole('button', { name: 'Route 22' })).toBeVisible();
-    // Nothing stands in for the rail until there is a reason for the rail to be gone.
-    expect(within(progression()).queryByText(/clear the search/i)).toBeNull();
+    expect(screen.queryByRole('button', { name: /hidden · no matches$/ })).toBeNull();
 
-    fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value: 'Mankey' } });
+    // Chikorita is transfer-only: a real species the pack places nowhere on the spine.
+    typeSearch('Chikorita');
 
-    await waitFor(() => expect(within(progression()).queryByRole('button', { name: 'Route 22' })).toBeNull());
-    expect(within(progression()).getByText(/clear the search/i)).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Milestones 1–10 hidden · no matches' })).toBeVisible();
+    expect(screen.queryByRole('button', { name: /^Brock · \d+ match/ })).toBeNull();
   });
 
-  it('restores the progression rail when the search query is cleared', async () => {
+  it('returns to browsing every milestone when the filters are cleared', () => {
     renderWorkbench();
-    const box = screen.getByRole('searchbox', { name: /search/i });
-    fireEvent.change(box, { target: { value: 'Mankey' } });
-    await screen.findByRole('button', { name: /select Mankey/i });
-    await waitFor(() => expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull());
-    fireEvent.change(box, { target: { value: '' } });
-    expect(await screen.findByRole('button', { name: 'Route 22' })).toBeVisible();
+    typeSearch('Mankey');
+    // Pallet Town holds no Mankey, so the starter leg is folded into the summary row.
+    expect(screen.queryByRole('button', { name: /^Starter · \d+ match/ })).toBeNull();
+    expect(screen.getByRole('button', { name: /hidden · no matches$/ })).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+
+    expect(screen.getByRole('searchbox', { name: /search/i })).toHaveValue('');
+    expect(screen.getByRole('button', { name: /^Starter · \d+ matches/ })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('button', { name: /hidden · no matches$/ })).toBeNull();
   });
 
-  it('keeps the progression rail visible for a whitespace-only name query', () => {
+  it('keeps browsing for a whitespace-only name query', () => {
     renderWorkbench();
-    fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value: '   ' } });
+    typeSearch('   ');
 
-    expect(screen.getByRole('button', { name: 'Route 22' })).toBeVisible();
-    expect(screen.getByText(/name or pick a filter/i)).toBeVisible();
+    expect(screen.getByRole('button', { name: /^Brock · \d+ matches/ })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('button', { name: /hidden · no matches$/ })).toBeNull();
   });
 
-  it('clears stale route detail when a search result opens Pokémon locations', async () => {
+  it('clears stale route detail when a search result opens Pokémon locations', () => {
     renderWorkbench();
+    openMilestoneGroup('Brock');
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
     expect(within(screen.getByRole('region', { name: /route detail/i })).getByText(/Route 22/i)).toBeVisible();
 
-    fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value: 'Mankey' } });
-    fireEvent.click(await screen.findByRole('button', { name: /select Mankey/i }));
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
 
     const detail = screen.getByRole('region', { name: /route detail/i });
     expect(within(detail).queryByText(/Route 22/i)).toBeNull();
     expect(within(screen.getByRole('region', { name: /inspector/i })).getByText('Mankey')).toBeVisible();
   });
 
+  it('accepts a revealed future route for as long as it keeps showing it', () => {
+    // The scope the surface renders and the scope it validates selections against are the same
+    // rule: a route offered past the target must survive the next reconciliation, not be listed
+    // and then silently dropped.
+    renderControlledWorkbench(starterPlaythrough());
+    revealFutureMilestones();
+    openMilestoneGroup('Misty');
+    fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
+
+    // Any durable change re-reconciles every ephemeral selection against the run.
+    fireEvent.click(screen.getByRole('button', { name: 'Set current milestone: Brock' }));
+
+    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
+  });
+
+  it('validates a milestone against the progression node that carries it', () => {
+    // FireRed unlocks trading with Oak's parcel in Viridian City. A traded member is illegal at the
+    // starter gate and legal by Pewter City, which the finding can only tell apart if the milestone
+    // is read at its own node — a milestone id sits nowhere on the golden path.
+    const traded = (previewMilestoneId: string): Playthrough => {
+      const base = speciesPlaythrough(1, []);
+      base.timeline.members.member.origin = { type: 'external-trade', acquisitionId: null, note: null };
+      return parsePlaythrough({ ...base, previewMilestoneId }, packIndex());
+    };
+
+    renderWorkbench({ playthrough: traded('starter') });
+    expect(screen.getByText('Trading is not unlocked')).toBeVisible();
+
+    cleanup();
+    renderWorkbench({ playthrough: traded('brock-gym') });
+    expect(screen.queryByText('Trading is not unlocked')).toBeNull();
+  });
+
+  it('reads editor capability evidence from where the run actually stands', () => {
+    // Cut needs the Cascade Badge. A member planning it is only holding a move until Misty is
+    // behind the run, and the editor must read that from the progression node the milestone sits
+    // at rather than from the milestone id, which is nowhere on the golden path.
+    const withCut = (previewMilestoneId: string): Playthrough =>
+      parsePlaythrough({ ...speciesPlaythrough(1, [15]), previewMilestoneId }, packIndex());
+
+    const cutState = (): HTMLElement => {
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Bulbasaur' }));
+      const evidence = screen.getByRole('region', { name: /capability evidence for Bulbasaur/i });
+      return within(evidence).getByText('cut').closest('li') as HTMLElement;
+    };
+
+    renderWorkbench({ playthrough: withCut('surge-gym') });
+    expect(within(cutState()).getByText('knows')).toBeVisible();
+
+    cleanup();
+    renderWorkbench({ playthrough: withCut('brock-gym') });
+    const early = cutState();
+    expect(within(early).getByText('conditional')).toBeVisible();
+    expect(within(early).queryByText('knows')).toBeNull();
+  });
+
+  it('reads a capability search back onto the matching species', () => {
+    renderWorkbench();
+    // The token is the ruleset's own term for the milestone's water, run as a capability search.
+    fireEvent.click(screen.getByRole('button', { name: 'Search for Surf' }));
+
+    const psyduck = screen.getByRole('button', { name: 'Select Psyduck at Viridian City' }).closest('li')!;
+    expect(within(psyduck as HTMLElement).getByText('Can learn with condition')).toBeVisible();
+    // Mankey has no path to Surf at all, so the search never places it.
+    expect(screen.queryByRole('button', { name: /^Select Mankey/ })).toBeNull();
+  });
+
   it('retains the selected candidate when an encounter location opens it', () => {
     renderWorkbench();
+    openMilestoneGroup('Brock');
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
     fireEvent.click(within(screen.getByRole('region', { name: /route detail/i })).getByRole('button', { name: 'Mankey' }));
 
