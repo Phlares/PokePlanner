@@ -341,7 +341,7 @@ export function Workbench({
   const teamSlots: readonly TeamStripSlot[] = (targetDisplay?.resolved.party ?? []).map((memberId) => {
     const member = memberId === null ? undefined : playthrough.timeline.members[memberId];
     const snapshot = memberId === null ? undefined : targetDisplay!.resolved.snapshots[memberId];
-    if (member === undefined || snapshot === undefined) return { memberId: null, name: null, level: null };
+    if (memberId === null || member === undefined || snapshot === undefined) return { memberId: null };
     return {
       memberId,
       name: memberDisplayName(member, snapshot, (id) => speciesNames.get(id) ?? `Species #${id}`, speciesCounts),
@@ -525,7 +525,15 @@ export function Workbench({
       )}
 
       <section className="workbench-rail" aria-label="Progression">
-        {/* An active query focuses the left column on its matches; the rail returns when it is cleared. */}
+        {/* Browsing the spine and searching it are different jobs: an active query answers itself in
+            the search rung, so the spine stands down and says how to get it back rather than
+            leaving a bordered column empty. */}
+        {searchActive && (
+          <p className="workbench-placeholder">
+            Matches for the active search are listed in the search rung above. Clear the search to browse the
+            progression spine again.
+          </p>
+        )}
         {!searchActive && (
           <ProgressionRail
             nodes={pack.progression.nodes}

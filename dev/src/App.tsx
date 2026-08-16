@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { loadFireRedPack, type FireRedDigest, type FireRedPack } from './data/game-pack';
 import { MILESTONE_ORDER } from './domain/availability';
 import { parsePlaythrough, type Playthrough, type PlaythroughPackIndex } from './domain/playthrough';
@@ -12,7 +12,7 @@ import {
 } from './persistence/repository';
 import { openIndexedDbRepository } from './persistence/indexeddb-repository';
 import { GameSetup } from './features/setup/GameSetup';
-import { RunMenu, type RunSaveStatus } from './features/workbench/RunMenu';
+import { RunMenu, type RunSaveStatus, type RunSummary } from './features/workbench/RunMenu';
 import { Workbench } from './features/workbench/Workbench';
 import { applyTheme, readStoredTheme, type Theme } from './theme';
 
@@ -73,6 +73,21 @@ function mostRecent(records: Playthrough[]): Playthrough | null {
 }
 
 /**
+ * Name every stored run for the switcher, newest first, without carrying whole records around.
+ * Takes anything that identifies a run, so a freshly stored record folds in through the same call.
+ */
+function runIndexOf(records: readonly RunSummary[]): RunSummary[] {
+  return [...records]
+    .sort((left, right) => right.updatedAt - left.updatedAt || left.name.localeCompare(right.name))
+    .map((record) => ({ id: record.id, name: record.name, updatedAt: record.updatedAt }));
+}
+
+/** Fold one stored record into the index, replacing the entry it supersedes. */
+function withRun(index: readonly RunSummary[], record: RunSummary): RunSummary[] {
+  return runIndexOf([...index.filter((entry) => entry.id !== record.id), record]);
+}
+
+/**
  * The application boundary coordinator. It performs the whole boot flow — load and hash-verify the
  * FireRed pack, open the persistence repository (falling back to an explicit in-memory session when
  * IndexedDB is unavailable), then list, restore, or create a playthrough — before rendering either
@@ -97,7 +112,16 @@ export function App({
   const saveQueue = useRef<Promise<void>>(Promise.resolve());
   const repositoryGeneration = useRef(0);
   const [pack, setPack] = useState<FireRedPack | null>(null);
+  const [runs, setRuns] = useState<readonly RunSummary[]>([]);
   const [theme, setTheme] = useState<Theme>(readStoredTheme);
+  const runMenuTrigger = useRef<HTMLButtonElement>(null);
+  // Bumped when a view change unmounts the run menu, so focus can follow it to the replacement.
+  const [refocusRunMenu, setRefocusRunMenu] = useState(0);
+
+  useEffect(() => {
+    if (refocusRunMenu === 0) return;
+    runMenuTrigger.current?.focus();
+  }, [refocusRunMenu]);
 
   // Keep the document and localStorage in step with the chosen theme; dark is the default.
   useEffect(() => {
@@ -116,6 +140,7 @@ export function App({
     setSaveError(null);
     setRepositoryRetrying(false);
     setPack(null);
+    setRuns([]);
 
     (async () => {
       let loaded: FireRedPack;
@@ -146,7 +171,9 @@ export function App({
 
       let restored: Playthrough | null = null;
       try {
-        restored = mostRecent(await repo.list());
+        const stored = await repo.list();
+        setRuns(runIndexOf(stored));
+        restored = mostRecent(stored);
       } catch (error) {
         if (alive) {
           setPack(loaded);
@@ -174,6 +201,21 @@ export function App({
     };
   }, [fetcher, digest, baseUrl, openRepository, now]);
 
+  /**
+   * Run one repository operation after every operation already queued, and hold the ones behind it
+   * until this finishes. Every write, delete and switch goes through here, so storage only ever
+   * sees them in the order the user asked for — a delete can never overtake the save queued ahead
+   * of it and leave the write to put the record back.
+   */
+  const enqueue = useCallback(<T,>(work: () => Promise<T>): Promise<T> => {
+    const operation = saveQueue.current.then(work);
+    saveQueue.current = operation.then(
+      () => undefined,
+      () => undefined,
+    );
+    return operation;
+  }, []);
+
   const persist = useCallback(
     async (record: Playthrough): Promise<void> => {
       if (boot.status !== 'ready') return;
@@ -184,15 +226,13 @@ export function App({
       setActiveDraft(record);
       // The repository validates against the schema + pack index before it writes, so an invalid or
       // canonical-tainted record can never reach storage; the returned record is the validated one.
-      // Serialize writes so an older request cannot finish after and overwrite a newer draft.
-      const operation = saveQueue.current.then(() => boot.repo.put(record));
-      saveQueue.current = operation.then(
-        () => undefined,
-        () => undefined,
-      );
+      const operation = enqueue(() => boot.repo.put(record));
       try {
         const stored = await operation;
-        if (repositoryGeneration.current === generation) setLastDurable(stored);
+        if (repositoryGeneration.current === generation) {
+          setLastDurable(stored);
+          setRuns((current) => withRun(current, stored));
+        }
         if (saveAttempt.current === attempt) {
           setActiveDraft(stored);
           setSaveError(null);
@@ -203,7 +243,7 @@ export function App({
         }
       }
     },
-    [boot],
+    [boot, enqueue],
   );
 
   const handleCreate = (record: Playthrough): void => {
@@ -242,17 +282,43 @@ export function App({
 
   const handleDelete = async (): Promise<void> => {
     if (boot.status !== 'ready' || activeDraft === null) return;
+    const { repo } = boot;
+    const deleted = activeDraft.id;
     const generation = repositoryGeneration.current;
+    // Any save already queued still belongs to the record being deleted, so it has to land first;
+    // deleting around it would let that write recreate what the user just removed.
     saveAttempt.current += 1;
     try {
-      await boot.repo.delete(activeDraft.id);
-      const remaining = mostRecent(await boot.repo.list());
+      const remaining = await enqueue(async () => {
+        await repo.delete(deleted);
+        return repo.list();
+      });
       if (repositoryGeneration.current !== generation) return;
-      setLastDurable(remaining);
-      setActiveDraft(remaining);
+      setRuns(runIndexOf(remaining));
+      setLastDurable(mostRecent(remaining));
+      setActiveDraft(mostRecent(remaining));
       setSaveError(null);
+      // Emptying the repository swaps the whole shell, which unmounts the menu this came from.
+      setRefocusRunMenu((count) => count + 1);
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : 'The run could not be deleted.');
+    }
+  };
+
+  const handleSwitchRun = async (id: string): Promise<void> => {
+    if (boot.status !== 'ready' || id === activeDraft?.id) return;
+    const { repo } = boot;
+    const generation = repositoryGeneration.current;
+    // Same ordering rule: whatever is queued belongs to the run being left, and must finish first.
+    saveAttempt.current += 1;
+    try {
+      const record = await enqueue(() => repo.get(id));
+      if (record === undefined || repositoryGeneration.current !== generation) return;
+      setLastDurable(record);
+      setActiveDraft(record);
+      setSaveError(null);
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : 'That run could not be opened.');
     }
   };
 
@@ -292,6 +358,7 @@ export function App({
   const runMenu = (
     <RunMenu
       playthrough={activeDraft}
+      runs={runs}
       saveStatus={saveStatus}
       theme={theme}
       onThemeChange={setTheme}
@@ -300,12 +367,19 @@ export function App({
       onRename={handleRename}
       onDuplicate={handleDuplicate}
       onDelete={() => void handleDelete()}
+      onSwitchRun={(id) => void handleSwitchRun(id)}
+      triggerRef={runMenuTrigger}
     />
   );
 
-  const unsavedDownload = saveError !== null && activeDraft !== null
-    ? createPlaythroughDownloadHref(activeDraft)
-    : null;
+  // Serializing the whole run is not free, so the failure export is built once per failed draft
+  // rather than on every render while the alert is up.
+  const saveFailure = useMemo(
+    () => (saveError === null || activeDraft === null
+      ? null
+      : { message: saveError, draft: activeDraft, ...createPlaythroughDownloadHref(activeDraft) }),
+    [saveError, activeDraft],
+  );
 
   // Recovery surfaces, kept out of the rungs: a temporary session and a failed save both preserve
   // whatever is on screen and keep an export within one click of the failure itself.
@@ -316,18 +390,18 @@ export function App({
           Changes are not saved to this browser. Download JSON or copy a plan code to keep this run.
         </p>
       )}
-      {saveError !== null && activeDraft !== null && unsavedDownload !== null && (
+      {saveFailure !== null && (
         <div role="alert" className="app-error">
           <p>
-            Changes are not saved: {saveError}.{' '}
+            Changes are not saved: {saveFailure.message}.{' '}
             {lastDurable === null
               ? 'This run has not been saved yet.'
               : 'The last saved version remains safe.'}
           </p>
-          <button type="button" className="app-tool-button" onClick={() => void persist(activeDraft)}>
+          <button type="button" className="app-tool-button" onClick={() => void persist(saveFailure.draft)}>
             Retry save
           </button>
-          <a className="app-tool-button" href={unsavedDownload.href} download={unsavedDownload.filename}>
+          <a className="app-tool-button" href={saveFailure.href} download={saveFailure.filename}>
             Export unsaved changes
           </a>
         </div>
@@ -358,7 +432,9 @@ export function App({
           <p className="eyebrow">Generation III vertical slice</p>
           <h1>PokéPlanner</h1>
         </div>
-        {boot.status === 'ready' && runMenu}
+        {/* Not gated on a successful boot: theme and import are exactly what a recovery screen
+            still needs to offer. */}
+        {runMenu}
       </header>
 
       {boot.status === 'loading' && <p role="status">Loading FireRed data…</p>}

@@ -155,6 +155,12 @@ describe('App boot and persistence', () => {
     expect(put).not.toHaveBeenCalled();
     expect(remove).not.toHaveBeenCalled();
 
+    // The recovery screen is not a dead end: theme and import stay reachable while it is up.
+    openRunMenu();
+    expect(screen.getByRole('menuitemcheckbox', { name: 'Dark theme' })).toBeInTheDocument();
+    expect(screen.getByRole('menuitem', { name: 'Import JSON file or plan code' })).toBeInTheDocument();
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
     fireEvent.click(screen.getByRole('button', { name: /retry loading saved runs/i }));
 
     expect(await screen.findByText(/set up a run/i)).toBeVisible();
@@ -350,6 +356,109 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Delete permanently' }));
     await waitFor(async () => expect(await get()!.list()).toHaveLength(1));
     expect((await get()!.list())[0].name).toBe('Renamed run');
+  });
+
+  it('lets a queued save finish before it deletes, so nothing is resurrected', async () => {
+    let repo: MemoryPlaythroughRepository | undefined;
+    const completions: string[] = [];
+    let putCount = 0;
+    const blocked = deferred();
+    const factory = async (options: RepositoryOptions): Promise<PlaythroughRepository> => {
+      repo ??= new MemoryPlaythroughRepository(options);
+      return {
+        list: () => repo!.list(),
+        get: (id) => repo!.get(id),
+        put: async (record) => {
+          putCount += 1;
+          if (putCount === 2) await blocked.promise;
+          const stored = await repo!.put(record);
+          completions.push('put');
+          return stored;
+        },
+        delete: async (id) => {
+          await repo!.delete(id);
+          completions.push('delete');
+        },
+      };
+    };
+    render(<App {...baseProps({ openRepository: factory })} />);
+    await createRun();
+    await waitFor(() => expect(completions).toEqual(['put']));
+
+    fireEvent.click(screen.getByRole('button', { name: /set current milestone.*brock/i }));
+    openRunMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Delete run' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete permanently' }));
+
+    // The write is still blocked, so the delete must not have overtaken it.
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(completions).toEqual(['put']);
+
+    await act(async () => {
+      blocked.resolve();
+      await Promise.resolve();
+    });
+
+    // Order is the whole point: a delete that ran first would be undone by the write behind it.
+    await waitFor(() => expect(completions).toEqual(['put', 'put', 'delete']));
+    expect(await repo!.list()).toHaveLength(0);
+  });
+
+  it('returns to setup with focus on the run menu after the last run is deleted', async () => {
+    const { factory, get } = sharedRepoFactory();
+    render(<App {...baseProps({ openRepository: factory })} />);
+    await createRun();
+
+    openRunMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Delete run' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete permanently' }));
+
+    expect(await screen.findByText(/set up a run/i)).toBeVisible();
+    expect(await get()!.list()).toHaveLength(0);
+    // The run menu is remounted in the setup header; focus has to follow it there, not fall to body.
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Run menu' })).toHaveFocus());
+  });
+
+  it('reaches every stored run from the menu after a duplicate', async () => {
+    const { factory, get } = sharedRepoFactory();
+    // A moving clock, so the two runs are distinguishable by age and the newest sorts first —
+    // which puts the run this test switches to *second* in the list rather than at the top.
+    let clock = 1000;
+    render(<App {...baseProps({ openRepository: factory, now: () => (clock += 1) })} />);
+    await createRun();
+
+    // Whole-string, not `toHaveTextContent`: a duplicate is named after the run it copies, so
+    // "Original" is a substring of "Original (copy)" and a containment check would call the switch
+    // a success without it having happened.
+    const openRunName = (): string | null => screen.getByRole('heading', { level: 1 }).textContent;
+
+    openRunMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Rename run' }));
+    fireEvent.change(screen.getByLabelText('Run name'), { target: { value: 'Original' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save name' }));
+    await waitFor(() => expect(openRunName()).toBe('Original'));
+
+    openRunMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Duplicate run' }));
+    await waitFor(() => expect(openRunName()).toBe('Original (copy)'));
+
+    openRunMenu();
+    expect(screen.getAllByRole('menuitemradio').map((entry) => entry.textContent)).toEqual([
+      'Original (copy)',
+      'Original',
+    ]);
+    fireEvent.click(screen.getByRole('menuitemradio', { name: 'Original' }));
+
+    // The duplicate is still stored; switching just changes which run is open.
+    await waitFor(() => expect(openRunName()).toBe('Original'));
+    // What was opened came straight out of storage, so it is durable — reporting it as unsaved
+    // would invite a pointless rewrite of a record nothing has touched.
+    expect(screen.getByText('Saved')).toBeVisible();
+    expect(await get()!.list()).toHaveLength(2);
   });
 
   it('preserves the existing record when an import fails validation', async () => {

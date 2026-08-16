@@ -1,9 +1,11 @@
-/** One party position at the planning target. An empty slot carries no member and no member id. */
-export interface TeamStripSlot {
-  memberId: string | null;
-  name: string | null;
-  level: number | null;
-}
+/**
+ * One party position at the planning target. A filled slot carries all three facts or none of
+ * them — the union makes "a member id with no name" unrepresentable rather than something the
+ * renderer has to defend against, so there is one condition to read and one to test.
+ */
+export type TeamStripSlot =
+  | { memberId: null }
+  | { memberId: string; name: string; level: number };
 
 export interface TeamStripProps {
   /** The planning target the party is resolved at, e.g. `Brock`. */
@@ -47,10 +49,12 @@ export function TeamStrip({
         <p className="team-strip-target-name">{targetName} · Target Lv {targetLevel}</p>
       </div>
 
-      <ol className="team-strip-slots">
+      {/* The markers are off for the ledger look, which drops list semantics in Safari/VoiceOver
+          unless the role is stated back explicitly. */}
+      <ol className="team-strip-slots" role="list">
         {slots.map((slot, index) => {
           const position = index + 1;
-          if (slot.memberId === null || slot.name === null) {
+          if (slot.memberId === null) {
             return (
               <li key={index} className="team-strip-slot">
                 <code className="team-strip-slot-index">P{position}</code>
@@ -67,7 +71,7 @@ export function TeamStrip({
                 aria-pressed={selected}
                 data-selected={selected ? 'true' : undefined}
                 aria-label={`Party slot ${position}: ${slot.name}, level ${slot.level}`}
-                onClick={() => onSelectMember(slot.memberId!)}
+                onClick={() => onSelectMember(slot.memberId)}
               >
                 <code className="team-strip-slot-index">P{position}</code>
                 <span className="team-strip-slot-name">{slot.name}</span>

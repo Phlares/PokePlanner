@@ -502,6 +502,19 @@ describe('Workbench', () => {
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull());
   });
 
+  it('explains the progression column instead of blanking it under an active query', async () => {
+    renderWorkbench();
+    const progression = () => screen.getByRole('region', { name: /progression/i });
+    expect(within(progression()).getByRole('button', { name: 'Route 22' })).toBeVisible();
+    // Nothing stands in for the rail until there is a reason for the rail to be gone.
+    expect(within(progression()).queryByText(/clear the search/i)).toBeNull();
+
+    fireEvent.change(screen.getByRole('searchbox', { name: /search/i }), { target: { value: 'Mankey' } });
+
+    await waitFor(() => expect(within(progression()).queryByRole('button', { name: 'Route 22' })).toBeNull());
+    expect(within(progression()).getByText(/clear the search/i)).toBeVisible();
+  });
+
   it('restores the progression rail when the search query is cleared', async () => {
     renderWorkbench();
     const box = screen.getByRole('searchbox', { name: /search/i });

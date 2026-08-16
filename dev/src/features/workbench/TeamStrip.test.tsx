@@ -7,12 +7,12 @@ import { TeamStrip, type TeamStripProps, type TeamStripSlot } from './TeamStrip'
  * about which member a click emits cannot pass by hitting the only, or the first, candidate.
  */
 const SLOTS: readonly TeamStripSlot[] = [
-  { memberId: null, name: null, level: null },
+  { memberId: null },
   { memberId: 'member-charmeleon', name: 'Charmeleon', level: 18 },
-  { memberId: null, name: null, level: null },
+  { memberId: null },
   { memberId: 'member-pidgey', name: 'Pidgey', level: 12 },
-  { memberId: null, name: null, level: null },
-  { memberId: null, name: null, level: null },
+  { memberId: null },
+  { memberId: null },
 ];
 
 function renderStrip(overrides: Partial<TeamStripProps> = {}) {
@@ -38,6 +38,13 @@ function renderStrip(overrides: Partial<TeamStripProps> = {}) {
 afterEach(cleanup);
 
 describe('TeamStrip', () => {
+  it('keeps the slot list a list even with its markers removed', () => {
+    renderStrip();
+    // `list-style: none` strips list semantics in Safari/VoiceOver unless the role is explicit,
+    // and jsdom will never notice — so the attribute itself is what this pins.
+    expect(screen.getByRole('list')).toHaveAttribute('role', 'list');
+  });
+
   it('lays out six numbered slots and names the filled ones', () => {
     renderStrip();
     expect(screen.getAllByRole('listitem')).toHaveLength(6);

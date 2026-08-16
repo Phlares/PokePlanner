@@ -76,28 +76,57 @@ function incompressibleNotes(length: number): string {
 const MOUNTED_RUN = runWith(3, 'Kanto ledger');
 const SHARED_RUN = runWith(12, 'Shared squad', 'run-shared');
 const FILE_RUN = runWith(5, 'File squad', 'run-file');
+const OVERSIZED_RUN = parsePlaythrough(
+  { ...MOUNTED_RUN, notes: incompressibleNotes(400_000) },
+  packIndex(),
+);
+
+/**
+ * Three entries, and the one every switching test clicks is the middle one: not the first, not the
+ * last, and not the run that is already open. Nothing about a switch can then be right by position.
+ * `run-1` is the mounted run, and it is listed last so "checked" cannot mean "first" either.
+ */
+const RUN_INDEX = [
+  { id: 'run-3', name: 'Randomizer', updatedAt: 40 },
+  { id: 'run-2', name: 'Nuzlocke branch', updatedAt: 30 },
+  { id: 'run-1', name: 'Kanto ledger', updatedAt: 20 },
+];
 
 function renderMenu(overrides: Partial<RunMenuProps> = {}) {
-  const onImport = vi.fn();
-  const onRename = vi.fn();
-  const onDuplicate = vi.fn();
-  const onDelete = vi.fn();
-  const onThemeChange = vi.fn();
-  const view = render(
-    <RunMenu
-      playthrough={MOUNTED_RUN}
-      saveStatus="saved"
-      theme="dark"
-      onThemeChange={onThemeChange}
-      prepareImport={(input) => prepareRunImport(input, packIndex(), pack.manifest.packVersion)}
-      onImport={onImport}
-      onRename={onRename}
-      onDuplicate={onDuplicate}
-      onDelete={onDelete}
-      {...overrides}
-    />,
-  );
-  return { onImport, onRename, onDuplicate, onDelete, onThemeChange, ...view };
+  const spies = {
+    onThemeChange: vi.fn(),
+    onImport: vi.fn(),
+    onRename: vi.fn(),
+    onDuplicate: vi.fn(),
+    onDelete: vi.fn(),
+    onSwitchRun: vi.fn(),
+  };
+  const props: RunMenuProps = {
+    playthrough: MOUNTED_RUN,
+    runs: [],
+    saveStatus: 'saved',
+    theme: 'dark',
+    prepareImport: (input) => prepareRunImport(input, packIndex(), pack.manifest.packVersion),
+    ...spies,
+    ...overrides,
+  };
+  const view = render(<RunMenu {...props} />);
+  return {
+    ...spies,
+    ...view,
+    /** Re-render with the same spies, so a prop change can be observed mid-life. */
+    update: (next: Partial<RunMenuProps>) => view.rerender(<RunMenu {...props} {...next} />),
+  };
+}
+
+function menuEntries(): HTMLElement[] {
+  return [
+    ...screen.queryAllByRole('menuitem'),
+    ...screen.queryAllByRole('menuitemradio'),
+    ...screen.queryAllByRole('menuitemcheckbox'),
+  ].sort((left, right) => (
+    (left.compareDocumentPosition(right) & Node.DOCUMENT_POSITION_FOLLOWING) === 0 ? 1 : -1
+  ));
 }
 
 function openMenu(): void {
@@ -195,7 +224,7 @@ describe('RunMenu', () => {
   });
 
   it('reports an oversized plan code and keeps the JSON download reachable', () => {
-    renderMenu({ playthrough: parsePlaythrough({ ...MOUNTED_RUN, notes: incompressibleNotes(400_000) }, packIndex()) });
+    renderMenu({ playthrough: OVERSIZED_RUN });
     openMenu();
     fireEvent.click(screen.getByRole('menuitem', { name: 'Copy plan code' }));
     const alert = screen.getByRole('alert');
@@ -316,23 +345,247 @@ describe('RunMenu', () => {
   });
 
   it('names each save status distinctly', () => {
-    const { rerender } = renderMenu({ saveStatus: 'saved' });
+    const view = renderMenu({ saveStatus: 'saved' });
     expect(screen.getByText('Saved')).toBeVisible();
-    rerender(
-      <RunMenu
-        playthrough={MOUNTED_RUN}
-        saveStatus="unsaved"
-        theme="dark"
-        onThemeChange={vi.fn()}
-        prepareImport={(input) => prepareRunImport(input, packIndex(), pack.manifest.packVersion)}
-        onImport={vi.fn()}
-        onRename={vi.fn()}
-        onDuplicate={vi.fn()}
-        onDelete={vi.fn()}
-      />,
-    );
+    view.update({ saveStatus: 'unsaved' });
     expect(screen.getByText('Unsaved changes')).toBeVisible();
     expect(screen.queryByText('Saved')).toBeNull();
+  });
+
+  // --- The plan code is a snapshot of one run, shown in a layer that must not outlive the menu ---
+
+  it('drops a copied plan code when the run it was taken from changes', () => {
+    const view = renderMenu();
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Copy plan code' }));
+    expect(screen.getByLabelText('Plan code')).toBeVisible();
+
+    // A saved edit hands down a new record; the code on screen describes the record before it.
+    view.update({ playthrough: runWith(3, 'Kanto ledger') });
+
+    expect(screen.queryByLabelText('Plan code')).toBeNull();
+    expect(screen.queryByText(/copied to the clipboard/i)).toBeNull();
+    expect(screen.getByRole('menu')).toBeVisible();
+  });
+
+  it('drops a plan code export error when the run it was taken from changes', () => {
+    const view = renderMenu({ playthrough: OVERSIZED_RUN });
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Copy plan code' }));
+    expect(screen.getByRole('alert')).toHaveTextContent(/size limit/i);
+
+    view.update({ playthrough: MOUNTED_RUN });
+
+    expect(screen.queryByRole('alert')).toBeNull();
+  }, 60_000);
+
+  it('takes the plan code off screen when the menu closes', () => {
+    renderMenu();
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Copy plan code' }));
+    expect(screen.getByLabelText('Plan code')).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Run menu' }));
+
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(screen.queryByLabelText('Plan code')).toBeNull();
+  });
+
+  it('takes a plan code export error off screen when the menu closes', () => {
+    renderMenu({ playthrough: OVERSIZED_RUN });
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Copy plan code' }));
+    expect(screen.getByRole('alert')).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Run menu' }));
+
+    expect(screen.queryByRole('alert')).toBeNull();
+  }, 60_000);
+
+  // --- Menu keyboard contract ---
+
+  it('moves focus onto the first entry when the menu opens', () => {
+    renderMenu();
+    openMenu();
+    expect(menuEntries()[0]).toHaveFocus();
+  });
+
+  it('keeps exactly one tab stop inside the menu and moves it with the arrow keys', () => {
+    renderMenu();
+    openMenu();
+    const entries = menuEntries();
+    expect(entries.filter((entry) => entry.tabIndex === 0)).toHaveLength(1);
+    expect(entries[0].tabIndex).toBe(0);
+
+    fireEvent.keyDown(entries[0], { key: 'ArrowDown' });
+
+    expect(entries[0].tabIndex).toBe(-1);
+    expect(entries[1].tabIndex).toBe(0);
+    expect(entries[1]).toHaveFocus();
+  });
+
+  it('wraps arrow navigation at both ends of the menu', () => {
+    renderMenu();
+    openMenu();
+    const entries = menuEntries();
+    const last = entries[entries.length - 1];
+
+    fireEvent.keyDown(entries[0], { key: 'ArrowUp' });
+    expect(last).toHaveFocus();
+
+    fireEvent.keyDown(last, { key: 'ArrowDown' });
+    expect(entries[0]).toHaveFocus();
+  });
+
+  it('jumps to the ends of the menu with Home and End', () => {
+    renderMenu();
+    openMenu();
+    const entries = menuEntries();
+
+    fireEvent.keyDown(entries[0], { key: 'End' });
+    expect(entries[entries.length - 1]).toHaveFocus();
+
+    fireEvent.keyDown(entries[entries.length - 1], { key: 'Home' });
+    expect(entries[0]).toHaveFocus();
+  });
+
+  it('closes the menu with Escape while an entry has focus', () => {
+    renderMenu();
+    openMenu();
+    fireEvent.keyDown(menuEntries()[0], { key: 'Escape' });
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Run menu' })).toHaveFocus();
+  });
+
+  it('closes the menu with Escape while the trigger itself has focus', () => {
+    renderMenu();
+    const trigger = screen.getByRole('button', { name: 'Run menu' });
+    openMenu();
+    trigger.focus();
+
+    fireEvent.keyDown(trigger, { key: 'Escape' });
+
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(trigger).toHaveFocus();
+  });
+
+  it('closes the menu when a press lands outside it', () => {
+    renderMenu();
+    openMenu();
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('stays open when a press lands on the menu itself', () => {
+    renderMenu();
+    openMenu();
+    fireEvent.mouseDown(screen.getByRole('menu'));
+    expect(screen.getByRole('menu')).toBeVisible();
+  });
+
+  it('closes the menu once the JSON download has been started', () => {
+    renderMenu();
+    openMenu();
+    const link = screen.getByRole('menuitem', { name: 'Download JSON' });
+    // The click still has to reach React's handler, so the navigation is cancelled rather than the
+    // event stopped: jsdom implements no navigation and would otherwise log the attempt. Whether a
+    // browser actually saves the file is Task 11's to check.
+    link.addEventListener('click', (event) => event.preventDefault());
+
+    fireEvent.click(link);
+
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  // --- Dialog dismissal and containment ---
+
+  it('dismisses the import dialog with Escape and restores the trigger', async () => {
+    const view = renderMenu();
+    openImportDialog();
+    fireEvent.keyDown(screen.getByRole('dialog', { name: 'Import FireRed Run?' }), { key: 'Escape' });
+    expect(screen.queryByRole('dialog', { name: 'Import FireRed Run?' })).toBeNull();
+    expect(view.onImport).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Run menu' })).toHaveFocus());
+  });
+
+  it('dismisses the delete confirmation with Escape without deleting', async () => {
+    const view = renderMenu();
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Delete run' }));
+    fireEvent.keyDown(screen.getByRole('alertdialog', { name: 'Delete this run?' }), { key: 'Escape' });
+    expect(screen.queryByRole('alertdialog')).toBeNull();
+    expect(view.onDelete).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Run menu' })).toHaveFocus());
+  });
+
+  it('dismisses the rename dialog with Escape without renaming', async () => {
+    const view = renderMenu();
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Rename run' }));
+    fireEvent.keyDown(screen.getByRole('dialog', { name: 'Rename run' }), { key: 'Escape' });
+    expect(screen.queryByRole('dialog', { name: 'Rename run' })).toBeNull();
+    expect(view.onRename).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Run menu' })).toHaveFocus());
+  });
+
+  it('seals everything outside the delete confirmation', () => {
+    renderMenu();
+    // Held by reference: a sealed branch is removed from the accessibility tree, so a role query
+    // can no longer reach the very element whose sealing is being asserted.
+    const trigger = screen.getByRole('button', { name: 'Run menu' });
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Delete run' }));
+    expect(trigger).toHaveAttribute('inert');
+    expect(trigger).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('seals everything outside the import dialog once a preview is on screen', () => {
+    renderMenu();
+    const trigger = screen.getByRole('button', { name: 'Run menu' });
+    openImportDialog();
+    // Still asking for input: nothing destructive is pending, so the surroundings stay reachable.
+    expect(trigger).not.toHaveAttribute('inert');
+
+    pasteImport(encodePlanCode(SHARED_RUN));
+
+    expect(trigger).toHaveAttribute('inert');
+    expect(trigger).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('releases the boundary when the confirmation is dismissed', () => {
+    renderMenu();
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Delete run' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel delete' }));
+    expect(screen.getByRole('button', { name: 'Run menu' })).not.toHaveAttribute('inert');
+  });
+
+  // --- Run switcher ---
+
+  it('lists every stored run and marks the one that is open', () => {
+    renderMenu({ runs: RUN_INDEX });
+    openMenu();
+    const entries = screen.getAllByRole('menuitemradio');
+    expect(entries.map((entry) => entry.textContent)).toEqual(['Randomizer', 'Nuzlocke branch', 'Kanto ledger']);
+    expect(entries[0]).toHaveAttribute('aria-checked', 'false');
+    expect(entries[1]).toHaveAttribute('aria-checked', 'false');
+    expect(entries[2]).toHaveAttribute('aria-checked', 'true');
+  });
+
+  it('switches to the chosen run and closes the menu', () => {
+    const view = renderMenu({ runs: RUN_INDEX });
+    openMenu();
+    fireEvent.click(screen.getByRole('menuitemradio', { name: 'Nuzlocke branch' }));
+    expect(view.onSwitchRun).toHaveBeenCalledTimes(1);
+    expect(view.onSwitchRun).toHaveBeenCalledWith('run-2');
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('omits the run list when there is nothing to switch to', () => {
+    renderMenu({ runs: [RUN_INDEX[2]] });
+    openMenu();
+    expect(screen.queryByRole('menuitemradio')).toBeNull();
+    expect(screen.queryByRole('group', { name: 'Switch run' })).toBeNull();
   });
 
   it('switches the theme in both directions from the menu', () => {
