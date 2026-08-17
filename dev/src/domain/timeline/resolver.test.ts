@@ -39,6 +39,10 @@ const rules: GameRules = {
     { id: 'misty-gym', nodeId: 'misty-gym', name: 'Misty', targetLevel: 20, badgeId: 'cascade-badge' },
   ],
   natures: [],
+  // A ruleset with no natures and no hidden values: the interface admits it without a branch.
+  hiddenStatBounds: { lowest: { individual: 0, effort: 0 }, highest: { individual: 0, effort: 0 } },
+  natureStatModifiers: [{ effect: 'neutral', multiplier: 1 }],
+  statValue: ({ base }) => base,
   capabilities: new Map(),
   targetLevel: (milestoneId) => milestoneId === 'brock-gym' ? 14 : milestoneId === 'misty-gym' ? 20 : 0,
   targetLevelAtNode: (nodeId) => nodeId === 'route-1' || nodeId === 'route-22' || nodeId === 'pewter-city' ? 14 : 20,

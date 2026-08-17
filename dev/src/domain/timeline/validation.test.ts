@@ -49,6 +49,10 @@ const rules: GameRules = {
   initialProgress: () => ({ currentNodeId: 'pallet-town', targetMilestoneId: 'brock-gym' }),
   milestones: [{ id: 'brock-gym', nodeId: 'pewter-city', name: 'Brock', targetLevel: 14, badgeId: 'boulder-badge' }],
   natures: [],
+  // A ruleset with no natures and no hidden values: the interface admits it without a branch.
+  hiddenStatBounds: { lowest: { individual: 0, effort: 0 }, highest: { individual: 0, effort: 0 } },
+  natureStatModifiers: [{ effect: 'neutral', multiplier: 1 }],
+  statValue: ({ base }) => base,
   capabilities: new Map(),
   targetLevel: () => 14,
   targetLevelAtNode: () => 14,

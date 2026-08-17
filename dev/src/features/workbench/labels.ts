@@ -1,5 +1,5 @@
 import type { MoveRecord } from '../../domain/pack';
-import type { StatKey } from '../../domain/rules/game-rules';
+import type { NatureEffect, StatKey } from '../../domain/rules/game-rules';
 import type { ObtainabilityStatus } from '../../domain/search';
 import type { CapabilityState } from '../../domain/timeline/capabilities';
 import { titleCase } from '../text';
@@ -71,6 +71,13 @@ export function nowhereLabel(name: string): string {
 export const STAT_ORDER: readonly StatKey[] = [
   'hp', 'attack', 'defense', 'specialAttack', 'specialDefense', 'speed',
 ];
+
+/** How a nature column reads; the ruleset states the multipliers, this file states the words. */
+export const NATURE_EFFECT_LABEL: Record<NatureEffect, string> = {
+  hindering: 'Hindering',
+  neutral: 'Neutral',
+  beneficial: 'Beneficial',
+};
 
 export const STAT_LABEL: Record<StatKey, string> = {
   hp: 'HP',

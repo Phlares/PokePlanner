@@ -79,3 +79,50 @@ describe('FIRE_RED_RULES', () => {
     expect(FIRE_RED_RULES.tradedObedienceLimit({ ...context, badgeIds: new Set(['earth-badge']) })).toBeNull();
   });
 });
+
+describe('FIRE_RED_RULES stat values', () => {
+  const NONE = { individual: 0, effort: 0 };
+  const attack = (level: number, hidden = NONE, natureMultiplier = 1): number =>
+    FIRE_RED_RULES.statValue({ stat: 'attack', base: 80, level, hidden, natureMultiplier });
+  const hp = (level: number, hidden = NONE, natureMultiplier = 1): number =>
+    FIRE_RED_RULES.statValue({ stat: 'hp', base: 40, level, hidden, natureMultiplier });
+
+  it('runs one formula for every stat, HP included', () => {
+    expect(attack(50)).toBe(85);
+    expect(hp(50)).toBe(100); // the level counts twice over for HP, not the flat five
+    expect(attack(100)).toBe(165);
+    expect(hp(100)).toBe(190);
+  });
+
+  it('lets a nature move any stat but HP', () => {
+    expect(attack(50, NONE, 0.9)).toBe(76);
+    expect(attack(50, NONE, 1.1)).toBe(93);
+    expect(hp(50, NONE, 0.9)).toBe(hp(50));
+    expect(hp(50, NONE, 1.1)).toBe(hp(50));
+  });
+
+  it('reads both hidden values, quarter-weighting effort', () => {
+    expect(attack(50, { individual: 31, effort: 0 })).toBe(100);
+    expect(attack(50, { individual: 0, effort: 252 })).toBe(116);
+    expect(attack(50, { individual: 31, effort: 252 })).toBe(132);
+  });
+
+  it('states the hidden bounds a plan never chooses', () => {
+    expect(FIRE_RED_RULES.hiddenStatBounds).toEqual({
+      lowest: { individual: 0, effort: 0 },
+      highest: { individual: 31, effort: 252 },
+    });
+  });
+
+  it('states one multiplier per nature column, weakest first', () => {
+    expect(FIRE_RED_RULES.natureStatModifiers).toEqual([
+      { effect: 'hindering', multiplier: 0.9 },
+      { effect: 'neutral', multiplier: 1 },
+      { effect: 'beneficial', multiplier: 1.1 },
+    ]);
+    // The columns and the natures state one delta between them, never two.
+    const delta = FIRE_RED_RULES.natures.find((nature) => nature.increasedStat !== null)!.multiplier;
+    expect(FIRE_RED_RULES.natureStatModifiers.map((modifier) => modifier.multiplier))
+      .toEqual([1 - delta, 1, 1 + delta]);
+  });
+});

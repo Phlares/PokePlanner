@@ -935,6 +935,9 @@ describe('Workbench', () => {
     expect(snapshot.moves).toEqual([]);
     // Reserve means reserve: no keyframe anywhere puts a reserve-added candidate in the party.
     expect(frames.some((frame) => frame.party.includes(member.id))).toBe(false);
+    // …and a write it never makes does not pin the planning target, which stays auto-filled.
+    expect(next.timeline.keyframes['brock-gym']).toBeUndefined();
+    expect(next.timeline.overrides['brock-gym']).toBeUndefined();
   });
 
   it('places a candidate added to the party in the first slot still open', () => {
@@ -948,7 +951,36 @@ describe('Workbench', () => {
     const placed = [...Object.values(next.timeline.keyframes), ...Object.values(next.timeline.overrides)]
       .find((frame) => frame.party.includes(member.id))!;
     expect(placed.nodeId).toBe('brock-gym');
-    expect(placed.party.indexOf(member.id)).toBe(1); // the starter still holds slot 0
+    expect(placed.party.indexOf(member.id)).toBe(1);
+    expect(placed.party[0]).toBe('starter'); // the slot was read off the inherited party; keep it
+  });
+
+  // The target of a fresh run is auto-filled, so writing to it materialises a frame. Materialising
+  // it from anything but what the run resolves there drops the party the node inherits.
+  it('keeps the party the planning target inherits when a candidate is added to reserve', () => {
+    renderControlledWorkbench(starterPlaythrough());
+    const team = () => within(screen.getByRole('region', { name: 'Team at Brock' }));
+    expect(team().getByRole('button', { name: 'Party slot 1: Bulbasaur, level 5' })).toBeVisible();
+
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Mankey to reserve' }));
+
+    expect(team().getByRole('button', { name: 'Party slot 1: Bulbasaur, level 5' })).toBeVisible();
+    expect(team().getAllByText('Empty')).toHaveLength(5);
+  });
+
+  it('keeps the party the planning target inherits when a candidate takes a party slot', () => {
+    renderControlledWorkbench(starterPlaythrough());
+    const team = () => within(screen.getByRole('region', { name: 'Team at Brock' }));
+
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Mankey to Brock party' }));
+
+    expect(team().getByRole('button', { name: 'Party slot 1: Bulbasaur, level 5' })).toBeVisible();
+    expect(team().getByRole('button', { name: 'Party slot 2: Mankey, level 2' })).toBeVisible();
+    expect(team().getAllByText('Empty')).toHaveLength(4);
   });
 
   it('moves focus to the heading of whatever was just selected', () => {

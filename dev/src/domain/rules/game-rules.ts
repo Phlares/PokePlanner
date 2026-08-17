@@ -22,6 +22,33 @@ export interface PlanningMilestone {
   badgeId: string | null;
 }
 
+/**
+ * The per-member values behind a stat that a plan never chooses — individual and effort values in
+ * the Generation III vocabulary. Surfaces span their range rather than state a false exact stat.
+ */
+export interface HiddenStatValues {
+  individual: number;
+  effort: number;
+}
+
+/** How far a nature can move one stat. A ruleset without natures states `neutral` alone. */
+export type NatureEffect = 'hindering' | 'neutral' | 'beneficial';
+
+export interface NatureStatModifier {
+  effect: NatureEffect;
+  multiplier: number;
+}
+
+export interface StatValueInput {
+  stat: StatKey;
+  /** The species' base value for that stat. */
+  base: number;
+  level: number;
+  hidden: HiddenStatValues;
+  /** One of `natureStatModifiers`' multipliers; a stat no nature moves ignores it. */
+  natureMultiplier: number;
+}
+
 /** A Generation III nature's stat delta, expressed as a signed ten-percent modifier. */
 export interface NatureRule {
   id: string;
@@ -58,6 +85,15 @@ export interface GameRules {
   initialProgress(): { currentNodeId: string; targetMilestoneId: string };
   milestones: readonly PlanningMilestone[];
   natures: readonly NatureRule[];
+  /** The extremes of the hidden values, so a surface states a range instead of a false exact stat. */
+  hiddenStatBounds: { lowest: HiddenStatValues; highest: HiddenStatValues };
+  /** Every distinct multiplier a nature applies to one stat, weakest first (spec §16). */
+  natureStatModifiers: readonly NatureStatModifier[];
+  /**
+   * One stat's value under this version's formula. All six stats run this one call; a stat that
+   * behaves unlike the others (HP under Generation III) differs by its terms, not by its caller.
+   */
+  statValue(input: StatValueInput): number;
   capabilities: ReadonlyMap<string, CapabilityRule>;
   targetLevel(milestoneId: string): number;
   targetLevelAtNode(nodeId: string, progression: RouteProgression): number;

@@ -611,8 +611,10 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('checkbox', { name: 'Auto-level active party' }));
     fireEvent.click(screen.getByRole('button', { name: 'Create Misty keyframe' }));
     const mistyReserve = screen.getByRole('region', { name: /Reserve.*1 Pok/i });
-    expect(mistyReserve).toHaveTextContent('Mankey #2');
-    expect(mistyReserve).toHaveTextContent('Lv 2');
+    // Whole-string reads on the specific nodes: `Lv 21` is a live value elsewhere in this journey,
+    // and a substring match on `Lv 2` would pass against it.
+    expect(within(mistyReserve).getByText('Mankey #2').textContent).toBe('Mankey #2');
+    expect(within(mistyReserve).getByText('Lv 2').textContent).toBe('Lv 2');
     await waitFor(async () => {
       const timeline = (await active.get()!.list())[0].timeline;
       expect(timeline.keyframes['misty-gym'].snapshots[starterMemberId].level).toBe(21);
@@ -638,7 +640,9 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Detailed Planning' }));
     fireEvent.click(screen.getByRole('button', { name: /^Route 1 .*Auto-filled/i }));
     expect(timeline().queryByText(/^Mankey #/)).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: /^Route 22 .*Explicit/i }));
+    // Adding a candidate pins its acquisition route from what the run resolved there, so the route
+    // reads Overridden rather than the empty explicit keyframe an unseeded write used to stamp.
+    fireEvent.click(screen.getByRole('button', { name: /^Route 22 .*Overridden/i }));
     expect(timeline().getByText('Mankey #1')).toBeVisible();
     expect(timeline().getByText('Mankey #2')).toBeVisible();
 

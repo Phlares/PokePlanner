@@ -39,6 +39,11 @@ function renderInspector(
   );
 }
 
+function columnHeaders(tableName: string): (string | null)[] {
+  return within(screen.getByRole('table', { name: tableName }))
+    .getAllByRole('columnheader').map((cell) => cell.textContent);
+}
+
 /** The cells of one reference-range row, read by the stat it heads. */
 function rangeRow(tableName: string, stat: string): (string | null)[] {
   const table = screen.getByRole('table', { name: tableName });
@@ -130,11 +135,27 @@ describe('PokemonInspector', () => {
 
   it('spreads a nature-affected stat across the reference ranges and leaves HP alone', () => {
     renderInspector();
+    expect(columnHeaders('Lv 50 reference ranges')).toEqual(['Stat', 'Hindering', 'Neutral', 'Beneficial']);
     // Attack base 80: hindering, neutral and beneficial each span worst to best hidden values.
     expect(rangeRow('Lv 50 reference ranges', 'Attack')).toEqual(['76–118', '85–132', '93–145']);
     expect(rangeRow('Lv 100 reference ranges', 'Attack')).toEqual(['148–233', '165–259', '181–284']);
     // HP takes no nature modifier, so its three columns must agree.
     expect(rangeRow('Lv 50 reference ranges', 'HP')).toEqual(['100–147', '100–147', '100–147']);
+  });
+
+  it('takes the columns and the arithmetic from the ruleset, holding no formula of its own', () => {
+    // A ruleset that grades no natures and admits no hidden values: one column, base stats flat.
+    renderInspector(56, {
+      rules: {
+        ...FIRE_RED_RULES,
+        hiddenStatBounds: { lowest: { individual: 0, effort: 0 }, highest: { individual: 0, effort: 0 } },
+        natureStatModifiers: [{ effect: 'neutral', multiplier: 1 }],
+        statValue: ({ base }) => base,
+      },
+    });
+    expect(columnHeaders('Lv 50 reference ranges')).toEqual(['Stat', 'Neutral']);
+    expect(rangeRow('Lv 50 reference ranges', 'Attack')).toEqual(['80–80']);
+    expect(rangeRow('Lv 100 reference ranges', 'HP')).toEqual(['40–40']);
   });
 
   it('summarises where the species is obtained, folded away, from the shared derivation', () => {

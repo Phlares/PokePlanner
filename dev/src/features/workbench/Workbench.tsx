@@ -455,6 +455,17 @@ export function Workbench({
   };
 
   /**
+   * Materialize one node's frame from what the run resolves there today. Timeline writes go through
+   * `keyframeAt`, which INVENTS an empty frame for a node with nothing stored, and the resolver then
+   * reads that frame as authoritative — so writing to an auto-filled node without this step erases
+   * the party that node inherits, at it and at every node after it.
+   */
+  const withResolvedFrame = (timeline: TimelineState, nodeId: string): TimelineState => {
+    const display = [...majorNodes, ...detailedNodes].find((node) => node.id === nodeId);
+    return display === undefined ? timeline : timelineWithExplicitNode(timeline, display);
+  };
+
+  /**
    * Spec §5: the inspector holds no draft, so a candidate becomes a persistent member here, built
    * from evidence rather than from fields a user typed into a browsing surface — the earliest place
    * the pack puts the species, the level it arrives at there, and the species' first ability. It
@@ -462,16 +473,21 @@ export function Workbench({
    * placement reads the one planning target the rest of the surface reads, so the slot the action
    * was offered for and the keyframe the member lands in are always the same milestone.
    */
-  const addCandidate = (speciesId: number, slot: number | null): void => {
-    const species = pack.pokemon.find((record) => record.id === speciesId);
-    if (species === undefined) return;
+  const addCandidate = (slot: number | null): void => {
+    if (candidateSpecies === null) return;
     const path = candidateLocations?.paths[0] ?? null;
+    const acquisitionNodeId = path?.nodeId ?? targetMilestone.id;
     const memberId = createId();
-    const acquired = acquireMember(playthrough.timeline, {
+    // Both nodes this write touches are seeded from resolution first, so the acquisition route and
+    // the planning target keep the party they inherited before the candidate joined it.
+    let seeded = withResolvedFrame(playthrough.timeline, acquisitionNodeId);
+    if (slot !== null) seeded = withResolvedFrame(seeded, targetMilestone.id);
+    const acquired = acquireMember(seeded, {
       memberId,
-      speciesId,
-      nodeId: path?.nodeId ?? targetMilestone.id,
-      abilityId: (species.abilities.find((ability) => ability.slot === 1) ?? species.abilities[0]).id,
+      speciesId: candidateSpecies.id,
+      nodeId: acquisitionNodeId,
+      abilityId: (candidateSpecies.abilities.find((ability) => ability.slot === 1)
+        ?? candidateSpecies.abilities[0]).id,
       level: path?.minLevel ?? targetMilestone.targetLevel,
       moves: [],
       heldItemId: null,
@@ -611,11 +627,11 @@ export function Workbench({
   const candidateActions: CandidateAction[] = candidateSpecies === null ? [] : [
     ...(openPartySlot < 0 ? [] : [{
       label: `Add ${candidateSpecies.name} to ${targetMilestone.name} party`,
-      onSelect: () => addCandidate(candidateSpecies.id, openPartySlot),
+      onSelect: () => addCandidate(openPartySlot),
     }]),
     {
       label: `Add ${candidateSpecies.name} to reserve`,
-      onSelect: () => addCandidate(candidateSpecies.id, null),
+      onSelect: () => addCandidate(null),
     },
   ];
 

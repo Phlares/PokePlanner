@@ -1,5 +1,14 @@
 import type { ProgressionEvent, ProgressionNode, RouteProgression } from '../progression';
-import type { CapabilityRule, GameRules, NatureRule, PlanningMilestone, ProgressionContext } from './game-rules';
+import type {
+  CapabilityRule,
+  GameRules,
+  NatureRule,
+  NatureStatModifier,
+  PlanningMilestone,
+  ProgressionContext,
+  StatKey,
+  StatValueInput,
+} from './game-rules';
 
 /** Ordered FireRed availability milestones retained for compatibility with the legacy API. */
 export const FIRE_RED_MILESTONE_ORDER = [
@@ -19,33 +28,73 @@ const MILESTONES: readonly PlanningMilestone[] = [
   { id: 'champion', nodeId: 'indigo-plateau', name: 'Champion', targetLevel: 63, badgeId: null },
 ];
 
+/** The share of one stat a non-neutral nature moves, stated once for the natures and the columns. */
+const NATURE_DELTA = 0.1;
+
 const NATURES: readonly NatureRule[] = [
   { id: 'hardy', increasedStat: null, decreasedStat: null, multiplier: 0 },
-  { id: 'lonely', increasedStat: 'attack', decreasedStat: 'defense', multiplier: 0.1 },
-  { id: 'brave', increasedStat: 'attack', decreasedStat: 'speed', multiplier: 0.1 },
-  { id: 'adamant', increasedStat: 'attack', decreasedStat: 'specialAttack', multiplier: 0.1 },
-  { id: 'naughty', increasedStat: 'attack', decreasedStat: 'specialDefense', multiplier: 0.1 },
-  { id: 'bold', increasedStat: 'defense', decreasedStat: 'attack', multiplier: 0.1 },
+  { id: 'lonely', increasedStat: 'attack', decreasedStat: 'defense', multiplier: NATURE_DELTA },
+  { id: 'brave', increasedStat: 'attack', decreasedStat: 'speed', multiplier: NATURE_DELTA },
+  { id: 'adamant', increasedStat: 'attack', decreasedStat: 'specialAttack', multiplier: NATURE_DELTA },
+  { id: 'naughty', increasedStat: 'attack', decreasedStat: 'specialDefense', multiplier: NATURE_DELTA },
+  { id: 'bold', increasedStat: 'defense', decreasedStat: 'attack', multiplier: NATURE_DELTA },
   { id: 'docile', increasedStat: null, decreasedStat: null, multiplier: 0 },
-  { id: 'relaxed', increasedStat: 'defense', decreasedStat: 'speed', multiplier: 0.1 },
-  { id: 'impish', increasedStat: 'defense', decreasedStat: 'specialAttack', multiplier: 0.1 },
-  { id: 'lax', increasedStat: 'defense', decreasedStat: 'specialDefense', multiplier: 0.1 },
-  { id: 'timid', increasedStat: 'speed', decreasedStat: 'attack', multiplier: 0.1 },
-  { id: 'hasty', increasedStat: 'speed', decreasedStat: 'defense', multiplier: 0.1 },
+  { id: 'relaxed', increasedStat: 'defense', decreasedStat: 'speed', multiplier: NATURE_DELTA },
+  { id: 'impish', increasedStat: 'defense', decreasedStat: 'specialAttack', multiplier: NATURE_DELTA },
+  { id: 'lax', increasedStat: 'defense', decreasedStat: 'specialDefense', multiplier: NATURE_DELTA },
+  { id: 'timid', increasedStat: 'speed', decreasedStat: 'attack', multiplier: NATURE_DELTA },
+  { id: 'hasty', increasedStat: 'speed', decreasedStat: 'defense', multiplier: NATURE_DELTA },
   { id: 'serious', increasedStat: null, decreasedStat: null, multiplier: 0 },
-  { id: 'jolly', increasedStat: 'speed', decreasedStat: 'specialAttack', multiplier: 0.1 },
-  { id: 'naive', increasedStat: 'speed', decreasedStat: 'specialDefense', multiplier: 0.1 },
-  { id: 'modest', increasedStat: 'specialAttack', decreasedStat: 'attack', multiplier: 0.1 },
-  { id: 'mild', increasedStat: 'specialAttack', decreasedStat: 'defense', multiplier: 0.1 },
-  { id: 'quiet', increasedStat: 'specialAttack', decreasedStat: 'speed', multiplier: 0.1 },
+  { id: 'jolly', increasedStat: 'speed', decreasedStat: 'specialAttack', multiplier: NATURE_DELTA },
+  { id: 'naive', increasedStat: 'speed', decreasedStat: 'specialDefense', multiplier: NATURE_DELTA },
+  { id: 'modest', increasedStat: 'specialAttack', decreasedStat: 'attack', multiplier: NATURE_DELTA },
+  { id: 'mild', increasedStat: 'specialAttack', decreasedStat: 'defense', multiplier: NATURE_DELTA },
+  { id: 'quiet', increasedStat: 'specialAttack', decreasedStat: 'speed', multiplier: NATURE_DELTA },
   { id: 'bashful', increasedStat: null, decreasedStat: null, multiplier: 0 },
-  { id: 'rash', increasedStat: 'specialAttack', decreasedStat: 'specialDefense', multiplier: 0.1 },
-  { id: 'calm', increasedStat: 'specialDefense', decreasedStat: 'attack', multiplier: 0.1 },
-  { id: 'gentle', increasedStat: 'specialDefense', decreasedStat: 'defense', multiplier: 0.1 },
-  { id: 'sassy', increasedStat: 'specialDefense', decreasedStat: 'speed', multiplier: 0.1 },
-  { id: 'careful', increasedStat: 'specialDefense', decreasedStat: 'specialAttack', multiplier: 0.1 },
+  { id: 'rash', increasedStat: 'specialAttack', decreasedStat: 'specialDefense', multiplier: NATURE_DELTA },
+  { id: 'calm', increasedStat: 'specialDefense', decreasedStat: 'attack', multiplier: NATURE_DELTA },
+  { id: 'gentle', increasedStat: 'specialDefense', decreasedStat: 'defense', multiplier: NATURE_DELTA },
+  { id: 'sassy', increasedStat: 'specialDefense', decreasedStat: 'speed', multiplier: NATURE_DELTA },
+  { id: 'careful', increasedStat: 'specialDefense', decreasedStat: 'specialAttack', multiplier: NATURE_DELTA },
   { id: 'quirky', increasedStat: null, decreasedStat: null, multiplier: 0 },
 ];
+
+/**
+ * Generation III grades every non-neutral nature by the same delta and mirrors the decrease onto
+ * the increase, so one number states all three columns. A version that graded them unevenly would
+ * list its own multipliers here instead of deriving them from a single delta.
+ */
+const NATURE_STAT_MODIFIERS: readonly NatureStatModifier[] = [
+  { effect: 'hindering', multiplier: 1 - NATURE_DELTA },
+  { effect: 'neutral', multiplier: 1 },
+  { effect: 'beneficial', multiplier: 1 + NATURE_DELTA },
+];
+
+/** The hidden per-member values Generation III admits: 0-31 individual and 0-252 effort per stat. */
+const HIDDEN_STAT_BOUNDS = {
+  lowest: { individual: 0, effort: 0 },
+  highest: { individual: 31, effort: 252 },
+};
+
+/**
+ * Generation III finishes all six stats with one formula: a core term every stat shares, a flat
+ * addend, and a nature multiplier. HP is not a special case — it carries a level-sized addend and
+ * takes no nature, and both of those are terms of the same formula rather than a branch in it.
+ */
+const STAT_TERMS: Record<StatKey, { flat: (level: number) => number; nature: boolean }> = {
+  hp: { flat: (level) => level + 10, nature: false },
+  attack: { flat: () => 5, nature: true },
+  defense: { flat: () => 5, nature: true },
+  specialAttack: { flat: () => 5, nature: true },
+  specialDefense: { flat: () => 5, nature: true },
+  speed: { flat: () => 5, nature: true },
+};
+
+function statValue({ stat, base, level, hidden, natureMultiplier }: StatValueInput): number {
+  const term = STAT_TERMS[stat];
+  const core = Math.floor(((2 * base + hidden.individual + Math.floor(hidden.effort / 4)) * level) / 100);
+  return Math.floor((core + term.flat(level)) * (term.nature ? natureMultiplier : 1));
+}
 
 const CAPABILITIES: readonly CapabilityRule[] = [
   { id: 'cut', kind: 'field-move', moveId: 15, requiredBadgeId: 'cascade-badge', availableAtMilestoneId: 'misty-gym' },
@@ -148,6 +197,9 @@ export const FIRE_RED_RULES: GameRules = {
   initialProgress: () => ({ currentNodeId: 'starter', targetMilestoneId: 'brock-gym' }),
   milestones: MILESTONES,
   natures: NATURES,
+  hiddenStatBounds: HIDDEN_STAT_BOUNDS,
+  natureStatModifiers: NATURE_STAT_MODIFIERS,
+  statValue,
   capabilities: new Map(CAPABILITIES.map((capability) => [capability.id, capability])),
   targetLevel: (milestoneId) => MILESTONE_BY_ID.get(milestoneId)?.targetLevel ?? 0,
   targetLevelAtNode,

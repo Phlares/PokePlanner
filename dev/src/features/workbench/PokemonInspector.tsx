@@ -2,11 +2,12 @@ import { useMemo, type Ref } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import type { AvailabilityContext } from '../../domain/availability';
 import type { EvolutionEdge, PokemonRecord, Provenance, TypeChart } from '../../domain/pack';
-import type { GameRules, NatureRule, StatKey } from '../../domain/rules/game-rules';
+import type { GameRules, StatKey } from '../../domain/rules/game-rules';
 import { titleCase } from '../text';
 import { MoveAvailability } from './MoveAvailability';
 import {
   ACCESS_LABEL,
+  NATURE_EFFECT_LABEL,
   STAT_LABEL,
   STAT_ORDER,
   levelLabel,
@@ -23,7 +24,7 @@ export interface CandidateAction {
 export interface PokemonInspectorProps {
   pokemonId: number;
   pack: FireRedPack;
-  /** The version rules, read for the nature spread the reference ranges span (spec §16). */
+  /** The version rules: the stat formula and nature grading the reference ranges read (spec §16). */
   rules: GameRules;
   context: AvailabilityContext;
   /** The shared Where & When view model; null when the pack does not carry the species. */
@@ -36,12 +37,7 @@ export interface PokemonInspectorProps {
   headingRef?: Ref<HTMLHeadingElement>;
 }
 
-/**
- * The hidden per-member values a plan never chooses. Both extremes are shown, so a reference range
- * spans everything a member of the species could turn out to be and never reads as an exact stat.
- */
-const WORST_HIDDEN = { individual: 0, effort: 0 };
-const BEST_HIDDEN = { individual: 31, effort: 252 };
+/** The two levels spec §16 names as the standard reference points; a presentation choice, not a rule. */
 const REFERENCE_LEVELS = [50, 100] as const;
 
 /**
@@ -91,27 +87,6 @@ function evolutionGate(edge: EvolutionEdge, itemName: (id: number) => string): s
 
 function provenanceText(entry: Provenance): string {
   return entry.locator !== null ? `${entry.sourceId} · ${entry.locator}` : entry.sourceId;
-}
-
-/** The strongest modifier the ruleset gives a nature, as a signed share of one stat (spec §16). */
-function natureSpread(natures: readonly NatureRule[]): number {
-  return natures.reduce((highest, nature) => Math.max(highest, nature.multiplier), 0);
-}
-
-/** One stat of a species at one level, for one set of hidden values and one nature modifier. */
-function statAt(
-  base: number,
-  level: number,
-  key: StatKey,
-  hidden: { individual: number; effort: number },
-  modifier: number,
-): number {
-  const core = Math.floor(((2 * base + hidden.individual + Math.floor(hidden.effort / 4)) * level) / 100);
-  return key === 'hp' ? core + level + 10 : Math.floor((core + 5) * modifier);
-}
-
-function referenceRange(base: number, level: number, key: StatKey, modifier: number): string {
-  return `${statAt(base, level, key, WORST_HIDDEN, modifier)}–${statAt(base, level, key, BEST_HIDDEN, modifier)}`;
 }
 
 /**
@@ -167,12 +142,13 @@ export function PokemonInspector({
     return <p className="workbench-placeholder">No inspector data for this species.</p>;
   }
 
-  const spread = natureSpread(rules.natures);
-  const natureColumns: ReadonlyArray<readonly [string, number]> = [
-    ['Hindering', 1 - spread],
-    ['Neutral', 1],
-    ['Beneficial', 1 + spread],
-  ];
+  // The span a member of this species could turn out to be, between the extremes of the hidden
+  // values a plan never chooses. Every number comes from the ruleset; no arithmetic lives here.
+  const referenceRange = (base: number, stat: StatKey, level: number, natureMultiplier: number): string => {
+    const at = (hidden: typeof rules.hiddenStatBounds.lowest): number =>
+      rules.statValue({ stat, base, level, hidden, natureMultiplier });
+    return `${at(rules.hiddenStatBounds.lowest)}–${at(rules.hiddenStatBounds.highest)}`;
+  };
 
   const whereRows = (locations?.paths ?? []).map((path) => ({
     nodeId: path.nodeId,
@@ -252,16 +228,18 @@ export function PokemonInspector({
                 <thead>
                   <tr>
                     <th scope="col">Stat</th>
-                    {natureColumns.map(([label]) => <th key={label} scope="col">{label}</th>)}
+                    {rules.natureStatModifiers.map((modifier) => (
+                      <th key={modifier.effect} scope="col">{NATURE_EFFECT_LABEL[modifier.effect]}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
                   {STAT_ORDER.map((key) => (
                     <tr key={key}>
                       <th scope="row">{STAT_LABEL[key]}</th>
-                      {natureColumns.map(([label, modifier]) => (
-                        <td key={label} className="stat-value">
-                          {referenceRange(species.baseStats[key], level, key, modifier)}
+                      {rules.natureStatModifiers.map((modifier) => (
+                        <td key={modifier.effect} className="stat-value">
+                          {referenceRange(species.baseStats[key], key, level, modifier.multiplier)}
                         </td>
                       ))}
                     </tr>
