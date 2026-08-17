@@ -11,7 +11,6 @@ import {
   type TeamSection,
   type TeamState,
 } from '../../domain/team';
-import type { MemberDraft } from '../workbench/PokemonInspector';
 import { titleCase } from '../text';
 
 const MAX_MOVES = 4;
@@ -35,11 +34,19 @@ function moveLabel(move: PlannedMove): string | null {
   return null;
 }
 
+/** The member this surface places when a slot is filled; its id is assigned on placement. */
+export interface ManifestDraft {
+  speciesId: number;
+  level: number;
+  abilityId: number;
+  moves: PlannedMove[];
+}
+
 export interface TeamManifestProps {
   team: TeamState;
   pack: FireRedPack;
-  /** The inspector's current proposed member; the source for add/replace. */
-  draft: MemberDraft | null;
+  /** The proposed member the caller wants placed; the source for add/replace. */
+  draft: ManifestDraft | null;
   onTeamChange: (next: TeamState) => void;
   createId?: () => string;
 }

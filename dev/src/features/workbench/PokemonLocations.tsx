@@ -1,5 +1,5 @@
 import { titleCase } from '../text';
-import { ACCESS_LABEL, OBTAIN_LABEL, levelLabel, methodLabel } from './labels';
+import { ACCESS_LABEL, OBTAIN_LABEL, levelLabel, methodLabel, nowhereLabel } from './labels';
 import type { PokemonLocationsResult } from './selectors';
 
 export interface PokemonLocationsProps {
@@ -30,9 +30,7 @@ export function PokemonLocations({ locations, onSelectLocation }: PokemonLocatio
       )}
 
       {locations.paths.length === 0 ? (
-        <p className="workbench-placeholder">
-          {`The pack places ${locations.name} nowhere on the golden path.`}
-        </p>
+        <p className="workbench-placeholder">{nowhereLabel(locations.name)}</p>
       ) : (
         <ol className="pokemon-locations-paths" aria-label={`${locations.name} acquisition paths`}>
           {locations.paths.map((path) => (

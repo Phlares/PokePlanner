@@ -29,7 +29,7 @@ import {
 } from '../timeline/TeamTimeline';
 import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
 import { MilestoneResults } from './MilestoneResults';
-import { PokemonInspector, type MemberDraft } from './PokemonInspector';
+import { PokemonInspector, type CandidateAction } from './PokemonInspector';
 import { TeamStrip, type TeamStripSlot } from './TeamStrip';
 import { WorkbenchDetail } from './WorkbenchDetail';
 import { WorkbenchShell } from './WorkbenchShell';
@@ -44,6 +44,7 @@ import {
   milestoneNodeId,
   revealsFutureNodes,
   selectMilestoneResults,
+  selectPokemonLocations,
   type MilestoneResultsInput,
 } from './selectors';
 
@@ -358,6 +359,13 @@ export function Workbench({
   // the totals the toolbar announces all come out of this single derivation of the controller state.
   const results = useMemo(() => selectMilestoneResults(resultsInput), [resultsInput]);
 
+  // The candidate's whole acquisition history, read once: the inspector's Where section states it,
+  // and adding the candidate takes its earliest path as the member's origin and arrival level.
+  const candidateLocations = useMemo(
+    () => (selectedPokemonId === null ? null : selectPokemonLocations(selectedPokemonId, resultsInput)),
+    [resultsInput, selectedPokemonId],
+  );
+
   const briefing = useMemo(
     () => selectMilestoneBriefing(targetMilestone.id, { pack, rules: FIRE_RED_RULES }),
     [pack, targetMilestone.id],
@@ -446,31 +454,37 @@ export function Workbench({
     onPlaythroughChange(next);
   };
 
-  const addDraftToPreviewParty = (draft: MemberDraft): void => {
-    const targetNodeId = playthrough.previewMilestoneId ?? playthrough.currentMilestoneId;
-    if (targetNodeId === null) return;
-    const target = playthrough.timeline.keyframes[targetNodeId] ?? playthrough.timeline.overrides[targetNodeId];
-    const slot = target?.party.findIndex((memberId) => memberId === null) ?? -1;
-    if (!target || slot < 0 || slot > 5) return;
-    const routeOrder = new Map(pack.progression.nodes.map((node) => [node.id, node.goldenPathOrder]));
-    const acquisitionNodeId = [...(pack.indexes.routesByPokemon[String(draft.speciesId)] ?? [])]
-      .sort((left, right) => (routeOrder.get(left) ?? Number.MAX_SAFE_INTEGER) - (routeOrder.get(right) ?? Number.MAX_SAFE_INTEGER))[0]
-      ?? targetNodeId;
+  /**
+   * Spec §5: the inspector holds no draft, so a candidate becomes a persistent member here, built
+   * from evidence rather than from fields a user typed into a browsing surface — the earliest place
+   * the pack puts the species, the level it arrives at there, and the species' first ability. It
+   * lands in reserve, and only reaches the party when an open slot was the action offered. Every
+   * placement reads the one planning target the rest of the surface reads, so the slot the action
+   * was offered for and the keyframe the member lands in are always the same milestone.
+   */
+  const addCandidate = (speciesId: number, slot: number | null): void => {
+    const species = pack.pokemon.find((record) => record.id === speciesId);
+    if (species === undefined) return;
+    const path = candidateLocations?.paths[0] ?? null;
     const memberId = createId();
     const acquired = acquireMember(playthrough.timeline, {
       memberId,
-      speciesId: draft.speciesId,
-      nodeId: acquisitionNodeId,
-      abilityId: draft.abilityId,
-      level: draft.level,
-      moves: draft.moves,
+      speciesId,
+      nodeId: path?.nodeId ?? targetMilestone.id,
+      abilityId: (species.abilities.find((ability) => ability.slot === 1) ?? species.abilities[0]).id,
+      level: path?.minLevel ?? targetMilestone.targetLevel,
+      moves: [],
       heldItemId: null,
       origin: { type: 'inferred', acquisitionId: null, note: null },
       nickname: null,
       natureId: null,
       notes: '',
     }, index);
-    emit({ timeline: placeInParty(acquired, targetNodeId, memberId, slot as 0 | 1 | 2 | 3 | 4 | 5, index) });
+    emit({
+      timeline: slot === null
+        ? acquired
+        : placeInParty(acquired, targetMilestone.id, memberId, slot as 0 | 1 | 2 | 3 | 4 | 5, index),
+    });
   };
 
   // Spec §8: selecting a species opens Pokémon mode, Where & When and the inspector. Every surface
@@ -590,6 +604,21 @@ export function Workbench({
     </div>
   );
 
+  // Spec §13: adding to reserve is always on offer; adding straight to the party needs an open slot
+  // at the planning target. With the party full and no member picked out, the primary action is the
+  // comparison the user has not chosen a subject for yet, so the panel says so instead.
+  const openPartySlot = teamSlots.findIndex((slot) => slot.memberId === null);
+  const candidateActions: CandidateAction[] = candidateSpecies === null ? [] : [
+    ...(openPartySlot < 0 ? [] : [{
+      label: `Add ${candidateSpecies.name} to ${targetMilestone.name} party`,
+      onSelect: () => addCandidate(candidateSpecies.id, openPartySlot),
+    }]),
+    {
+      label: `Add ${candidateSpecies.name} to reserve`,
+      onSelect: () => addCandidate(candidateSpecies.id, null),
+    },
+  ];
+
   // The inspector slot is a shell landmark with a fixed name; the candidate inside it is named by
   // its own complementary region, so a screen reader hears whose evidence it is holding.
   const inspector = candidateSpecies === null ? (
@@ -599,12 +628,13 @@ export function Workbench({
       <PokemonInspector
         pokemonId={candidateSpecies.id}
         pack={pack}
+        rules={FIRE_RED_RULES}
         context={availabilityContext}
-        onAddMember={addDraftToPreviewParty}
-        addMemberLabel={(() => {
-          const target = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === playthrough.previewMilestoneId);
-          return target ? `Add ${candidateSpecies.name} to ${target.name} party` : undefined;
-        })()}
+        locations={candidateLocations}
+        actions={candidateActions}
+        actionNote={openPartySlot < 0 && controller.selectedMemberId === null
+          ? `Choose a party member to compare with ${candidateSpecies.name}.`
+          : null}
         headingRef={inspectorHeading}
       />
     </aside>

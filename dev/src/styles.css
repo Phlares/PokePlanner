@@ -892,10 +892,64 @@ button:disabled {
   gap: var(--space-4);
 }
 
+/* Spec §17: the title, the types and the candidate actions stay put while the body scrolls. */
 .inspector-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--panel);
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--rule);
+}
+
+.inspector-identity { display: flex; align-items: baseline; gap: var(--space-2); }
+
+.inspector-type-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: var(--space-1);
+}
+
+.inspector-type {
+  border: var(--rule);
+  padding: 0 var(--space-1);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.inspector-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.inspector-action-note {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+/* Spec §17: a denser two-column body once the panel is wide enough to read two columns. */
+.inspector-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+@media (min-width: 88rem) {
+  .inspector-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
 }
 
 .workbench-inspector { display: block; }
@@ -934,6 +988,20 @@ button:disabled {
   letter-spacing: 0.06em;
   color: var(--ink-soft);
 }
+
+.inspector-block-heading {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+.inspector-fold { margin-top: var(--space-3); }
+
+.inspector-fold-summary { cursor: pointer; }
+
+.inspector-note { margin: 0 0 var(--space-2); color: var(--ink-soft); font-size: var(--text-xs); }
 
 .inspector-empty { margin: 0; color: var(--ink-soft); }
 
@@ -976,48 +1044,13 @@ button:disabled {
 
 .evolution-item,
 .source-item {
-  display: flex;
-  gap: var(--space-2);
-  align-items: baseline;
-}
-
-.evolution-gate,
-.source-kind {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--ink-soft);
-}
-
-.source-kind {
-  text-transform: uppercase;
-  min-width: 3.5rem;
+  font-size: var(--text-sm);
 }
 
 .provenance-item {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--ink-faint);
-}
-
-.plan-controls { display: flex; flex-wrap: wrap; gap: var(--space-3); }
-
-.plan-field { display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--text-sm); }
-
-.plan-field span {
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-soft);
-}
-
-.plan-field input,
-.plan-field select {
-  border: var(--rule-strong);
-  border-radius: 0;
-  background: var(--panel);
-  padding: var(--space-1) var(--space-2);
-  font-family: var(--font-mono);
-  width: 6rem;
 }
 
 /* --- Move availability drawers --- */
@@ -1053,12 +1086,16 @@ button:disabled {
 
 .move-entry:last-child { border-bottom: 0; }
 
-.move-entry-head { display: flex; align-items: baseline; gap: var(--space-2); }
+.move-entry-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
 
-.move-entry-name { flex: 1; }
+.move-entry-name { font-weight: 600; }
 
-.move-entry-planned {
-  font-family: var(--font-mono);
+.move-entry-type {
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -1066,14 +1103,11 @@ button:disabled {
   padding: 0 var(--space-1);
 }
 
-.move-entry-plan {
-  border: var(--rule-strong);
-  border-radius: 0;
-  background: var(--panel);
-  color: var(--ink);
-  padding: 0 var(--space-2);
+/* Spec §17: the class and the stat it attacks with are read without hover, never as a tooltip. */
+.move-entry-class {
+  margin-left: auto;
   font-size: var(--text-xs);
-  cursor: pointer;
+  color: var(--ink-soft);
 }
 
 .move-evidence {

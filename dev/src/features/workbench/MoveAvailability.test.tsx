@@ -1,28 +1,30 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render, screen, within } from '@testing-library/react';
+import { afterEach, describe, expect, it } from 'vitest';
 import { MoveAvailability } from './MoveAvailability';
 import { loadFireRedPackFixture } from '../../test/firered-pack';
 
 const pack = loadFireRedPackFixture();
 
 function renderMoves(overrides: Partial<Parameters<typeof MoveAvailability>[0]> = {}) {
-  const onPlanMove = vi.fn();
-  const utils = render(
+  return render(
     <MoveAvailability
       pokemonId={56}
       pack={pack}
       context={{ currentMilestoneId: null }}
-      onPlanMove={onPlanMove}
       {...overrides}
     />,
   );
-  return { onPlanMove, ...utils };
 }
 
 function drawer(container: HTMLElement, group: string): HTMLDetailsElement {
   const element = container.querySelector(`details[data-group="${group}"]`);
   if (!element) throw new Error(`Expected a disclosure for group "${group}"`);
   return element as HTMLDetailsElement;
+}
+
+/** The row for one move inside one drawer, found by the name the row heads. */
+function moveRow(container: HTMLElement, group: string, name: string): HTMLElement {
+  return within(drawer(container, group)).getByText(name).closest('li') as HTMLElement;
 }
 
 afterEach(cleanup);
@@ -70,15 +72,44 @@ describe('MoveAvailability', () => {
     expect(group.getAllByText(/Four Island/).length).toBeGreaterThan(0); // reason evidence
   });
 
-  it('labels a future choice when it is planned', () => {
-    const { container, onPlanMove } = renderMoves();
-    const group = within(drawer(container, 'future-milestone'));
-    fireEvent.click(group.getByRole('button', { name: /Plan Body Slam/i }));
-    expect(onPlanMove).toHaveBeenCalledTimes(1);
-    const move = onPlanMove.mock.calls[0][0];
-    expect(move.status).toBe('future-milestone');
-    expect(move.milestoneId).toBe('champion');
-    expect(group.getByText(/Planned/i)).toBeInTheDocument();
+  it('states each move’s own type, not the species’ type', () => {
+    const { container } = renderMoves(); // Mankey is pure Fighting
+    expect(within(moveRow(container, 'current-level-up', 'Scratch')).getByText('Normal').textContent)
+      .toBe('Normal');
+    expect(within(moveRow(container, 'machine-tutor', 'Thunderbolt')).getByText('Electric').textContent)
+      .toBe('Electric');
+  });
+
+  it('names the damage class and the stat a damaging move attacks with', () => {
+    const { container } = renderMoves();
+    expect(within(moveRow(container, 'future-level-up', 'Karate Chop')).getByText('Karate Chop'))
+      .toHaveAccessibleDescription('Physical move · uses Attack');
+    expect(within(moveRow(container, 'machine-tutor', 'Thunderbolt')).getByText('Thunderbolt'))
+      .toHaveAccessibleDescription('Special move · uses Sp. Atk');
+  });
+
+  it('names no attacking stat for a move that deals no damage', () => {
+    const { container } = renderMoves();
+    expect(within(moveRow(container, 'current-level-up', 'Leer')).getByText('Leer'))
+      .toHaveAccessibleDescription('Status move');
+  });
+
+  it('states nothing it cannot read when the pack names a move nowhere', () => {
+    const { container } = renderMoves({
+      pack: { ...pack, moves: pack.moves.filter((move) => move.id !== 2) },
+    });
+    const row = moveRow(container, 'future-level-up', 'Move #2');
+    expect(within(row).getByText('Move #2')).not.toHaveAccessibleDescription();
+    // Neither the type nor the class is guessed at, and nothing points at a description that is
+    // not there — the row states the id it could not resolve and stops.
+    expect(row.querySelectorAll('.move-entry-type, .move-entry-class')).toHaveLength(0);
+    expect(row.querySelector('.move-entry-name')).not.toHaveAttribute('aria-describedby');
+  });
+
+  it('never offers to edit a member’s moves', () => {
+    const { container } = renderMoves();
+    expect(container.querySelectorAll('button')).toHaveLength(0);
+    expect(screen.queryByText('Planned')).toBeNull();
   });
 
   it('never surfaces simulation or expected-time math', () => {

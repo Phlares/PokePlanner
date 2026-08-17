@@ -1,9 +1,8 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { TeamManifest } from './TeamManifest';
+import { TeamManifest, type ManifestDraft } from './TeamManifest';
 import { loadFireRedPackFixture } from '../../test/firered-pack';
 import { createEmptyTeam, type TeamMember, type TeamState } from '../../domain/team';
-import type { MemberDraft } from '../workbench/PokemonInspector';
 
 const pack = loadFireRedPackFixture();
 
@@ -28,7 +27,7 @@ function teamWith(primary: (TeamMember | null)[]): TeamState {
   return { primary: slots, reserve: base.reserve };
 }
 
-const draft: MemberDraft = {
+const draft: ManifestDraft = {
   speciesId: 56,
   level: 8,
   abilityId: 72,
@@ -79,7 +78,7 @@ describe('TeamManifest', () => {
   });
 
   it('replaces an occupied slot with the current draft', () => {
-    const replacement: MemberDraft = { ...draft, level: 40 };
+    const replacement: ManifestDraft = { ...draft, level: 40 };
     const { onTeamChange } = renderManifest({ team: teamWith([mankey()]), draft: replacement });
     fireEvent.click(screen.getByRole('button', { name: /replace primary slot 1/i }));
     const next = onTeamChange.mock.calls[0][0] as TeamState;

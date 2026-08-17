@@ -1,3 +1,5 @@
+import type { MoveRecord } from '../../domain/pack';
+import type { StatKey } from '../../domain/rules/game-rules';
 import type { ObtainabilityStatus } from '../../domain/search';
 import type { CapabilityState } from '../../domain/timeline/capabilities';
 import { titleCase } from '../text';
@@ -58,4 +60,41 @@ export function methodLabel(methods: readonly string[]): string {
 export function levelLabel(min: number | null, max: number | null): string | null {
   if (min === null || max === null) return null;
   return min === max ? `Lv ${min}` : `Lv ${min}–${max}`;
+}
+
+/** Said by every surface that has to report the pack placing a species on no golden-path node. */
+export function nowhereLabel(name: string): string {
+  return `The pack places ${name} nowhere on the golden path.`;
+}
+
+/** The six stats, in the order every surface shows them, named once (spec §16). */
+export const STAT_ORDER: readonly StatKey[] = [
+  'hp', 'attack', 'defense', 'specialAttack', 'specialDefense', 'speed',
+];
+
+export const STAT_LABEL: Record<StatKey, string> = {
+  hp: 'HP',
+  attack: 'Attack',
+  defense: 'Defense',
+  specialAttack: 'Sp. Atk',
+  specialDefense: 'Sp. Def',
+  speed: 'Speed',
+};
+
+/**
+ * The stat a move attacks with, read off the damage class the pack records for that move. A status
+ * move attacks with none. Because the class is per move rather than per type, no surface has to
+ * know which generation split them.
+ */
+const ATTACKING_STAT: Record<MoveRecord['damageClass'], StatKey | null> = {
+  physical: 'attack',
+  special: 'specialAttack',
+  status: null,
+};
+
+/** What a move row states about how it deals damage, in one sentence (spec §17). */
+export function moveClassDescription(damageClass: MoveRecord['damageClass']): string {
+  const stat = ATTACKING_STAT[damageClass];
+  const opening = `${titleCase(damageClass)} move`;
+  return stat === null ? opening : `${opening} · uses ${STAT_LABEL[stat]}`;
 }

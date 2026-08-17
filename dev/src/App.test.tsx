@@ -603,7 +603,8 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Edit Mankey #1' }));
     fireEvent.click(screen.getByRole('button', { name: 'Close editor' }));
 
-    // Copy Brock to Misty. Only active members auto-level; boxed Mankey #2 stays level 5.
+    // Copy Brock to Misty. Only active members auto-level, so boxed Mankey #2 stays at the level
+    // the pack records for its earliest acquisition — the inspector no longer types one in.
     fireEvent.click(screen.getByRole('button', { name: 'Major Events' }));
     fireEvent.click(screen.getByRole('button', { name: /Misty.*Auto-filled/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Copy previous' }));
@@ -611,12 +612,12 @@ describe('App boot and persistence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Create Misty keyframe' }));
     const mistyReserve = screen.getByRole('region', { name: /Reserve.*1 Pok/i });
     expect(mistyReserve).toHaveTextContent('Mankey #2');
-    expect(mistyReserve).toHaveTextContent('Lv 5');
+    expect(mistyReserve).toHaveTextContent('Lv 2');
     await waitFor(async () => {
       const timeline = (await active.get()!.list())[0].timeline;
       expect(timeline.keyframes['misty-gym'].snapshots[starterMemberId].level).toBe(21);
       expect(timeline.keyframes['misty-gym'].snapshots[mankeyOneId].level).toBe(21);
-      expect(timeline.keyframes['misty-gym'].snapshots[mankeyTwoId].level).toBe(5);
+      expect(timeline.keyframes['misty-gym'].snapshots[mankeyTwoId].level).toBe(2);
     });
 
     // A forward replacement affects Brock but stops at the explicit Mt Moon override.

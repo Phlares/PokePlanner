@@ -1,46 +1,41 @@
-import { useMemo, useState } from 'react';
+import { useId, useMemo } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import {
   evaluateMoveAvailability,
   type AvailabilityContext,
   type MoveAvailabilityEntry,
 } from '../../domain/availability';
-import type { PlannedMove, PlannedMoveStatus } from '../../domain/team';
+import { titleCase } from '../text';
+import { moveClassDescription } from './labels';
 
 export interface MoveAvailabilityProps {
   pokemonId: number;
   pack: FireRedPack;
   context: AvailabilityContext;
-  /** Emitted when the planner plans one move; future choices keep their availability label. */
-  onPlanMove?: (move: PlannedMove) => void;
 }
 
 interface DrawerEntry {
   entry: MoveAvailabilityEntry;
   name: string;
+  /** Null only when the pack names the move nowhere, which leaves nothing to state about it. */
+  type: string | null;
+  description: string | null;
   location: string | null;
-  planned: PlannedMove;
-}
-
-function plannedFrom(entry: MoveAvailabilityEntry): PlannedMove {
-  const status = entry.status as PlannedMoveStatus;
-  return {
-    moveId: entry.moveId,
-    status,
-    level: entry.status === 'future-level' ? entry.evidence.level : null,
-    milestoneId: entry.status === 'future-milestone' ? entry.evidence.milestoneId : null,
-  };
 }
 
 /**
  * The move-availability drawers for one Pokémon in the current planning context. It CONSUMES the
- * pure Task 8 `evaluateMoveAvailability` verdict and sorts moves into four SEPARATE native
- * `<details>` disclosures: current level-up, upcoming level-up, available machine/tutor/breeding,
- * and future-milestone. Every future entry surfaces its milestone, location, and prerequisite
- * evidence so a planned future choice is never silently promoted into the current set.
+ * pure `evaluateMoveAvailability` verdict and sorts moves into four SEPARATE native `<details>`
+ * disclosures: current level-up, upcoming level-up, available machine/tutor/breeding, and
+ * future-milestone. Every future entry surfaces its milestone, location, and prerequisite evidence
+ * so a planned future choice is never silently promoted into the current set.
+ *
+ * Every row is read-only (spec §5): it names the move, its type, its damage class and the stat it
+ * attacks with, and the requirement it waits on. Choosing moves for an owned member belongs to the
+ * timeline member editor, never to a browsing surface.
  */
-export function MoveAvailability({ pokemonId, pack, context, onPlanMove }: MoveAvailabilityProps) {
-  const [plannedMoveIds, setPlannedMoveIds] = useState<ReadonlySet<number>>(() => new Set());
+export function MoveAvailability({ pokemonId, pack, context }: MoveAvailabilityProps) {
+  const descriptionId = useId();
 
   const report = useMemo(
     () => evaluateMoveAvailability(context, pokemonId, pack),
@@ -48,17 +43,25 @@ export function MoveAvailability({ pokemonId, pack, context, onPlanMove }: MoveA
   );
 
   const groups = useMemo(() => {
-    const nameById = new Map(pack.moves.map((record) => [record.id, record.name] as const));
+    const moveById = new Map(pack.moves.map((record) => [record.id, record] as const));
     const nodeNameById = new Map(pack.progression.nodes.map((node) => [node.id, node.name] as const));
     const decorate = (entries: MoveAvailabilityEntry[]): DrawerEntry[] =>
-      entries.map((entry) => ({
-        entry,
-        name: nameById.get(entry.moveId) ?? `Move #${entry.moveId}`,
-        location: entry.evidence.location === null
+      entries.map((entry) => {
+        const move = moveById.get(entry.moveId);
+        const location = entry.evidence.location === null
           ? null
-          : nodeNameById.get(entry.evidence.location) ?? entry.evidence.location,
-        planned: plannedFrom(entry),
-      }));
+          : nodeNameById.get(entry.evidence.location) ?? entry.evidence.location;
+        // A move the pack names nowhere states its id and nothing else; nothing is guessed at.
+        return move === undefined
+          ? { entry, name: `Move #${entry.moveId}`, type: null, description: null, location }
+          : {
+            entry,
+            name: move.name,
+            type: titleCase(move.type),
+            description: moveClassDescription(move.damageClass),
+            location,
+          };
+      });
     return {
       currentLevelUp: decorate(report.availableNow.filter((entry) => entry.evidence.method === 'level-up')),
       futureLevel: decorate(report.futureLevel),
@@ -67,28 +70,22 @@ export function MoveAvailability({ pokemonId, pack, context, onPlanMove }: MoveA
     };
   }, [report, pack]);
 
-  const plan = (planned: PlannedMove): void => {
-    setPlannedMoveIds((current) => new Set(current).add(planned.moveId));
-    onPlanMove?.(planned);
-  };
-
-  const renderEntry = (item: DrawerEntry, showEvidence: boolean) => {
+  const renderEntry = (item: DrawerEntry, group: string, showEvidence: boolean) => {
     const { entry, name } = item;
-    const isPlanned = plannedMoveIds.has(entry.moveId);
+    const classId = `${descriptionId}-${group}-${entry.moveId}`;
     return (
       <li key={entry.moveId} className="move-entry">
         <div className="move-entry-head">
-          <span className="move-entry-name">{name}</span>
-          {isPlanned && <span className="move-entry-planned">Planned</span>}
-          <button
-            type="button"
-            className="move-entry-plan"
-            aria-label={`Plan ${name}`}
-            aria-pressed={isPlanned}
-            onClick={() => plan(item.planned)}
+          <span
+            className="move-entry-name"
+            aria-describedby={item.description === null ? undefined : classId}
           >
-            Plan
-          </button>
+            {name}
+          </span>
+          {item.type !== null && <span className="move-entry-type">{item.type}</span>}
+          {item.description !== null && (
+            <span className="move-entry-class" id={classId}>{item.description}</span>
+          )}
         </div>
         {showEvidence && (
           <dl className="move-evidence">
@@ -131,7 +128,7 @@ export function MoveAvailability({ pokemonId, pack, context, onPlanMove }: MoveA
         count={groups.currentLevelUp.length}
         defaultOpen
       >
-        {groups.currentLevelUp.map((item) => renderEntry(item, false))}
+        {groups.currentLevelUp.map((item) => renderEntry(item, 'current-level-up', false))}
       </MoveDrawer>
 
       <MoveDrawer
@@ -139,7 +136,7 @@ export function MoveAvailability({ pokemonId, pack, context, onPlanMove }: MoveA
         title="Upcoming level-up moves"
         count={groups.futureLevel.length}
       >
-        {groups.futureLevel.map((item) => renderEntry(item, true))}
+        {groups.futureLevel.map((item) => renderEntry(item, 'future-level-up', true))}
       </MoveDrawer>
 
       <MoveDrawer
@@ -147,7 +144,7 @@ export function MoveAvailability({ pokemonId, pack, context, onPlanMove }: MoveA
         title="Available machine, tutor & breeding moves"
         count={groups.machineTutor.length}
       >
-        {groups.machineTutor.map((item) => renderEntry(item, true))}
+        {groups.machineTutor.map((item) => renderEntry(item, 'machine-tutor', true))}
       </MoveDrawer>
 
       <MoveDrawer
@@ -155,7 +152,7 @@ export function MoveAvailability({ pokemonId, pack, context, onPlanMove }: MoveA
         title="Future-milestone moves"
         count={groups.futureMilestone.length}
       >
-        {groups.futureMilestone.map((item) => renderEntry(item, true))}
+        {groups.futureMilestone.map((item) => renderEntry(item, 'future-milestone', true))}
       </MoveDrawer>
     </div>
   );

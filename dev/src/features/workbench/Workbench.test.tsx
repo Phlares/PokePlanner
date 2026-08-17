@@ -154,6 +154,36 @@ function doubledSpeciesPlaythrough(
   }, packIndex());
 }
 
+/** Six members in the party at the planning target, so a candidate finds no slot open. */
+function fullPartyPlaythrough(): Playthrough {
+  const starter = pack.pokemon.find((record) => record.id === 1)!;
+  const ids = ['m1', 'm2', 'm3', 'm4', 'm5', 'm6'];
+  const base = emptyPlaythrough();
+  return parsePlaythrough({
+    ...base,
+    currentMilestoneId: 'starter',
+    previewMilestoneId: 'brock-gym',
+    timeline: {
+      members: Object.fromEntries(ids.map((id, index) => [id, {
+        id, originalSpeciesId: 1, speciesSequence: index + 1, nickname: null, natureId: null,
+        origin: { type: 'inferred', acquisitionId: null, note: null },
+        acquiredAtNodeId: 'starter', notes: '', lifecycle: [],
+      }])),
+      keyframes: {
+        starter: {
+          nodeId: 'starter', kind: 'major', party: ids, reserve: [], released: [],
+          snapshots: Object.fromEntries(ids.map((id, index) => [id, {
+            speciesId: 1, level: 5, abilityId: starter.abilities[0].id, moves: [], heldItemId: null,
+            placement: 'party', partySlot: index, review: { moves: false, heldItem: false },
+          }])),
+        },
+      },
+      overrides: {},
+      preferences: { levelMode: 'manual', autoEvolveLevel: false },
+    },
+  }, packIndex());
+}
+
 function restoredStarterPlaythrough(): Playthrough {
   const run = starterPlaythrough();
   run.timeline.members.starter.lifecycle = [
@@ -850,6 +880,75 @@ describe('Workbench', () => {
     const inspector = screen.getByRole('complementary', { name: 'Mankey inspector' });
     expect(within(inspector).getByRole('heading', { name: 'Mankey' }).textContent).toBe('Mankey');
     expect(screen.queryByRole('complementary', { name: 'Rattata inspector' })).toBeNull();
+  });
+
+  it('offers the candidate both an open party slot and the reserve', () => {
+    renderWorkbench({ playthrough: starterPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+
+    const actions = within(screen.getByRole('group', { name: 'Mankey actions' }));
+    expect(actions.getAllByRole('button').map((button) => button.textContent))
+      .toEqual(['Add Mankey to Brock party', 'Add Mankey to reserve']);
+    expect(screen.queryByText(/Choose a party member to compare/)).toBeNull();
+  });
+
+  it('asks for a comparison subject instead of a party slot once the party is full', () => {
+    renderWorkbench({ playthrough: fullPartyPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+
+    const actions = within(screen.getByRole('group', { name: 'Mankey actions' }));
+    expect(actions.getAllByRole('button').map((button) => button.textContent))
+      .toEqual(['Add Mankey to reserve']);
+    expect(screen.getByText('Choose a party member to compare with Mankey.')).toBeVisible();
+  });
+
+  // Spec §14 seam: with a subject chosen, the primary action becomes the comparison Task 8 builds.
+  it('drops the comparison prompt once a party member is selected', () => {
+    renderWorkbench({ playthrough: fullPartyPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    expect(screen.getByText('Choose a party member to compare with Mankey.')).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: /^Party slot 1: Bulbasaur/ }));
+    expect(screen.queryByText(/Choose a party member to compare/)).toBeNull();
+  });
+
+  // Spec §5: the inspector holds no draft, so the member the run gains has to come from evidence.
+  it('builds an added member from the pack’s earliest acquisition, not from typed-in fields', () => {
+    const { onPlaythroughChange } = renderWorkbench({ playthrough: starterPlaythrough() });
+    typeSearch('Rattata'); // two abilities, so slot 1 is not simply the only one on offer
+    fireEvent.click(screen.getByRole('button', { name: 'Select Rattata at Route 1' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Rattata to reserve' }));
+
+    const next = onPlaythroughChange.mock.calls[0][0] as Playthrough;
+    const member = Object.values(next.timeline.members).find((record) => record.originalSpeciesId === 19)!;
+    expect(member.acquiredAtNodeId).toBe('kanto-route-1'); // not the planning target it was added at
+    const frames = [...Object.values(next.timeline.keyframes), ...Object.values(next.timeline.overrides)];
+    const snapshot = frames.map((frame) => frame.snapshots[member.id])
+      .find((candidate) => candidate !== undefined)!;
+    expect(snapshot.level).toBe(2); // Route 1 states Rattata at Lv 2–4; Brock's target level is 14
+    const abilities = pack.pokemon.find((record) => record.id === 19)!.abilities;
+    expect(snapshot.abilityId).toBe(abilities.find((ability) => ability.slot === 1)!.id);
+    expect(snapshot.abilityId).not.toBe(abilities.find((ability) => ability.slot === 2)!.id);
+    expect(snapshot.moves).toEqual([]);
+    // Reserve means reserve: no keyframe anywhere puts a reserve-added candidate in the party.
+    expect(frames.some((frame) => frame.party.includes(member.id))).toBe(false);
+  });
+
+  it('places a candidate added to the party in the first slot still open', () => {
+    const { onPlaythroughChange } = renderWorkbench({ playthrough: starterPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Mankey to Brock party' }));
+
+    const next = onPlaythroughChange.mock.calls[0][0] as Playthrough;
+    const member = Object.values(next.timeline.members).find((record) => record.originalSpeciesId === 56)!;
+    const placed = [...Object.values(next.timeline.keyframes), ...Object.values(next.timeline.overrides)]
+      .find((frame) => frame.party.includes(member.id))!;
+    expect(placed.nodeId).toBe('brock-gym');
+    expect(placed.party.indexOf(member.id)).toBe(1); // the starter still holds slot 0
   });
 
   it('moves focus to the heading of whatever was just selected', () => {
