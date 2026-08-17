@@ -32,7 +32,6 @@ function renderLocations(
   render(
     <PokemonLocations
       locations={locations}
-      selectedNodeId={null}
       onSelectLocation={onSelectLocation}
       {...overrides}
     />,
@@ -114,13 +113,14 @@ describe('PokemonLocations', () => {
     expect(screen.queryByText('Transfer only')).toBeNull();
   });
 
-  it('opens a location and marks the one already open', () => {
-    const { onSelectLocation } = renderLocations(locationsOf(56), { selectedNodeId: 'kanto-route-3' });
-    const route22 = screen.getByRole('button', { name: 'Inspect Mankey at Route 22' });
-    expect(route22).toHaveAttribute('aria-pressed', 'false');
-    expect(screen.getByRole('button', { name: 'Inspect Mankey at Route 3' })).toHaveAttribute('aria-pressed', 'true');
+  it('opens the location a path names, and no other', () => {
+    const { onSelectLocation } = renderLocations(locationsOf(56));
 
-    fireEvent.click(route22);
+    fireEvent.click(screen.getByRole('button', { name: 'Inspect Mankey at Route 22' }));
     expect(onSelectLocation).toHaveBeenCalledWith('kanto-route-22');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Inspect Mankey at Rock Tunnel' }));
+    expect(onSelectLocation).toHaveBeenLastCalledWith('rock-tunnel');
+    expect(onSelectLocation).toHaveBeenCalledTimes(2);
   });
 });

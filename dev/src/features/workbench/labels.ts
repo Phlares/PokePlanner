@@ -38,6 +38,9 @@ export const OBTAIN_LABEL: Partial<Record<ObtainabilityStatus, string>> = {
   'transfer-only': 'Transfer only',
 };
 
+/** A name filter that matched the whole name or slug, not merely a substring (spec §11). */
+export const EXACT_MATCH_LABEL = 'Exact match';
+
 export function matchLabel(count: number): string {
   return `${count} ${count === 1 ? 'match' : 'matches'}`;
 }

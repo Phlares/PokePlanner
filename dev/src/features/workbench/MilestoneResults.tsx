@@ -5,6 +5,7 @@ import { FUTURE_TEASER_SECTION_ID, NO_MATCH_SUMMARY_SECTION_ID } from './control
 import {
   ACCESS_LABEL,
   CAPABILITY_LABEL,
+  EXACT_MATCH_LABEL,
   OBTAIN_LABEL,
   gateLabel,
   levelLabel,
@@ -157,7 +158,7 @@ export function MilestoneResults({
           <span className="results-match-name">{match.name}</span>
           <span className="results-match-methods">{match.methods.map(titleCase).join(', ')}</span>
         </button>
-        {match.exactMatch && <span className="results-match-exact">Exact match</span>}
+        {match.exactMatch && <span className="results-match-exact">{EXACT_MATCH_LABEL}</span>}
         {obtainLabel !== undefined && (
           <span className="results-match-obtain" data-status={match.obtainability.status}>{obtainLabel}</span>
         )}

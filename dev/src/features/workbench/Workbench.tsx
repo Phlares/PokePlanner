@@ -30,9 +30,8 @@ import {
 import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
 import { MilestoneResults } from './MilestoneResults';
 import { PokemonInspector, type MemberDraft } from './PokemonInspector';
-import { PokemonLocations } from './PokemonLocations';
-import { RouteDetail } from './RouteDetail';
 import { TeamStrip, type TeamStripSlot } from './TeamStrip';
+import { WorkbenchDetail } from './WorkbenchDetail';
 import { WorkbenchShell } from './WorkbenchShell';
 import { WorkbenchToolbar } from './WorkbenchToolbar';
 import {
@@ -45,8 +44,6 @@ import {
   milestoneNodeId,
   revealsFutureNodes,
   selectMilestoneResults,
-  selectPokemonLocations,
-  selectRouteDetail,
   type MilestoneResultsInput,
 } from './selectors';
 
@@ -243,20 +240,12 @@ export function Workbench({
 
   const selectedNodeId = controller.detail.kind === 'route' ? controller.detail.nodeId : null;
   const selectedPokemonId = controller.candidatePokemonId;
-  const candidateSpecies = selectedPokemonId === null
-    ? null
-    : pack.pokemon.find((record) => record.id === selectedPokemonId) ?? null;
+  const candidateSpecies = pack.pokemon.find((record) => record.id === selectedPokemonId) ?? null;
 
-  // Spec §20: a selected route hands focus to the pane's heading, a selected species to the
-  // inspector's. Both are keyed on the selection itself, so a group the search expands on its own
-  // never moves focus off the field producing it.
-  const routeHeading = useRef<HTMLHeadingElement>(null);
+  // Spec §20: a selected species hands focus to the inspector's heading; the route half of the
+  // same rule belongs to the pane that owns the heading. Keyed on the selection itself, so a group
+  // the search expands on its own never moves focus off the field producing it.
   const inspectorHeading = useRef<HTMLHeadingElement>(null);
-  useEffect(() => {
-    if (selectedNodeId === null) return;
-    routeHeading.current?.focus();
-    routeHeading.current?.scrollIntoView?.({ block: 'start' });
-  }, [selectedNodeId]);
   useEffect(() => {
     if (selectedPokemonId === null) return;
     inspectorHeading.current?.focus();
@@ -368,17 +357,6 @@ export function Workbench({
   // One grouping drives the whole primary surface: the sections, their folds, the route rows and
   // the totals the toolbar announces all come out of this single derivation of the controller state.
   const results = useMemo(() => selectMilestoneResults(resultsInput), [resultsInput]);
-
-  const routeDetail = useMemo(
-    () => (selectedNodeId === null ? null : selectRouteDetail(selectedNodeId, resultsInput)),
-    [resultsInput, selectedNodeId],
-  );
-  const pokemonLocations = useMemo(
-    () => (controller.detail.kind !== 'pokemon-locations' || selectedPokemonId === null
-      ? null
-      : selectPokemonLocations(selectedPokemonId, resultsInput)),
-    [controller.detail.kind, resultsInput, selectedPokemonId],
-  );
 
   const briefing = useMemo(
     () => selectMilestoneBriefing(targetMilestone.id, { pack, rules: FIRE_RED_RULES }),
@@ -495,40 +473,12 @@ export function Workbench({
     emit({ timeline: placeInParty(acquired, targetNodeId, memberId, slot as 0 | 1 | 2 | 3 | 4 | 5, index) });
   };
 
+  // Spec §8: selecting a species opens Pokémon mode, Where & When and the inspector. Every surface
+  // offering a species emits this one action; the route it was read off stays the run's last route,
+  // which the Routes toggle brings back.
   const selectCandidate = (pokemonId: number): void => {
     dispatch({ type: 'candidate-selected', pokemonId });
   };
-
-  // The centre pane follows the controller's detail, which is the one place mode changes and
-  // selections are reconciled: Routes shows the node, Pokémon shows Where & When, and the region
-  // names whichever it is holding so the landmark and the heading agree.
-  const detailPane = routeDetail !== null ? (
-    <RouteDetail
-      route={routeDetail}
-      milestoneName={FIRE_RED_RULES.milestones
-        .find((milestone) => milestone.id === routeDetail.milestoneId)?.name ?? routeDetail.milestoneId}
-      pack={pack}
-      selectedPokemonId={selectedPokemonId}
-      matchedPokemonIds={hasActiveSearchQuery(controller.query)
-        ? new Set(routeDetail.matches.map((match) => match.pokemonId))
-        : null}
-      capabilityStates={capabilityStates}
-      onSelectPokemon={(pokemonId) => {
-        dispatch({ type: 'candidate-selected', pokemonId });
-        dispatch({ type: 'candidate-location-selected', nodeId: routeDetail.nodeId });
-      }}
-      headingRef={routeHeading}
-    />
-  ) : pokemonLocations !== null ? (
-    <PokemonLocations
-      locations={pokemonLocations}
-      selectedNodeId={selectedNodeId}
-      onSelectLocation={(nodeId) => dispatch({ type: 'candidate-location-selected', nodeId })}
-    />
-  ) : (
-    <p className="workbench-placeholder">Choose a route from a milestone group.</p>
-  );
-  const detailLabel = routeDetail === null && pokemonLocations !== null ? 'Where & When' : 'Route detail';
 
   const workspace = (
     <div className="workbench">
@@ -631,10 +581,12 @@ export function Workbench({
         />
       </div>
 
-      <section className="workbench-table" aria-label={detailLabel}>
-        {detailPane}
-      </section>
-
+      <WorkbenchDetail
+        input={resultsInput}
+        capabilityStates={capabilityStates}
+        onSelectPokemon={selectCandidate}
+        onSelectLocation={(nodeId) => dispatch({ type: 'candidate-location-selected', nodeId })}
+      />
     </div>
   );
 

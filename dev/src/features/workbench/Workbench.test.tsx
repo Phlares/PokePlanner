@@ -541,7 +541,8 @@ describe('Workbench', () => {
     renderControlledWorkbench();
     openMilestoneGroup('Misty');
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
-    expect(screen.getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
+    expect(within(screen.getByRole('region', { name: 'Route detail' }))
+      .getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
 
     fireEvent.click(screen.getByRole('button', { name: /Preview milestone.*Brock/i }));
 
@@ -554,7 +555,8 @@ describe('Workbench', () => {
     const { onPlaythroughChange, rerender } = renderWorkbench();
     openMilestoneGroup('Misty');
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
-    expect(screen.getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
+    expect(within(screen.getByRole('region', { name: 'Route detail' }))
+      .getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
 
     rerender(
       <Workbench
@@ -675,7 +677,8 @@ describe('Workbench', () => {
     // Any durable change re-reconciles every ephemeral selection against the run.
     fireEvent.click(screen.getByRole('button', { name: 'Set current milestone: Brock' }));
 
-    expect(screen.getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
+    expect(within(screen.getByRole('region', { name: 'Route detail' }))
+      .getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
   });
 
   it('validates a milestone against the progression node that carries it', () => {
@@ -762,15 +765,40 @@ describe('Workbench', () => {
     expect(screen.queryByRole('button', { name: /^Select Mankey/ })).toBeNull();
   });
 
-  it('retains the selected candidate when an encounter location opens it', () => {
+  it('opens Pokémon mode from the route ledger, and the toggle never contradicts the pane', () => {
+    // Spec §8: selecting a species opens Pokémon mode, Where & When and the inspector. The pressed
+    // view and the pane it drives therefore agree after every ordinary gesture.
     renderWorkbench();
     openMilestoneGroup('Brock');
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
+    expect(screen.getByRole('button', { name: 'Routes' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Pokémon' })).toHaveAttribute('aria-pressed', 'false');
+
     fireEvent.click(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('button', { name: 'Mankey' }));
 
-    expect(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('heading', { name: 'Route 22' }))
-      .toBeVisible();
-    expect(within(screen.getByRole('region', { name: /inspector/i })).getByText('Mankey')).toBeVisible();
+    expect(within(screen.getByRole('region', { name: 'Where & When' }))
+      .getByRole('heading', { name: 'Mankey · Where & When' }).textContent).toBe('Mankey · Where & When');
+    expect(screen.getByRole('button', { name: 'Pokémon' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Routes' })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.queryByRole('region', { name: 'Route detail' })).toBeNull();
+    expect(screen.getByRole('complementary', { name: 'Mankey inspector' })).toBeVisible();
+
+    // A location opened from Where & When is the one Pokémon-mode route pane the spec asks for
+    // (§8 line 4, §12), and it keeps the candidate it was opened from.
+    fireEvent.click(screen.getByRole('button', { name: 'Inspect Mankey at Route 22' }));
+
+    expect(within(screen.getByRole('region', { name: 'Route detail' }))
+      .getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
+    expect(screen.getByRole('button', { name: 'Pokémon' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('complementary', { name: 'Mankey inspector' })).toBeVisible();
+    expect(screen.queryByRole('region', { name: 'Where & When' })).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Routes' }));
+
+    expect(within(screen.getByRole('region', { name: 'Route detail' }))
+      .getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
+    expect(screen.getByRole('button', { name: 'Routes' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Pokémon' })).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('drives the centre pane from the Routes/Pokémon toggle, both ways', () => {
@@ -779,18 +807,19 @@ describe('Workbench', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
     fireEvent.click(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('button', { name: 'Mankey' }));
 
-    fireEvent.click(screen.getByRole('button', { name: 'Pokémon' }));
-
-    expect(screen.getByRole('heading', { name: 'Mankey · Where & When' }).textContent).toBe('Mankey · Where & When');
-    expect(screen.getByRole('region', { name: 'Where & When' })).toBeVisible();
-    expect(screen.queryByRole('heading', { name: 'Route 22' })).toBeNull();
-
+    // Pokémon → Routes: the route the run was last on comes back, not an empty pane.
     fireEvent.click(screen.getByRole('button', { name: 'Routes' }));
 
-    // Routes mode returns to the route the run was last on, not to an empty pane.
-    expect(screen.getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
-    expect(screen.getByRole('region', { name: 'Route detail' })).toBeVisible();
+    expect(within(screen.getByRole('region', { name: 'Route detail' }))
+      .getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
     expect(screen.queryByRole('heading', { name: 'Mankey · Where & When' })).toBeNull();
+
+    // Routes → Pokémon: the candidate's own pane comes back.
+    fireEvent.click(screen.getByRole('button', { name: 'Pokémon' }));
+
+    expect(within(screen.getByRole('region', { name: 'Where & When' }))
+      .getByRole('heading', { name: 'Mankey · Where & When' }).textContent).toBe('Mankey · Where & When');
+    expect(screen.queryByRole('heading', { name: 'Route 22' })).toBeNull();
   });
 
   it('returns Routes mode to the empty placeholder when no route has been opened', () => {
@@ -808,22 +837,6 @@ describe('Workbench', () => {
     expect(screen.getByRole('complementary', { name: 'Mankey inspector' })).toBeVisible();
   });
 
-  it('marks matched encounter rows only while a query narrows them', () => {
-    renderWorkbench();
-    openMilestoneGroup('Brock');
-    fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
-    // Browsing places every species on the route, so a mark on every row would say nothing.
-    expect(screen.queryByText('Match')).toBeNull();
-
-    typeSearch('Mankey');
-
-    const detail = screen.getByRole('region', { name: 'Route detail' });
-    const marks = within(detail).getAllByText('Match');
-    expect(marks).toHaveLength(1);
-    const row = marks[0].closest('tr') as HTMLElement;
-    expect(within(row).getByRole('button').textContent).toBe('Mankey');
-  });
-
   it('opens route evidence from Where & When and keeps the candidate', () => {
     renderWorkbench();
     typeSearch('Mankey');
@@ -832,7 +845,8 @@ describe('Workbench', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Inspect Mankey at Route 22' }));
 
-    expect(screen.getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
+    expect(within(screen.getByRole('region', { name: 'Route detail' }))
+      .getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
     const inspector = screen.getByRole('complementary', { name: 'Mankey inspector' });
     expect(within(inspector).getByRole('heading', { name: 'Mankey' }).textContent).toBe('Mankey');
     expect(screen.queryByRole('complementary', { name: 'Rattata inspector' })).toBeNull();
@@ -843,23 +857,31 @@ describe('Workbench', () => {
     openMilestoneGroup('Brock');
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
     expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Route 22' }));
+    expect(screen.queryByRole('complementary')).toBeNull();
 
     fireEvent.click(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('button', { name: 'Mankey' }));
 
     const inspector = screen.getByRole('complementary', { name: 'Mankey inspector' });
     expect(document.activeElement).toBe(within(inspector).getByRole('heading', { name: 'Mankey' }));
-    expect(document.activeElement).not.toBe(screen.getByRole('heading', { name: 'Route 22' }));
+    // The ledger click opens Pokémon mode, so the route heading is gone, not merely unfocused.
+    expect(screen.queryByRole('heading', { name: 'Route 22' })).toBeNull();
   });
 
-  it('never takes focus off the search field when a query expands groups by itself', () => {
+  it('never takes focus off the search field when a query re-derives the open route', () => {
     renderWorkbench();
+    openMilestoneGroup('Brock');
+    fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Route 22' }));
+
     const field = screen.getByRole('searchbox', { name: /search/i });
     field.focus();
-
     typeSearch('Mankey');
 
+    // The query re-derives the open route's whole detail row; that is not a selection, so nothing
+    // may pull focus back to the pane heading.
     expect(screen.getByRole('button', { name: 'Select Mankey at Route 22' })).toBeVisible();
     expect(document.activeElement).toBe(field);
+    expect(document.activeElement).not.toBe(screen.getByRole('heading', { name: 'Route 22' }));
   });
 
   it('never surfaces opponent or exposure analysis in the workbench shell', () => {

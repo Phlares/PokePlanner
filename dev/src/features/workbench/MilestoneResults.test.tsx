@@ -390,6 +390,27 @@ describe('MilestoneResults', () => {
     expect(within(optional).queryByText(/Needs/)).toBeNull();
   });
 
+  it('states a one-level band as one level, and a real band as a range', () => {
+    renderResults({
+      sections: [group({
+        routes: [
+          route({ levelRange: { min: 5, max: 5 } }),
+          route({ nodeId: 'viridian-forest', name: 'Viridian Forest', levelRange: { min: 3, max: 5 } }),
+        ],
+        matchCount: 1,
+      })],
+      totalPokemon: 1,
+      totalRoutes: 2,
+    });
+
+    const flat = screen.getByRole('button', { name: 'Route 22' }).closest('li') as HTMLElement;
+    expect(within(flat).getByText('1 match · Lv 5').textContent).toBe('1 match · Lv 5');
+    expect(within(flat).queryByText('1 match · Lv 5–5')).toBeNull();
+
+    const band = screen.getByRole('button', { name: 'Viridian Forest' }).closest('li') as HTMLElement;
+    expect(within(band).getByText('1 match · Lv 3–5').textContent).toBe('1 match · Lv 3–5');
+  });
+
   it('marks an exact name match in text as well as in styling', () => {
     renderResults({
       sections: [group({

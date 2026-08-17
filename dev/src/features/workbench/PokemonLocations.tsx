@@ -5,8 +5,6 @@ import type { PokemonLocationsResult } from './selectors';
 export interface PokemonLocationsProps {
   /** The species' whole acquisition history; see `selectPokemonLocations`. */
   locations: PokemonLocationsResult;
-  /** The location whose route evidence is open, so the path that opened it stays marked. */
-  selectedNodeId: string | null;
   onSelectLocation: (nodeId: string) => void;
 }
 
@@ -17,9 +15,11 @@ export interface PokemonLocationsProps {
  * stands, with any story event the location waits on stated in words.
  *
  * Selecting a path opens that location's route evidence; the candidate is the caller's to keep, so
- * this pane never drops it. It derives nothing — the paths arrive resolved and chronological.
+ * this pane never drops it. No path is ever marked as the open one: a `pokemon-locations` detail
+ * carries no node, and the last route the run opened is not on screen while this pane is.
+ * It derives nothing — the paths arrive resolved and chronological.
  */
-export function PokemonLocations({ locations, selectedNodeId, onSelectLocation }: PokemonLocationsProps) {
+export function PokemonLocations({ locations, onSelectLocation }: PokemonLocationsProps) {
   const obtainLabel = OBTAIN_LABEL[locations.obtainability.status];
 
   return (
@@ -41,7 +41,6 @@ export function PokemonLocations({ locations, selectedNodeId, onSelectLocation }
                 type="button"
                 className="pokemon-locations-select"
                 aria-label={`Inspect ${locations.name} at ${path.name}`}
-                aria-pressed={selectedNodeId === path.nodeId}
                 onClick={() => onSelectLocation(path.nodeId)}
               >
                 <span className="pokemon-locations-name">{path.name}</span>

@@ -809,6 +809,7 @@ button:disabled {
 
 .route-detail-match-methods,
 .route-detail-match-level,
+.route-detail-match-exact,
 .route-detail-match-obtain,
 .route-detail-match-capability {
   font-family: var(--font-mono);
@@ -816,8 +817,17 @@ button:disabled {
   color: var(--ink-soft);
 }
 
+.route-detail-match-exact,
 .route-detail-match-obtain,
 .route-detail-match-capability { border: var(--rule); padding: 0 var(--space-1); }
+
+/* An exact name match is underscored as well as worded, so the emphasis is not carried by weight
+   alone in a monochrome ledger. */
+.route-detail-match[data-exact='true'] .route-detail-match-name {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 .route-detail-match-capability[data-state='knows'] { border-color: var(--gray-500); color: var(--ink); }
 
 /* An encounter outside ordinary play is set apart as well as worded, never by the wording alone. */
@@ -863,11 +873,6 @@ button:disabled {
 }
 
 .pokemon-locations-select:hover .pokemon-locations-name { text-decoration: underline; }
-
-.pokemon-locations-select[aria-pressed='true'] .pokemon-locations-name {
-  font-weight: 600;
-  text-decoration: underline;
-}
 
 .pokemon-locations-access,
 .pokemon-locations-meta,

@@ -88,6 +88,21 @@ describe('RouteDetail', () => {
     expect(screen.queryByRole('button', { name: `Inspect Chikorita at ${route.name}` })).toBeNull();
   });
 
+  it('sets an exact name match apart in words as well as in styling', () => {
+    // The Safari Zone holds Paras and Parasect, so one query gives an exact hit and a partial one
+    // on the same route.
+    const safari = routeOf('kanto-safari-zone', { name: 'paras' }, 'koga-gym');
+    renderDetail(safari, { milestoneName: milestoneName('koga-gym') });
+
+    const paras = matchRow('Paras', safari.name);
+    expect(paras).toHaveAttribute('data-exact', 'true');
+    expect(within(paras).getByText('Exact match').textContent).toBe('Exact match');
+
+    const parasect = matchRow('Parasect', safari.name);
+    expect(parasect).not.toHaveAttribute('data-exact');
+    expect(within(parasect).queryByText('Exact match')).toBeNull();
+  });
+
   it('states the gates a route stands behind, and none where there are none', () => {
     const cave = routeOf('cerulean-cave', {}, 'champion');
     renderDetail(cave, { milestoneName: milestoneName('champion') });

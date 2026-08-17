@@ -495,7 +495,8 @@ describe('App boot and persistence', () => {
     await waitFor(async () => expect((await get()!.list())[0].previewMilestoneId).toBe('misty-gym'));
     revealFutureMilestones();
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
-    expect(screen.getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
+    expect(within(screen.getByRole('region', { name: 'Route detail' }))
+      .getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
 
     openRunMenu();
     const exported = downloadedRun();

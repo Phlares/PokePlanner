@@ -5,6 +5,7 @@ import { EncounterTable } from './EncounterTable';
 import {
   ACCESS_LABEL,
   CAPABILITY_LABEL,
+  EXACT_MATCH_LABEL,
   OBTAIN_LABEL,
   gateLabel,
   levelLabel,
@@ -79,7 +80,11 @@ export function RouteDetail({
             const capabilityLabel = capability === undefined ? undefined : CAPABILITY_LABEL[capability];
             const levels = levelLabel(match.minLevel, match.maxLevel);
             return (
-              <li key={match.pokemonId} className="route-detail-match">
+              <li
+                key={match.pokemonId}
+                className="route-detail-match"
+                data-exact={match.exactMatch ? 'true' : undefined}
+              >
                 <button
                   type="button"
                   className="route-detail-match-select"
@@ -91,6 +96,7 @@ export function RouteDetail({
                   <span className="route-detail-match-methods">{methodLabel(match.methods)}</span>
                 </button>
                 {levels !== null && <span className="route-detail-match-level">{levels}</span>}
+                {match.exactMatch && <span className="route-detail-match-exact">{EXACT_MATCH_LABEL}</span>}
                 {obtainLabel !== undefined && (
                   <span className="route-detail-match-obtain" data-status={match.obtainability.status}>
                     {obtainLabel}
