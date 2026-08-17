@@ -741,6 +741,145 @@ button:disabled {
   text-decoration: underline;
 }
 
+/* A matched row is set apart by a rule as well as by its word, never by a background alone. */
+.encounter-table tr[data-match] th,
+.encounter-table tr[data-match] td { border-bottom: var(--rule-strong); }
+
+.encounter-match,
+.encounter-capability {
+  margin-left: var(--space-2);
+  border: var(--rule);
+  padding: 0 var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.encounter-capability[data-state='knows'] { border-color: var(--gray-500); color: var(--ink); }
+
+/* --- Route detail: one node stated whole (spec §11) --- */
+.route-detail { display: block; }
+
+/* The pane heading takes focus when a route is selected, so the move has to be visible. */
+.workbench-region-heading:focus { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.route-detail-meta,
+.route-detail-gates {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.route-detail[data-access='locked'] .route-detail-meta,
+.route-detail[data-access='postgame'] .route-detail-meta { font-style: italic; }
+
+.route-detail-matches { margin: 0 0 var(--space-4); }
+
+.route-detail-match {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  border-top: var(--rule);
+  padding: var(--space-1) 0;
+}
+
+.route-detail-match-select {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.route-detail-match-select:hover .route-detail-match-name { text-decoration: underline; }
+
+.route-detail-match-select[aria-pressed='true'] .route-detail-match-name {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.route-detail-match-methods,
+.route-detail-match-level,
+.route-detail-match-obtain,
+.route-detail-match-capability {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.route-detail-match-obtain,
+.route-detail-match-capability { border: var(--rule); padding: 0 var(--space-1); }
+.route-detail-match-capability[data-state='knows'] { border-color: var(--gray-500); color: var(--ink); }
+
+/* An encounter outside ordinary play is set apart as well as worded, never by the wording alone. */
+.route-detail-match-obtain { border-style: dashed; }
+
+/* --- Where & When: one species' acquisition paths in progression order (spec §12) --- */
+.pokemon-locations { display: block; }
+
+.pokemon-locations-obtain {
+  display: inline-block;
+  margin: 0 0 var(--space-3);
+  border: var(--rule);
+  border-style: dashed;
+  padding: 0 var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.pokemon-locations-path {
+  border-top: var(--rule);
+  padding: var(--space-2) 0 var(--space-2) var(--space-3);
+}
+
+.pokemon-locations-path[data-access='locked'],
+.pokemon-locations-path[data-access='postgame'] { color: var(--ink-soft); }
+
+.pokemon-locations-path[data-access='locked'] .pokemon-locations-name,
+.pokemon-locations-path[data-access='postgame'] .pokemon-locations-name { font-style: italic; }
+
+.pokemon-locations-select {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.pokemon-locations-select:hover .pokemon-locations-name { text-decoration: underline; }
+
+.pokemon-locations-select[aria-pressed='true'] .pokemon-locations-name {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.pokemon-locations-access,
+.pokemon-locations-meta,
+.pokemon-locations-gates {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+.pokemon-locations-meta,
+.pokemon-locations-gates { margin: var(--space-1) 0 0; }
+
 /* --- Pokémon inspector --- */
 .inspector {
   display: flex;
@@ -754,7 +893,12 @@ button:disabled {
   gap: var(--space-2);
 }
 
+.workbench-inspector { display: block; }
+
 .inspector-name { margin: 0; font-size: var(--text-lg); }
+
+/* The inspector heading takes focus when a candidate is selected, so the move has to be visible. */
+.inspector-name:focus { outline: 2px solid var(--ink); outline-offset: 2px; }
 
 .inspector-dex { color: var(--ink-faint); font-size: var(--text-sm); }
 

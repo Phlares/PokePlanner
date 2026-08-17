@@ -485,8 +485,9 @@ describe('Workbench', () => {
     expect(screen.queryByRole('button', { name: 'Route 22' })).toBeNull();
     openMilestoneGroup('Brock');
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
-    const table = screen.getByRole('region', { name: /route detail/i });
-    expect(within(table).getByText(/Route 22/i)).toBeVisible();
+    const table = screen.getByRole('region', { name: 'Route detail' });
+    expect(within(table).getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
+    expect(within(table).queryByRole('heading', { name: 'Viridian Forest' })).toBeNull();
     expect(onPlaythroughChange).not.toHaveBeenCalled();
   });
 
@@ -540,11 +541,11 @@ describe('Workbench', () => {
     renderControlledWorkbench();
     openMilestoneGroup('Misty');
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
-    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
 
     fireEvent.click(screen.getByRole('button', { name: /Preview milestone.*Brock/i }));
 
-    expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Cerulean City' })).toBeNull();
     // The route is out of scope now, so the surface stops offering it too.
     expect(screen.queryByRole('button', { name: 'Cerulean City' })).toBeNull();
   });
@@ -553,7 +554,7 @@ describe('Workbench', () => {
     const { onPlaythroughChange, rerender } = renderWorkbench();
     openMilestoneGroup('Misty');
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
-    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
 
     rerender(
       <Workbench
@@ -564,7 +565,7 @@ describe('Workbench', () => {
       />,
     );
 
-    expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Cerulean City' })).toBeNull();
   });
 
   it('narrows the groups to the matches and expands them when a query is active', () => {
@@ -645,17 +646,20 @@ describe('Workbench', () => {
     expect(screen.queryByRole('button', { name: /hidden · no matches$/ })).toBeNull();
   });
 
-  it('clears stale route detail when a search result opens Pokémon locations', () => {
+  it('swaps stale route detail for Where & When when a search result is opened', () => {
     renderWorkbench();
     openMilestoneGroup('Brock');
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
-    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText(/Route 22/i)).toBeVisible();
+    expect(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('heading', { name: 'Route 22' }))
+      .toBeVisible();
 
     typeSearch('Mankey');
     fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
 
-    const detail = screen.getByRole('region', { name: /route detail/i });
-    expect(within(detail).queryByText(/Route 22/i)).toBeNull();
+    const detail = screen.getByRole('region', { name: 'Where & When' });
+    expect(within(detail).getByRole('heading', { name: 'Mankey · Where & When' }).textContent)
+      .toBe('Mankey · Where & When');
+    expect(screen.queryByRole('region', { name: 'Route detail' })).toBeNull();
     expect(within(screen.getByRole('region', { name: /inspector/i })).getByText('Mankey')).toBeVisible();
   });
 
@@ -671,7 +675,7 @@ describe('Workbench', () => {
     // Any durable change re-reconciles every ephemeral selection against the run.
     fireEvent.click(screen.getByRole('button', { name: 'Set current milestone: Brock' }));
 
-    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
   });
 
   it('validates a milestone against the progression node that carries it', () => {
@@ -762,10 +766,100 @@ describe('Workbench', () => {
     renderWorkbench();
     openMilestoneGroup('Brock');
     fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
-    fireEvent.click(within(screen.getByRole('region', { name: /route detail/i })).getByRole('button', { name: 'Mankey' }));
+    fireEvent.click(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('button', { name: 'Mankey' }));
 
-    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText(/Route 22/i)).toBeVisible();
+    expect(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('heading', { name: 'Route 22' }))
+      .toBeVisible();
     expect(within(screen.getByRole('region', { name: /inspector/i })).getByText('Mankey')).toBeVisible();
+  });
+
+  it('drives the centre pane from the Routes/Pokémon toggle, both ways', () => {
+    renderWorkbench();
+    openMilestoneGroup('Brock');
+    fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
+    fireEvent.click(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('button', { name: 'Mankey' }));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Pokémon' }));
+
+    expect(screen.getByRole('heading', { name: 'Mankey · Where & When' }).textContent).toBe('Mankey · Where & When');
+    expect(screen.getByRole('region', { name: 'Where & When' })).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'Route 22' })).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Routes' }));
+
+    // Routes mode returns to the route the run was last on, not to an empty pane.
+    expect(screen.getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
+    expect(screen.getByRole('region', { name: 'Route detail' })).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'Mankey · Where & When' })).toBeNull();
+  });
+
+  it('returns Routes mode to the empty placeholder when no route has been opened', () => {
+    renderWorkbench();
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    expect(screen.getByRole('heading', { name: 'Mankey · Where & When' })).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Routes' }));
+
+    const detail = screen.getByRole('region', { name: 'Route detail' });
+    expect(within(detail).getByText('Choose a route from a milestone group.')).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'Mankey · Where & When' })).toBeNull();
+    // Only the centre pane changed: the candidate is still the one being inspected.
+    expect(screen.getByRole('complementary', { name: 'Mankey inspector' })).toBeVisible();
+  });
+
+  it('marks matched encounter rows only while a query narrows them', () => {
+    renderWorkbench();
+    openMilestoneGroup('Brock');
+    fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
+    // Browsing places every species on the route, so a mark on every row would say nothing.
+    expect(screen.queryByText('Match')).toBeNull();
+
+    typeSearch('Mankey');
+
+    const detail = screen.getByRole('region', { name: 'Route detail' });
+    const marks = within(detail).getAllByText('Match');
+    expect(marks).toHaveLength(1);
+    const row = marks[0].closest('tr') as HTMLElement;
+    expect(within(row).getByRole('button').textContent).toBe('Mankey');
+  });
+
+  it('opens route evidence from Where & When and keeps the candidate', () => {
+    renderWorkbench();
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    expect(screen.getByRole('heading', { name: 'Mankey · Where & When' })).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Inspect Mankey at Route 22' }));
+
+    expect(screen.getByRole('heading', { name: 'Route 22' }).textContent).toBe('Route 22');
+    const inspector = screen.getByRole('complementary', { name: 'Mankey inspector' });
+    expect(within(inspector).getByRole('heading', { name: 'Mankey' }).textContent).toBe('Mankey');
+    expect(screen.queryByRole('complementary', { name: 'Rattata inspector' })).toBeNull();
+  });
+
+  it('moves focus to the heading of whatever was just selected', () => {
+    renderWorkbench();
+    openMilestoneGroup('Brock');
+    fireEvent.click(screen.getByRole('button', { name: 'Route 22' }));
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Route 22' }));
+
+    fireEvent.click(within(screen.getByRole('region', { name: 'Route detail' })).getByRole('button', { name: 'Mankey' }));
+
+    const inspector = screen.getByRole('complementary', { name: 'Mankey inspector' });
+    expect(document.activeElement).toBe(within(inspector).getByRole('heading', { name: 'Mankey' }));
+    expect(document.activeElement).not.toBe(screen.getByRole('heading', { name: 'Route 22' }));
+  });
+
+  it('never takes focus off the search field when a query expands groups by itself', () => {
+    renderWorkbench();
+    const field = screen.getByRole('searchbox', { name: /search/i });
+    field.focus();
+
+    typeSearch('Mankey');
+
+    expect(screen.getByRole('button', { name: 'Select Mankey at Route 22' })).toBeVisible();
+    expect(document.activeElement).toBe(field);
   });
 
   it('never surfaces opponent or exposure analysis in the workbench shell', () => {

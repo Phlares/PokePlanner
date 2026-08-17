@@ -1,12 +1,24 @@
 import { useMemo } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import type { EncounterArea } from '../../domain/pack';
+import type { CapabilityState } from '../../domain/timeline/capabilities';
+import { CAPABILITY_LABEL } from './labels';
 
 export interface EncounterTableProps {
   /** One wild-encounter area (a route's method/slot table). */
   area: EncounterArea;
   pack: FireRedPack;
   selectedPokemonId: number | null;
+  /**
+   * Species the active query places here. Omitted while browsing, where every row would carry the
+   * mark and it would therefore say nothing.
+   */
+  matchedPokemonIds?: ReadonlySet<number>;
+  /**
+   * Species id → capability verdict while a capability search runs. It arrives resolved from the
+   * one evaluator every workbench surface reads, so a row here cannot disagree with a result row.
+   */
+  capabilityStates?: ReadonlyMap<number, CapabilityState>;
   /** Selecting a row keeps the user on the workbench; the caller opens the inspector in place. */
   onSelectPokemon: (pokemonId: number) => void;
 }
@@ -53,8 +65,18 @@ function evYieldText(evYield: Record<string, number>): string {
  * encounter chance within that method). The area's per-method encounter rate stays its own
  * separate column and is never folded into the species chance. No encounter simulation,
  * expected-time, or catch-odds math is performed: only the recorded facts are displayed.
+ *
+ * Match and capability evidence arrives resolved from the caller and is stated in words inside the
+ * species cell, so neither rests on a background colour (spec §20) and the table stays a table.
  */
-export function EncounterTable({ area, pack, selectedPokemonId, onSelectPokemon }: EncounterTableProps) {
+export function EncounterTable({
+  area,
+  pack,
+  selectedPokemonId,
+  matchedPokemonIds,
+  capabilityStates,
+  onSelectPokemon,
+}: EncounterTableProps) {
   const rows = useMemo<EncounterRow[]>(() => {
     const nameById = new Map(pack.pokemon.map((record) => [record.id, record.name] as const));
     const evById = new Map(pack.pokemon.map((record) => [record.id, record.evYield] as const));
@@ -115,8 +137,11 @@ export function EncounterTable({ area, pack, selectedPokemonId, onSelectPokemon 
         <tbody>
           {rows.map((row) => {
             const selected = selectedPokemonId === row.pokemonId;
+            const matched = matchedPokemonIds?.has(row.pokemonId) ?? false;
+            const capability = capabilityStates?.get(row.pokemonId);
+            const capabilityLabel = capability === undefined ? undefined : CAPABILITY_LABEL[capability];
             return (
-              <tr key={row.key} data-selected={selected || undefined}>
+              <tr key={row.key} data-selected={selected || undefined} data-match={matched || undefined}>
                 <th scope="row" className="encounter-cell-name">
                   <button
                     type="button"
@@ -126,6 +151,10 @@ export function EncounterTable({ area, pack, selectedPokemonId, onSelectPokemon 
                   >
                     {row.pokemonName}
                   </button>
+                  {matched && <span className="encounter-match">Match</span>}
+                  {capabilityLabel !== undefined && (
+                    <span className="encounter-capability" data-state={capability}>{capabilityLabel}</span>
+                  )}
                 </th>
                 <td className="encounter-cell-method">{row.method}</td>
                 <td className="encounter-num">{levelText(row.minLevel, row.maxLevel)}</td>

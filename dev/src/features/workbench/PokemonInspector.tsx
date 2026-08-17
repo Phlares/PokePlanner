@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type Ref } from 'react';
 import type { FireRedPack } from '../../data/game-pack';
 import type { AvailabilityContext } from '../../domain/availability';
 import type {
@@ -27,6 +27,8 @@ export interface PokemonInspectorProps {
   /** Commits the currently displayed draft through the owning workbench. */
   onAddMember?: (draft: MemberDraft) => void;
   addMemberLabel?: string;
+  /** The species heading, which the shell focuses when a candidate is selected (spec §20). */
+  headingRef?: Ref<HTMLHeadingElement>;
 }
 
 const STAT_ROWS: ReadonlyArray<readonly [keyof PokemonRecord['baseStats'], string]> = [
@@ -100,7 +102,15 @@ function provenanceText(entry: Provenance): string {
  * upward; nothing here simulates battles, opponents, exposure, or catch odds. Missing sprites are
  * simply omitted — the panel is data-forward and never blocks on artwork.
  */
-export function PokemonInspector({ pokemonId, pack, context, onDraftMember, onAddMember, addMemberLabel }: PokemonInspectorProps) {
+export function PokemonInspector({
+  pokemonId,
+  pack,
+  context,
+  onDraftMember,
+  onAddMember,
+  addMemberLabel,
+  headingRef,
+}: PokemonInspectorProps) {
   const species = useMemo(
     () => pack.pokemon.find((record) => record.id === pokemonId) ?? null,
     [pack, pokemonId],
@@ -180,7 +190,7 @@ export function PokemonInspector({ pokemonId, pack, context, onDraftMember, onAd
   return (
     <div className="inspector">
       <header className="inspector-head">
-        <h4 className="inspector-name">{species.name}</h4>
+        <h4 className="inspector-name" tabIndex={-1} ref={headingRef}>{species.name}</h4>
         <code className="inspector-dex">#{species.id}</code>
       </header>
 

@@ -13,6 +13,8 @@ import {
   milestoneNodeId,
   revealsFutureNodes,
   selectMilestoneResults,
+  selectPokemonLocations,
+  selectRouteDetail,
   type GroupedWorkbenchResults,
   type MatchingMilestoneSection,
   type MilestoneResultsInput,
@@ -352,5 +354,105 @@ describe('selectMilestoneResults — totals', () => {
     const shown = new Set(allRoutes(scoped).flatMap((route) => route.matches.map((match) => match.pokemonId)));
     expect(shown.size).toBeGreaterThan(0);
     expect(scoped.totalPokemon).toBeGreaterThan(shown.size);
+  });
+});
+
+describe('selectRouteDetail', () => {
+  it('states one node whole, in the same terms the grouping states it', () => {
+    const route = selectRouteDetail('kanto-route-22', input({ target: 'brock-gym' }))!;
+    expect(route).toMatchObject({
+      nodeId: 'kanto-route-22',
+      name: 'Route 22',
+      milestoneId: 'brock-gym',
+      milestoneIndex: 1,
+      access: 'optional',
+      matchCount: 9,
+      levelRange: { min: 2, max: 40 },
+      gates: [],
+    });
+    expect(route.matches.map((match) => match.name)).toEqual([
+      'Rattata', 'Spearow', 'Psyduck', 'Mankey', 'Poliwag', 'Poliwhirl', 'Goldeen', 'Magikarp', 'Gyarados',
+    ]);
+    // A different node answers for itself and never borrows this one's rows.
+    const forest = selectRouteDetail('viridian-forest', input({ target: 'brock-gym' }))!;
+    expect(forest.name).toBe('Viridian Forest');
+    expect(forest.matches.some((match) => match.name === 'Mankey')).toBe(false);
+  });
+
+  it('keeps the active filters while narrowing to the node', () => {
+    const route = selectRouteDetail('kanto-route-22', input({ query: { name: 'Mankey' }, target: 'brock-gym' }))!;
+    expect(route.matchCount).toBe(1);
+    expect(route.matches[0]).toMatchObject({ name: 'Mankey', methods: ['walk'], minLevel: 2, maxLevel: 5 });
+
+    // A node the filter places nothing on is still stated, with an honest empty match set.
+    const forest = selectRouteDetail('viridian-forest', input({ query: { name: 'Mankey' }, target: 'brock-gym' }))!;
+    expect(forest).toMatchObject({ name: 'Viridian Forest', matchCount: 0, levelRange: null, access: 'future' });
+    expect(forest.matches).toEqual([]);
+  });
+
+  it('carries the gates the node stands behind', () => {
+    const cave = selectRouteDetail('cerulean-cave', input({ target: 'champion' }))!;
+    expect(cave.access).toBe('postgame');
+    expect(cave.gates).toEqual([
+      { kind: 'capability', id: 'rock-smash' },
+      { kind: 'capability', id: 'surf' },
+      { kind: 'story', id: 'champion' },
+      { kind: 'story', id: 'network-machine-restored' },
+    ]);
+  });
+
+  it('answers null for a node the pack does not carry', () => {
+    expect(selectRouteDetail('no-such-node', input({ target: 'brock-gym' }))).toBeNull();
+  });
+});
+
+describe('selectPokemonLocations', () => {
+  it('places one species chronologically with method, level, milestone and prerequisite', () => {
+    const locations = selectPokemonLocations(56, input({ target: 'brock-gym' }))!;
+    expect(locations.name).toBe('Mankey');
+    expect(locations.paths.map((path) => path.nodeId)).toEqual([
+      'kanto-route-22', 'kanto-route-3', 'kanto-route-4', 'rock-tunnel', 'kanto-route-23',
+    ]);
+    expect(locations.paths[0]).toEqual({
+      nodeId: 'kanto-route-22',
+      name: 'Route 22',
+      milestoneId: 'brock-gym',
+      milestoneName: milestoneName('brock-gym'),
+      access: 'optional',
+      methods: ['walk'],
+      minLevel: 2,
+      maxLevel: 5,
+      prerequisites: [],
+    });
+    expect(locations.paths.at(-1)).toMatchObject({
+      nodeId: 'kanto-route-23',
+      access: 'locked',
+      prerequisites: ['giovanni-gym'],
+    });
+  });
+
+  it('reads a non-wild acquisition as a path of its own', () => {
+    const bulbasaur = selectPokemonLocations(1, input({ target: 'brock-gym' }))!;
+    expect(bulbasaur.paths.map((path) => path.nodeId)).toEqual(['pallet-town']);
+    expect(bulbasaur.paths[0]).toMatchObject({
+      name: 'Pallet Town',
+      methods: ['gift', 'starter'],
+      minLevel: 5,
+      maxLevel: 5,
+      access: 'future',
+    });
+    // The starter is not on Route 22, and Mankey is not in Pallet Town.
+    expect(bulbasaur.paths.some((path) => path.nodeId === 'kanto-route-22')).toBe(false);
+  });
+
+  it('states a species the pack places nowhere without inventing a location', () => {
+    const chikorita = selectPokemonLocations(152, input({ target: 'brock-gym' }))!;
+    expect(chikorita.name).toBe('Chikorita');
+    expect(chikorita.paths).toEqual([]);
+    expect(chikorita.obtainability).toEqual({ status: 'transfer-only', flagged: true });
+  });
+
+  it('answers null for a species the pack does not carry', () => {
+    expect(selectPokemonLocations(9999, input({ target: 'brock-gym' }))).toBeNull();
   });
 });

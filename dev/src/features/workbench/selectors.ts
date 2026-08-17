@@ -2,7 +2,14 @@ import type { FireRedPack } from '../../data/game-pack';
 import type { ProgressionNode } from '../../domain/progression';
 import type { GameRules } from '../../domain/rules/game-rules';
 import { hasActiveSearchQuery, type MoveMatch, type Obtainability, type PokemonType } from '../../domain/search';
-import { milestoneBands, searchWorkbench, type MilestoneBand, type WorkbenchMethod } from '../../domain/workbench/search';
+import {
+  milestoneBands,
+  searchWorkbench,
+  type MilestoneBand,
+  type WorkbenchMatch,
+  type WorkbenchMethod,
+  type WorkbenchPlacement,
+} from '../../domain/workbench/search';
 import { FUTURE_TEASER_SECTION_ID, NO_MATCH_SUMMARY_SECTION_ID, type WorkbenchState } from './controller';
 
 // The milestone geometry the workbench groups by is domain logic; briefings cut the same bands.
@@ -133,6 +140,52 @@ function bandForOrder(bands: readonly MilestoneBand[], order: number): Milestone
 }
 
 /**
+ * Where the run stands and where it is planning to, resolved once. Every selector here classifies
+ * against this one reading, so a route cannot be `locked` in a group and `future` in a detail pane.
+ */
+interface ResultHorizon {
+  nodeById: ReadonlyMap<string, ProgressionNode>;
+  bands: readonly MilestoneBand[];
+  targetBand: MilestoneBand;
+  /** The planning target's own golden-path order — the horizon the milestone scope cuts at. */
+  targetOrder: number;
+  /** How far the run has actually walked; negative infinity when it has reached nothing. */
+  currentOrder: number;
+}
+
+function horizonOf(input: MilestoneResultsInput): ResultHorizon {
+  const nodeById = new Map(input.pack.progression.nodes.map((node) => [node.id, node]));
+  const bands = milestoneBands(input.rules.milestones, input.pack);
+  const orderOf = (band: MilestoneBand): number =>
+    nodeById.get(band.nodeId)?.goldenPathOrder ?? Number.POSITIVE_INFINITY;
+  const targetBand = bands.find((band) => band.milestoneId === input.targetMilestoneId) ?? bands[bands.length - 1];
+  const currentBand = bands.find((band) => band.milestoneId === input.currentMilestoneId);
+  return {
+    nodeById,
+    bands,
+    targetBand,
+    targetOrder: orderOf(targetBand),
+    currentOrder: currentBand === undefined ? Number.NEGATIVE_INFINITY : orderOf(currentBand),
+  };
+}
+
+/** One search hit read at one of its placements: the shape every route row is built from. */
+function routeMatchOf(match: WorkbenchMatch, placement: WorkbenchPlacement): RouteMatch {
+  return {
+    pokemonId: match.pokemonId,
+    slug: match.slug,
+    name: match.name,
+    types: match.types,
+    methods: placement.methods,
+    minLevel: placement.minLevel,
+    maxLevel: placement.maxLevel,
+    exactMatch: match.exactMatch,
+    obtainability: match.obtainability,
+    moveMatch: match.moveMatch,
+  };
+}
+
+/**
  * Classify one route. The branch the pack puts a node on wins over where the run stands — postgame
  * content is postgame however far ahead you plan — then the planning horizon, then the detour flag,
  * and only then how far the run has actually walked.
@@ -197,16 +250,10 @@ function levelRangeOf(matches: readonly RouteMatch[]): { min: number; max: numbe
  */
 export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWorkbenchResults {
   const { pack, rules, state } = input;
-  const nodeById = new Map(pack.progression.nodes.map((node) => [node.id, node]));
-  const bands = milestoneBands(rules.milestones, pack);
-  const orderOf = (band: MilestoneBand): number => nodeById.get(band.nodeId)?.goldenPathOrder ?? Number.POSITIVE_INFINITY;
-
-  const targetBand = bands.find((band) => band.milestoneId === input.targetMilestoneId) ?? bands[bands.length - 1];
-  const currentBand = bands.find((band) => band.milestoneId === input.currentMilestoneId);
-  const currentOrder = currentBand === undefined ? Number.NEGATIVE_INFINITY : orderOf(currentBand);
+  const { nodeById, bands, targetBand, targetOrder, currentOrder } = horizonOf(input);
   // The node's own order, not the band's end: this is the same horizon the controller validates
   // route selections against, so nothing is ever listed that a selection would immediately drop.
-  const scopeOrder = state.milestoneFilter ? orderOf(targetBand) : Number.POSITIVE_INFINITY;
+  const scopeOrder = state.milestoneFilter ? targetOrder : Number.POSITIVE_INFINITY;
   // Opening the teaser reveals what it counts without changing what it counts, so the two horizons
   // are kept apart: the scope decides what is teased, the reveal decides what is grouped.
   const revealOrder = revealsFutureNodes(state) ? Number.POSITIVE_INFINITY : scopeOrder;
@@ -237,18 +284,7 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
         siblings.push(node.id);
         nodeIdsByMilestone.set(band.milestoneId, siblings);
       }
-      rowsByNodeId.get(node.id)!.push({
-        pokemonId: match.pokemonId,
-        slug: match.slug,
-        name: match.name,
-        types: match.types,
-        methods: placement.methods,
-        minLevel: placement.minLevel,
-        maxLevel: placement.maxLevel,
-        exactMatch: match.exactMatch,
-        obtainability: match.obtainability,
-        moveMatch: match.moveMatch,
-      });
+      rowsByNodeId.get(node.id)!.push(routeMatchOf(match, placement));
     }
   }
 
@@ -319,4 +355,99 @@ export function selectMilestoneResults(input: MilestoneResultsInput): GroupedWor
   }
 
   return { sections, totalPokemon: totalPokemonIds.size, totalRoutes: totalNodeIds.size };
+}
+
+/**
+ * Everything the detail pane states about ONE node, whether or not the grouping shows it. The
+ * active filters are kept and simply narrowed to this node through the workbench search's own
+ * `nodeId` filter, so the detail can never disagree with the row that opened it — and a node the
+ * filters place nothing on is still stated, with an honest empty match set rather than a blank pane.
+ *
+ * Null only when the pack does not carry the node.
+ */
+export function selectRouteDetail(nodeId: string, input: MilestoneResultsInput): RouteResult | null {
+  const { pack, rules, state } = input;
+  const { nodeById, bands, targetBand, currentOrder } = horizonOf(input);
+  const node = nodeById.get(nodeId);
+  if (node === undefined) return null;
+
+  const band = bandForOrder(bands, node.goldenPathOrder);
+  const matches = searchWorkbench({ ...state.query, nodeId }, pack, rules)
+    .flatMap((match) => match.placements.map((placement) => routeMatchOf(match, placement)))
+    .sort((left, right) => left.pokemonId - right.pokemonId);
+
+  return {
+    nodeId,
+    name: node.name,
+    milestoneId: band.milestoneId,
+    milestoneIndex: band.index,
+    access: routeAccess(node, band, targetBand.index, currentOrder),
+    levelRange: levelRangeOf(matches),
+    matchCount: matches.length,
+    gates: routeGates(node, matches, rules),
+    matches,
+  };
+}
+
+/** One way of obtaining a species at one place on the golden path. */
+export interface AcquisitionPath {
+  nodeId: string;
+  /** The location's own name, as the progression graph gives it. */
+  name: string;
+  milestoneId: string;
+  milestoneName: string;
+  access: RouteAccess;
+  /** Every way the species is obtained here — wild methods and non-wild acquisitions alike. */
+  methods: readonly WorkbenchMethod[];
+  /** Null when nothing here states a level (a gift or a trade arrives fixed). */
+  minLevel: number | null;
+  maxLevel: number | null;
+  /** Progression events the pack makes this location wait on. */
+  prerequisites: readonly string[];
+}
+
+/** Where and when one species can be obtained, read off the whole pack rather than a query. */
+export interface PokemonLocationsResult {
+  pokemonId: number;
+  name: string;
+  obtainability: Obtainability;
+  /** Chronological by golden-path order; empty when the pack places the species nowhere. */
+  paths: readonly AcquisitionPath[];
+}
+
+/**
+ * Every acquisition path for one species, in progression order (spec §12). The active filters are
+ * deliberately NOT applied: this pane answers "where and when can I get this", which a filter that
+ * happens to be running must not silently narrow. Reachability is still read against the run, so
+ * each path carries the same access verdict a route row would give it.
+ *
+ * Null only when the pack does not carry the species.
+ */
+export function selectPokemonLocations(
+  pokemonId: number,
+  input: MilestoneResultsInput,
+): PokemonLocationsResult | null {
+  const { pack, rules } = input;
+  const { nodeById, bands, targetBand, currentOrder } = horizonOf(input);
+  const match = searchWorkbench({}, pack, rules).find((candidate) => candidate.pokemonId === pokemonId);
+  if (match === undefined) return null;
+
+  const paths = match.placements.map((placement): AcquisitionPath => {
+    // A placement is indexed off the progression graph, so its node is always one the pack carries.
+    const node = nodeById.get(placement.nodeId)!;
+    const band = bandForOrder(bands, node.goldenPathOrder);
+    return {
+      nodeId: node.id,
+      name: node.name,
+      milestoneId: band.milestoneId,
+      milestoneName: band.name,
+      access: routeAccess(node, band, targetBand.index, currentOrder),
+      methods: placement.methods,
+      minLevel: placement.minLevel,
+      maxLevel: placement.maxLevel,
+      prerequisites: [...node.prerequisiteEventIds].sort(),
+    };
+  });
+
+  return { pokemonId, name: match.name, obtainability: match.obtainability, paths };
 }

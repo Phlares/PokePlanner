@@ -103,6 +103,36 @@ describe('EncounterTable', () => {
     expect(button).toHaveAttribute('aria-pressed', 'true');
   });
 
+  it('states match and capability evidence in the species cell, keeping the table a table', () => {
+    renderTable({
+      matchedPokemonIds: new Set([56]),
+      capabilityStates: new Map([[56, 'knows' as const]]),
+    });
+
+    const row = mankeyRow();
+    expect(row).toHaveAttribute('data-match', 'true');
+    expect(within(row).getByText('Match').textContent).toBe('Match');
+    expect(within(row).getByText('Knows').textContent).toBe('Knows');
+    // The evidence lives in the row header cell, so no column was invented for it.
+    expect(within(row).getByRole('rowheader').textContent).toBe('MankeyMatchKnows');
+    expect(screen.getAllByRole('columnheader')).toHaveLength(7);
+
+    // A species the query does not place here, and holds no verdict for, carries neither label.
+    const rattata = screen
+      .getAllByRole('row')
+      .find((candidate) => within(candidate).queryByRole('button', { name: 'Rattata' }))!;
+    expect(rattata).not.toHaveAttribute('data-match');
+    expect(within(rattata).queryByText('Match')).toBeNull();
+    expect(within(rattata).queryByText('Knows')).toBeNull();
+  });
+
+  it('shows no evidence at all when the caller has none to give', () => {
+    renderTable();
+    expect(mankeyRow()).not.toHaveAttribute('data-match');
+    expect(screen.queryByText('Match')).toBeNull();
+    expect(screen.queryByText('Knows')).toBeNull();
+  });
+
   it('never surfaces encounter simulation, expected time, or catch-odds math', () => {
     renderTable();
     expect(screen.queryByText(/expected time|per hour|average time|catch odds|simulat|steps to/i)).toBeNull();

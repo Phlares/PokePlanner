@@ -495,7 +495,7 @@ describe('App boot and persistence', () => {
     await waitFor(async () => expect((await get()!.list())[0].previewMilestoneId).toBe('misty-gym'));
     revealFutureMilestones();
     fireEvent.click(screen.getByRole('button', { name: 'Cerulean City' }));
-    expect(within(screen.getByRole('region', { name: /route detail/i })).getByText('Cerulean City')).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Cerulean City' }).textContent).toBe('Cerulean City');
 
     openRunMenu();
     const exported = downloadedRun();
@@ -511,7 +511,7 @@ describe('App boot and persistence', () => {
     // The import replaces the durable target under a still-mounted workbench.
     await waitFor(() =>
       expect(screen.getByRole('button', { name: /preview milestone.*brock/i })).toHaveAttribute('aria-pressed', 'true'));
-    expect(within(screen.getByRole('region', { name: /route detail/i })).queryByText('Cerulean City')).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Cerulean City' })).toBeNull();
   });
 
   it('shows an actionable error and no partial UI when the pack is corrupt', async () => {

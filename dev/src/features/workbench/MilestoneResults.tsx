@@ -1,54 +1,23 @@
 import { useId } from 'react';
-import type { ObtainabilityStatus } from '../../domain/search';
 import type { CapabilityState } from '../../domain/timeline/capabilities';
 import { titleCase } from '../text';
 import { FUTURE_TEASER_SECTION_ID, NO_MATCH_SUMMARY_SECTION_ID } from './controller';
+import {
+  ACCESS_LABEL,
+  CAPABILITY_LABEL,
+  OBTAIN_LABEL,
+  gateLabel,
+  levelLabel,
+  matchLabel,
+} from './labels';
 import type {
   FutureTeaserSection,
   GroupedWorkbenchResults,
   HiddenMilestone,
   MatchingMilestoneSection,
   NoMatchSummarySection,
-  RouteAccess,
-  RouteGate,
   RouteResult,
 } from './selectors';
-
-/** Where a route stands relative to the run, said in words so no state rests on colour alone. */
-const ACCESS_LABEL: Record<RouteAccess, string> = {
-  current: 'Reached',
-  future: 'Ahead',
-  locked: 'Locked',
-  optional: 'Optional',
-  postgame: 'Postgame',
-};
-
-/** The three capability verdicts worth showing; `none` has nothing to say (spec §18). */
-const CAPABILITY_LABEL: Partial<Record<CapabilityState, string>> = {
-  knows: 'Knows',
-  'can-now': 'Can learn now',
-  conditional: 'Can learn with condition',
-};
-
-/**
- * Every way of being obtainable that is not ordinary play (spec §11). `standard` is absent on
- * purpose: it is the case the rest of the row already describes, and the four listed here are
- * exactly the statuses `Obtainability.flagged` marks, so one map is both the label and the rule.
- */
-const OBTAIN_LABEL: Partial<Record<ObtainabilityStatus, string>> = {
-  postgame: 'Postgame',
-  'version-exclusive': 'Version exclusive',
-  'event-only': 'Event only',
-  'transfer-only': 'Transfer only',
-};
-
-function matchLabel(count: number): string {
-  return `${count} ${count === 1 ? 'match' : 'matches'}`;
-}
-
-function gateLabel(gate: RouteGate): string {
-  return titleCase(gate.id);
-}
 
 /**
  * What the folded row stands for. One hidden milestone is named — the row has the space and the name
@@ -222,7 +191,7 @@ export function MilestoneResults({
         </button>
         <p className="results-route-meta">
           {matchLabel(route.matchCount)}
-          {route.levelRange !== null && ` · Lv ${route.levelRange.min}–${route.levelRange.max}`}
+          {route.levelRange !== null && ` · ${levelLabel(route.levelRange.min, route.levelRange.max)}`}
         </p>
         {route.gates.length > 0 && (
           <p className="results-route-gates">Needs {route.gates.map(gateLabel).join(' · ')}</p>

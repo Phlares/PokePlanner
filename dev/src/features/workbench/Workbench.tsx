@@ -28,9 +28,10 @@ import {
   type TimelineDisplayNode,
 } from '../timeline/TeamTimeline';
 import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
-import { EncounterTable } from './EncounterTable';
 import { MilestoneResults } from './MilestoneResults';
 import { PokemonInspector, type MemberDraft } from './PokemonInspector';
+import { PokemonLocations } from './PokemonLocations';
+import { RouteDetail } from './RouteDetail';
 import { TeamStrip, type TeamStripSlot } from './TeamStrip';
 import { WorkbenchShell } from './WorkbenchShell';
 import { WorkbenchToolbar } from './WorkbenchToolbar';
@@ -40,7 +41,14 @@ import {
   sameWorkbenchValidity,
   type WorkbenchValidity,
 } from './controller';
-import { milestoneNodeId, revealsFutureNodes, selectMilestoneResults } from './selectors';
+import {
+  milestoneNodeId,
+  revealsFutureNodes,
+  selectMilestoneResults,
+  selectPokemonLocations,
+  selectRouteDetail,
+  type MilestoneResultsInput,
+} from './selectors';
 
 /** Local id-resolution surface so emitted playthrough changes are re-validated before they leave. */
 function packIndexOf(pack: FireRedPack): PlaythroughPackIndex & TimelineResolverPackView {
@@ -235,14 +243,25 @@ export function Workbench({
 
   const selectedNodeId = controller.detail.kind === 'route' ? controller.detail.nodeId : null;
   const selectedPokemonId = controller.candidatePokemonId;
-
-  const selectedNode = selectedNodeId === null
+  const candidateSpecies = selectedPokemonId === null
     ? null
-    : pack.progression.nodes.find((node) => node.id === selectedNodeId) ?? null;
+    : pack.pokemon.find((record) => record.id === selectedPokemonId) ?? null;
 
-  const selectedAreas = selectedNodeId === null
-    ? []
-    : pack.encounters.filter((area) => area.nodeId === selectedNodeId);
+  // Spec §20: a selected route hands focus to the pane's heading, a selected species to the
+  // inspector's. Both are keyed on the selection itself, so a group the search expands on its own
+  // never moves focus off the field producing it.
+  const routeHeading = useRef<HTMLHeadingElement>(null);
+  const inspectorHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (selectedNodeId === null) return;
+    routeHeading.current?.focus();
+    routeHeading.current?.scrollIntoView?.({ block: 'start' });
+  }, [selectedNodeId]);
+  useEffect(() => {
+    if (selectedPokemonId === null) return;
+    inspectorHeading.current?.focus();
+    inspectorHeading.current?.scrollIntoView?.({ block: 'start' });
+  }, [selectedPokemonId]);
 
   const progressionIds = useMemo(() => new Set(pack.progression.nodes.map((node) => node.id)), [pack]);
   const timelineForRoutes = useMemo(
@@ -336,15 +355,30 @@ export function Workbench({
     };
   });
 
-  // One grouping drives the whole primary surface: the sections, their folds, the route rows and
-  // the totals the toolbar announces all come out of this single derivation of the controller state.
-  const results = useMemo(() => selectMilestoneResults({
+  // One reading of the run and the controller feeds every selector below it, so the groups, the
+  // detail pane and Where & When can never disagree about where the run stands.
+  const resultsInput = useMemo((): MilestoneResultsInput => ({
     pack,
     rules: FIRE_RED_RULES,
     state: controller,
     currentMilestoneId: playthrough.currentMilestoneId,
     targetMilestoneId: playthrough.previewMilestoneId ?? playthrough.currentMilestoneId,
   }), [controller, pack, playthrough.currentMilestoneId, playthrough.previewMilestoneId]);
+
+  // One grouping drives the whole primary surface: the sections, their folds, the route rows and
+  // the totals the toolbar announces all come out of this single derivation of the controller state.
+  const results = useMemo(() => selectMilestoneResults(resultsInput), [resultsInput]);
+
+  const routeDetail = useMemo(
+    () => (selectedNodeId === null ? null : selectRouteDetail(selectedNodeId, resultsInput)),
+    [resultsInput, selectedNodeId],
+  );
+  const pokemonLocations = useMemo(
+    () => (controller.detail.kind !== 'pokemon-locations' || selectedPokemonId === null
+      ? null
+      : selectPokemonLocations(selectedPokemonId, resultsInput)),
+    [controller.detail.kind, resultsInput, selectedPokemonId],
+  );
 
   const briefing = useMemo(
     () => selectMilestoneBriefing(targetMilestone.id, { pack, rules: FIRE_RED_RULES }),
@@ -465,6 +499,37 @@ export function Workbench({
     dispatch({ type: 'candidate-selected', pokemonId });
   };
 
+  // The centre pane follows the controller's detail, which is the one place mode changes and
+  // selections are reconciled: Routes shows the node, Pokémon shows Where & When, and the region
+  // names whichever it is holding so the landmark and the heading agree.
+  const detailPane = routeDetail !== null ? (
+    <RouteDetail
+      route={routeDetail}
+      milestoneName={FIRE_RED_RULES.milestones
+        .find((milestone) => milestone.id === routeDetail.milestoneId)?.name ?? routeDetail.milestoneId}
+      pack={pack}
+      selectedPokemonId={selectedPokemonId}
+      matchedPokemonIds={hasActiveSearchQuery(controller.query)
+        ? new Set(routeDetail.matches.map((match) => match.pokemonId))
+        : null}
+      capabilityStates={capabilityStates}
+      onSelectPokemon={(pokemonId) => {
+        dispatch({ type: 'candidate-selected', pokemonId });
+        dispatch({ type: 'candidate-location-selected', nodeId: routeDetail.nodeId });
+      }}
+      headingRef={routeHeading}
+    />
+  ) : pokemonLocations !== null ? (
+    <PokemonLocations
+      locations={pokemonLocations}
+      selectedNodeId={selectedNodeId}
+      onSelectLocation={(nodeId) => dispatch({ type: 'candidate-location-selected', nodeId })}
+    />
+  ) : (
+    <p className="workbench-placeholder">Choose a route from a milestone group.</p>
+  );
+  const detailLabel = routeDetail === null && pokemonLocations !== null ? 'Where & When' : 'Route detail';
+
   const workspace = (
     <div className="workbench">
       <section className="workbench-timeline" aria-label="Team timeline" ref={timelineRegion} tabIndex={-1}>
@@ -566,50 +631,31 @@ export function Workbench({
         />
       </div>
 
-      <section className="workbench-table" aria-label="Route detail">
-        {selectedNode === null && (
-          <p className="workbench-placeholder">Choose a route from a milestone group.</p>
-        )}
-        {selectedNode !== null && selectedAreas.length === 0 && (
-          <>
-            <h3 className="workbench-region-heading">{selectedNode.name}</h3>
-            <p className="workbench-placeholder">No wild encounters recorded for this location.</p>
-          </>
-        )}
-        {selectedAreas.map((area) => (
-          <EncounterTable
-            key={area.slug}
-            area={area}
-            pack={pack}
-            selectedPokemonId={selectedPokemonId}
-            onSelectPokemon={(pokemonId) => {
-              dispatch({ type: 'candidate-selected', pokemonId });
-              dispatch({
-                type: 'candidate-location-selected',
-                nodeId: area.nodeId ?? selectedNodeId!,
-              });
-            }}
-          />
-        ))}
+      <section className="workbench-table" aria-label={detailLabel}>
+        {detailPane}
       </section>
 
     </div>
   );
 
-  const inspector = selectedPokemonId === null ? (
+  // The inspector slot is a shell landmark with a fixed name; the candidate inside it is named by
+  // its own complementary region, so a screen reader hears whose evidence it is holding.
+  const inspector = candidateSpecies === null ? (
     <p className="workbench-placeholder">Select a Pokémon from the encounter table.</p>
   ) : (
-    <PokemonInspector
-      pokemonId={selectedPokemonId}
-      pack={pack}
-      context={availabilityContext}
-      onAddMember={addDraftToPreviewParty}
-      addMemberLabel={(() => {
-        const species = pack.pokemon.find((record) => record.id === selectedPokemonId);
-        const target = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === playthrough.previewMilestoneId);
-        return species && target ? `Add ${species.name} to ${target.name} party` : undefined;
-      })()}
-    />
+    <aside className="workbench-inspector" aria-label={`${candidateSpecies.name} inspector`}>
+      <PokemonInspector
+        pokemonId={candidateSpecies.id}
+        pack={pack}
+        context={availabilityContext}
+        onAddMember={addDraftToPreviewParty}
+        addMemberLabel={(() => {
+          const target = FIRE_RED_RULES.milestones.find((milestone) => milestone.id === playthrough.previewMilestoneId);
+          return target ? `Add ${candidateSpecies.name} to ${target.name} party` : undefined;
+        })()}
+        headingRef={inspectorHeading}
+      />
+    </aside>
   );
 
   return (
