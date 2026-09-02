@@ -21,6 +21,11 @@ import {
   searchCapability,
   selectMilestoneBriefing,
 } from '../../domain/workbench/search';
+import {
+  compareMemberCandidate,
+  type ComparisonSubject,
+  type MemberComparisonView,
+} from '../../domain/workbench/comparison';
 import { memberDisplayName } from '../timeline/MemberPool';
 import {
   explicitOverrideFrom,
@@ -28,6 +33,7 @@ import {
   type TimelineDisplayNode,
 } from '../timeline/TeamTimeline';
 import { TimelineMemberEditor } from '../timeline/TimelineMemberEditor';
+import { MemberComparison } from './MemberComparison';
 import { MilestoneResults } from './MilestoneResults';
 import { PokemonInspector, type CandidateAction } from './PokemonInspector';
 import { TeamStrip, type TeamStripSlot } from './TeamStrip';
@@ -503,6 +509,75 @@ export function Workbench({
     });
   };
 
+  // Spec §14: a candidate in the inspector plus a selected party member stands up the comparison.
+  // It derives from the controller and the resolved target — retargeting when the selection moves
+  // and closing when the candidate or the member leaves — so nothing about it is durable until the
+  // replacement below is confirmed.
+  const comparison = (() => {
+    const selected = controller.selectedMemberId;
+    if (candidateSpecies === null || selected === null || targetDisplay === undefined) return null;
+    const slot = targetDisplay.resolved.party.indexOf(selected);
+    if (slot < 0) return null;
+    const member = playthrough.timeline.members[selected];
+    const memberSnapshot = targetDisplay.resolved.snapshots[selected];
+    if (member === undefined || memberSnapshot === undefined) return null;
+    const node = { ...targetDisplay.resolved, nodeId: progressionNodeId(targetDisplay, pack) };
+    const reserveMemberId = targetDisplay.resolved.reserve.find(
+      (memberId) => node.snapshots[memberId]?.speciesId === candidateSpecies.id,
+    ) ?? null;
+    if (reserveMemberId !== null && node.snapshots[reserveMemberId] === undefined) return null;
+    const candidate: ComparisonSubject = reserveMemberId === null
+      ? {
+        memberId: null,
+        natureId: null,
+        snapshot: {
+          speciesId: candidateSpecies.id,
+          level: targetMilestone.targetLevel,
+          abilityId: (candidateSpecies.abilities.find((ability) => ability.slot === 1)
+            ?? candidateSpecies.abilities[0]).id,
+          moves: [],
+          heldItemId: null,
+          placement: 'reserve',
+          partySlot: null,
+          review: { moves: false, heldItem: false },
+        },
+      }
+      : {
+        memberId: reserveMemberId,
+        natureId: playthrough.timeline.members[reserveMemberId]?.natureId ?? null,
+        snapshot: node.snapshots[reserveMemberId],
+      };
+    const view: MemberComparisonView = compareMemberCandidate(
+      { memberId: selected, snapshot: memberSnapshot, natureId: member.natureId },
+      candidate,
+      { pack, rules: FIRE_RED_RULES, node, findings: findingsByNode[targetDisplay.id] ?? [] },
+    );
+    return {
+      view,
+      memberName: memberDisplayName(member, memberSnapshot, (id) => speciesNames.get(id) ?? `Species #${id}`, speciesCounts),
+      slot,
+      reserveMemberId,
+    };
+  })();
+
+  // The confirmation is the one moment the comparison touches the timeline: the slot's outgoing
+  // member goes to reserve through the same placement commands the inspector's actions use, and
+  // the warning rows above it never block the write.
+  const confirmComparison = (): void => {
+    if (comparison === null || candidateSpecies === null) return;
+    const slot = comparison.slot as 0 | 1 | 2 | 3 | 4 | 5;
+    if (comparison.reserveMemberId !== null) {
+      const timeline = withResolvedFrame(playthrough.timeline, targetMilestone.id);
+      emit({ timeline: placeInParty(timeline, targetMilestone.id, comparison.reserveMemberId, slot, index) });
+    } else {
+      addCandidate(slot);
+    };
+  };
+
+  const cancelComparison = (): void => {
+    dispatch({ type: 'member-selected', memberId: null });
+  };
+
   // Spec §8: selecting a species opens Pokémon mode, Where & When and the inspector. Every surface
   // offering a species emits this one action; the route it was read off stays the run's last route,
   // which the Routes toggle brings back.
@@ -640,20 +715,31 @@ export function Workbench({
   const inspector = candidateSpecies === null ? (
     <p className="workbench-placeholder">Select a Pokémon from the encounter table.</p>
   ) : (
-    <aside className="workbench-inspector" aria-label={`${candidateSpecies.name} inspector`}>
-      <PokemonInspector
-        pokemonId={candidateSpecies.id}
-        pack={pack}
-        rules={FIRE_RED_RULES}
-        context={availabilityContext}
-        locations={candidateLocations}
-        actions={candidateActions}
-        actionNote={openPartySlot < 0 && controller.selectedMemberId === null
-          ? `Choose a party member to compare with ${candidateSpecies.name}.`
-          : null}
-        headingRef={inspectorHeading}
-      />
-    </aside>
+    <>
+      {comparison !== null && (
+        <MemberComparison
+          view={comparison.view}
+          memberName={comparison.memberName}
+          candidateName={candidateSpecies.name}
+          onConfirm={confirmComparison}
+          onCancel={cancelComparison}
+        />
+      )}
+      <aside className="workbench-inspector" aria-label={`${candidateSpecies.name} inspector`}>
+        <PokemonInspector
+          pokemonId={candidateSpecies.id}
+          pack={pack}
+          rules={FIRE_RED_RULES}
+          context={availabilityContext}
+          locations={candidateLocations}
+          actions={candidateActions}
+          actionNote={openPartySlot < 0 && controller.selectedMemberId === null
+            ? `Choose a party member to compare with ${candidateSpecies.name}.`
+            : null}
+          headingRef={inspectorHeading}
+        />
+      </aside>
+    </>
   );
 
   return (
