@@ -51,7 +51,7 @@ function node(): ResolvedTimelineNode {
 }
 
 const OUTGOING_FINDING: TimelineFinding = {
-  code: 'team.weakness', severity: 'yellow', memberId: 'nidorino-1', field: 'moves',
+  code: 'team.weakness', severity: 'yellow', memberId: 'nidorino-1', field: 'move',
   summary: 'Outgoing member finding', explanation: 'x', evidenceIds: [], resolutions: [],
 };
 

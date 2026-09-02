@@ -129,7 +129,7 @@ describe('compareMemberCandidate — capability losses', () => {
   });
 
   it('drops the warning when another party member already knows the capability', () => {
-    const node = node({
+    const scene = node({
       party: ['nidorino-1', 'farfetchd-1', null, null, null, null],
       reserve: ['pikachu-3'],
       snapshots: {
@@ -138,14 +138,14 @@ describe('compareMemberCandidate — capability losses', () => {
         'pikachu-3': snapshot(PIKACHU, PIKACHU_MOVES, { placement: 'reserve', partySlot: null }),
       },
     });
-    const loss = compareMemberCandidate(nidorinoMember, pikachuCandidate, context(node))
+    const loss = compareMemberCandidate(nidorinoMember, pikachuCandidate, context(scene))
       .capabilityLosses.find((entry) => entry.capabilityId === 'cut')!;
     expect(loss).toMatchObject({ severity: null, retainedByParty: true });
   });
 
   it('scores a search candidate with no plan behind it', () => {
-    const node = node({ reserve: ['farfetchd-1'] });
-    const loss = compareMemberCandidate(nidorinoMember, pikachuSearchCandidate, context(node))
+    const scene = node({ reserve: ['farfetchd-1'] });
+    const loss = compareMemberCandidate(nidorinoMember, pikachuSearchCandidate, context(scene))
       .capabilityLosses.find((entry) => entry.capabilityId === 'cut')!;
     expect(loss).toMatchObject({ severity: 'yellow', candidateState: 'none', reserveMemberIds: ['farfetchd-1'] });
   });
@@ -154,7 +154,7 @@ describe('compareMemberCandidate — capability losses', () => {
 describe('compareMemberCandidate — findings', () => {
   it('keeps only the outgoing member findings', () => {
     const outgoing: TimelineFinding = {
-      code: 'team.weakness', severity: 'yellow', memberId: 'nidorino-1', field: 'moves',
+      code: 'team.weakness', severity: 'yellow', memberId: 'nidorino-1', field: 'move',
       summary: 'Outgoing member finding', explanation: 'x', evidenceIds: [], resolutions: [],
     };
     const other: TimelineFinding = { ...outgoing, memberId: 'pikachu-2' };
