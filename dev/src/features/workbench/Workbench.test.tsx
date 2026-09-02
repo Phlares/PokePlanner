@@ -184,6 +184,48 @@ function fullPartyPlaythrough(): Playthrough {
   }, packIndex());
 }
 
+/** One party member plus an existing Mankey in reserve, at one node. */
+function reserveMankeyPlaythrough(): Playthrough {
+  const starter = pack.pokemon.find((record) => record.id === 1)!;
+  const mankey = pack.pokemon.find((record) => record.id === 56)!;
+  const base = emptyPlaythrough();
+  return parsePlaythrough({
+    ...base,
+    currentMilestoneId: 'starter',
+    previewMilestoneId: 'brock-gym',
+    timeline: {
+      members: {
+        starter: {
+          id: 'starter', originalSpeciesId: 1, speciesSequence: 1, nickname: null, natureId: null,
+          origin: { type: 'inferred', acquisitionId: null, note: null }, acquiredAtNodeId: 'starter', notes: '', lifecycle: [],
+        },
+        mankey: {
+          id: 'mankey', originalSpeciesId: 56, speciesSequence: 1, nickname: null, natureId: null,
+          origin: { type: 'inferred', acquisitionId: null, note: null }, acquiredAtNodeId: 'starter', notes: '', lifecycle: [],
+        },
+      },
+      keyframes: {
+        starter: {
+          nodeId: 'starter', kind: 'major',
+          party: ['starter', null, null, null, null, null], reserve: ['mankey'], released: [],
+          snapshots: {
+            starter: {
+              speciesId: 1, level: 5, abilityId: starter.abilities[0].id, moves: [], heldItemId: null,
+              placement: 'party', partySlot: 0, review: { moves: false, heldItem: false },
+            },
+            mankey: {
+              speciesId: 56, level: 20, abilityId: mankey.abilities[0].id, moves: [], heldItemId: null,
+              placement: 'reserve', partySlot: null, review: { moves: false, heldItem: false },
+            },
+          },
+        },
+      },
+      overrides: {},
+      preferences: { levelMode: 'manual', autoEvolveLevel: false },
+    },
+  }, packIndex());
+}
+
 function restoredStarterPlaythrough(): Playthrough {
   const run = starterPlaythrough();
   run.timeline.members.starter.lifecycle = [
@@ -1020,5 +1062,92 @@ describe('Workbench', () => {
     expect(screen.queryByText(/exposure/i)).toBeNull();
     expect(screen.queryByText(/opponent/i)).toBeNull();
     expect(screen.queryByText(/super.?effective/i)).toBeNull();
+  });
+
+  // Spec §14: a candidate in the inspector plus a selected party member stands up the comparison,
+  // ephemeral until confirmation.
+  it('opens the comparison when a party member is selected while a candidate is inspected', () => {
+    renderWorkbench({ playthrough: fullPartyPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Party slot 1: Bulbasaur/ }));
+
+    const comparison = screen.getByRole('section', { name: 'Compare Bulbasaur #1 with Mankey' });
+    expect(within(comparison).getByRole('table', { name: 'Stat comparison' })).toBeVisible();
+    expect(within(comparison).getByRole('button', { name: 'Replace Bulbasaur #1 with Mankey' })).toBeVisible();
+    expect(within(comparison).getByRole('button', { name: 'Cancel' })).toBeVisible();
+  });
+
+  it('retargets the comparison when another party member is selected', () => {
+    renderWorkbench({ playthrough: fullPartyPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Party slot 1: Bulbasaur/ }));
+    expect(screen.getByRole('section', { name: 'Compare Bulbasaur #1 with Mankey' })).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: /^Party slot 3: Bulbasaur/ }));
+
+    expect(screen.getByRole('section', { name: 'Compare Bulbasaur #3 with Mankey' })).toBeVisible();
+    expect(screen.queryByRole('section', { name: 'Compare Bulbasaur #1 with Mankey' })).toBeNull();
+  });
+
+  it('closes the comparison on cancel without touching the run', () => {
+    const { onPlaythroughChange } = renderWorkbench({ playthrough: fullPartyPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Party slot 1: Bulbasaur/ }));
+    const comparison = screen.getByRole('section', { name: 'Compare Bulbasaur #1 with Mankey' });
+
+    fireEvent.click(within(comparison).getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.queryByRole('section', { name: /Compare/ })).toBeNull();
+    expect(screen.getByRole('button', { name: /^Party slot 1: Bulbasaur/ })).toHaveAttribute('aria-pressed', 'false');
+    expect(onPlaythroughChange).not.toHaveBeenCalled();
+    // The candidate stays inspected: only the member selection is withdrawn.
+    expect(screen.getByRole('complementary', { name: 'Mankey inspector' })).toBeVisible();
+  });
+
+  it('replaces the selected member with a new candidate and sends the outgoing member to reserve', () => {
+    const { onPlaythroughChange } = renderWorkbench({ playthrough: fullPartyPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Party slot 1: Bulbasaur/ }));
+    const comparison = screen.getByRole('section', { name: 'Compare Bulbasaur #1 with Mankey' });
+
+    fireEvent.click(within(comparison).getByRole('button', { name: 'Replace Bulbasaur #1 with Mankey' }));
+
+    expect(onPlaythroughChange).toHaveBeenCalledTimes(1);
+    const next = onPlaythroughChange.mock.calls[0][0] as Playthrough;
+    const mankey = Object.values(next.timeline.members).find((record) => record.originalSpeciesId === 56)!;
+    const frame = [...Object.values(next.timeline.keyframes), ...Object.values(next.timeline.overrides)]
+      .find((candidate) => candidate.party.includes(mankey.id))!;
+    expect(frame.nodeId).toBe('brock-gym');
+    expect(frame.party[0]).toBe(mankey.id);
+    // The outgoing member goes to reserve, not released.
+    expect(frame.reserve).toContain('m1');
+    expect(frame.snapshots['m1'].placement).toBe('reserve');
+    expect(frame.released).not.toContain('m1');
+  });
+
+  it('replaces the selected member with an existing reserve member through its slot', () => {
+    const { onPlaythroughChange } = renderWorkbench({ playthrough: reserveMankeyPlaythrough() });
+    typeSearch('Mankey');
+    fireEvent.click(screen.getByRole('button', { name: 'Select Mankey at Route 22' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Party slot 1: Bulbasaur/ }));
+    const comparison = screen.getByRole('section', { name: 'Compare Bulbasaur with Mankey' });
+
+    fireEvent.click(within(comparison).getByRole('button', { name: 'Replace Bulbasaur with Mankey' }));
+
+    expect(onPlaythroughChange).toHaveBeenCalledTimes(1);
+    const next = onPlaythroughChange.mock.calls[0][0] as Playthrough;
+    const frame = [...Object.values(next.timeline.keyframes), ...Object.values(next.timeline.overrides)]
+      .find((candidate) => candidate.party.includes('mankey'))!;
+    expect(frame.nodeId).toBe('brock-gym');
+    expect(frame.party[0]).toBe('mankey');
+    expect(frame.snapshots.mankey.placement).toBe('party');
+    expect(frame.snapshots.mankey.partySlot).toBe(0);
+    // The replaced Bulbasaur went to reserve.
+    expect(frame.reserve).toContain('starter');
+    expect(frame.snapshots.starter.placement).toBe('reserve');
   });
 });

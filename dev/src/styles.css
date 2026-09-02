@@ -1981,3 +1981,48 @@ button:disabled {
   .team-strip-slot:nth-child(3) { border-right: 0; }
   .team-strip-slot:nth-child(-n + 3) { border-bottom: var(--rule); }
 }
+
+/* Member comparison (Task 8): text-forward, square, 1px rules. */
+.member-comparison {
+  border: var(--rule);
+  padding: 0.5rem;
+  color: var(--ink);
+}
+.mc-stats {
+  border-collapse: collapse;
+  margin-block: 0.5rem;
+}
+.mc-stats th,
+.mc-stats td {
+  border: var(--rule);
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+}
+.mc-stats td {
+  color: var(--ink-soft);
+}
+.mc-stats thead th {
+  color: var(--ink-soft);
+  border-bottom: var(--rule-strong);
+}
+.mc-line {
+  color: var(--ink);
+  margin-block: 0.25rem;
+}
+/* Yellow warning = a text label and a left rule, never a fill. */
+.mc-warning {
+  border-left: 3px solid var(--ink);
+  color: var(--ink);
+  padding-left: 0.5rem;
+  font-weight: 600;
+}
+.mc-actions button {
+  border: var(--rule-strong);
+  background: transparent;
+  color: var(--ink);
+  padding: 0.25rem 0.75rem;
+}
+.mc-actions button:first-child {
+  background: var(--ink);
+  color: var(--paper, #fff);
+}
