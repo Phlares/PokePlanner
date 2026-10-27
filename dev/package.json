@@ -5,7 +5,7 @@
   "type": "module",
   "packageManager": "npm@11.5.1",
   "engines": {
-    "node": "22.17.1",
+    "node": "22.23.4",
     "npm": "11.5.1"
   },
   "scripts": {

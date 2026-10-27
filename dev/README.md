@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Node.js 22.17.1
+- Node.js 22.23.4
 - npm 11.5.1
 - Git
 
