@@ -20,6 +20,11 @@ updates:
     directory: /dev
     schedule:
       interval: monthly
+    # @types/node majors track the Node runtime, pinned to 22 in package.json
+    # engines and ci.yml. Move both together.
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     groups:
       npm:
         patterns: ["*"]
